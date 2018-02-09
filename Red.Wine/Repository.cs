@@ -285,11 +285,12 @@ namespace Red.Wine
                     entry.Entity.CreatedBy = _userId;
                     entry.Entity.CreatedOn = DateTime.Now;
                     entry.Entity.IsActive = true;
-                    entry.Entity.KeyId = GetIncrementedKeyId();
+                    entry.Entity.KeyId = GetIncrementedKeyId(); //Bug: entry.Entity type needs to be passed
                 }
             }
         }
 
+        // Needs to operate on the type passed. _dbSet is useless.
         private long GetIncrementedKeyId()
         {
             var entity = _dbSet.OrderByDescending(t => t.KeyId).First();

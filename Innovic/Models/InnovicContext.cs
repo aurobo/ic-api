@@ -1,17 +1,28 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Innovic.Models.Sales;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Red.Wine;
 using System;
-using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
-using System.Web;
 
 namespace Innovic.Models
 {
     public class InnovicContext : IdentityDbContext<IdentityUser>
     {
+        private readonly string _userId = "Jarvis";
+
+        public DbSet<SalesOrder> SalesOrders { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+
         public InnovicContext()
             : base("dbConnection")
         {
 
+        }
+
+        public InnovicContext(string userId)
+        {
+            _userId = userId;
         }
 
         public InnovicContext Create()
@@ -19,8 +30,50 @@ namespace Innovic.Models
             return new InnovicContext();
         }
 
-        public System.Data.Entity.DbSet<Innovic.Models.Sales.SalesOrder> SalesOrders { get; set; }
+        public override int SaveChanges()
+        {
+            SetDefaultValues();
+            return base.SaveChanges();
+        }
 
-        public System.Data.Entity.DbSet<Innovic.Models.Sales.Customer> Customers { get; set; }
+        private void SetDefaultValues()
+        {
+            var entries = ChangeTracker.Entries<BaseModel>().Where(x => x.State == EntityState.Modified || x.State == EntityState.Added);
+
+            foreach (var entry in entries)
+            {
+                if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.SetWhenModifying(_userId, DateTime.Now);
+                }
+                else if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.SetWhenInserting(
+                        Guid.NewGuid().ToString(), 
+                        _userId,
+                        DateTime.Now,
+                        true,
+                        GetIncrementedKeyId(entry.Entity));
+                }
+            }
+        }
+
+        private long GetIncrementedKeyId(BaseModel entity)
+        {
+            var dbSet = Set(entity.GetType());
+            var entityList = Enumerable.Cast<BaseModel>(dbSet).ToList();
+            long currentCount = 0;
+
+            if(entityList.Count > 0)
+            {
+                var lastInsertedEntity = entityList
+                    .OrderByDescending(t => t.KeyId)
+                    .First();
+
+                currentCount = lastInsertedEntity.KeyId;
+            }
+
+            return ++currentCount;
+        }
     }
 }

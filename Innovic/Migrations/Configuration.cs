@@ -1,18 +1,16 @@
+using System.Data.Entity.Migrations;
+using Innovic.Models;
+
 namespace Innovic.Migrations
 {
-    using System;
-    using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
-
-    internal sealed class Configuration : DbMigrationsConfiguration<Innovic.Models.InnovicContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<InnovicContext>
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
-        protected override void Seed(Innovic.Models.InnovicContext context)
+        protected override void Seed(InnovicContext context)
         {
             //  This method will be called after migrating to the latest version.
 

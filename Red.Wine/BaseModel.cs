@@ -9,14 +9,42 @@ namespace Red.Wine
 {
     public class BaseModel
     {
-        public string LastModifiedBy { get; set; }
+        public string LastModifiedBy { get; protected internal set; }
         [Column(TypeName = "datetime2")]
-        public DateTime LastModifiedOn { get; set; }
-        public string Id { get; set; }
-        public string CreatedBy { get; set; }
+        public DateTime LastModifiedOn { get; protected internal set; }
+        public string Id { get; protected internal set; }
+        public string CreatedBy { get; protected internal set; }
         [Column(TypeName = "datetime2")]
-        public DateTime CreatedOn { get; set; }
-        public bool IsActive { get; set; }
-        public long KeyId { get; set; }
+        public DateTime CreatedOn { get; protected internal set; }
+        public bool IsActive { get; protected internal set; }
+        public long KeyId { get; protected internal set; }
+
+        public void Set(string lastModifiedBy, DateTime lastModifiedOn, string id, string createdBy, DateTime createdOn, bool isActive, long keyId)
+        {
+            LastModifiedBy = lastModifiedBy;
+            LastModifiedOn = lastModifiedOn;
+            Id = id;
+            CreatedBy = createdBy;
+            CreatedOn = createdOn;
+            IsActive = isActive;
+            KeyId = keyId;
+        }
+
+        public void SetWhenModifying(string lastModifiedBy, DateTime lastModifiedOn)
+        {
+            LastModifiedBy = lastModifiedBy;
+            LastModifiedOn = lastModifiedOn;
+        }
+
+        public void SetWhenInserting(string id, string createdBy, DateTime createdOn, bool isActive, long keyId)
+        {
+            LastModifiedBy = createdBy;
+            LastModifiedOn = createdOn;
+            Id = id;
+            CreatedBy = createdBy;
+            CreatedOn = createdOn;
+            IsActive = isActive;
+            KeyId = keyId;
+        }
     }
 }

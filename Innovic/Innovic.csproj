@@ -151,6 +151,7 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="AuthProvider.cs" />
+    <Compile Include="Controllers\SalesOrdersController.cs" />
     <Compile Include="Helpers\AppConstants.cs" />
     <Compile Include="JModels\SetUser.cs" />
     <Compile Include="Migrations\Configuration.cs" />
@@ -165,7 +166,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Red.Wine\Red.Wine.csproj">
