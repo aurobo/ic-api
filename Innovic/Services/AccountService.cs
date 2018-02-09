@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Innovic.Services
 {
-    public class UserService : IDisposable
+    public class AccountService : IDisposable
     {
         private InnovicContext _context;
         private UserManager<IdentityUser> _userManager;
 
-        public UserService()
+        public AccountService()
         {
             _context = new InnovicContext();
             _userManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(_context));

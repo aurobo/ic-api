@@ -24,13 +24,13 @@ namespace Innovic
             IdentityUser user;
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
 
-            using (UserService _service = new UserService())
+            using (AccountService _service = new AccountService())
             {
                 user = await _service.FindUser(context.UserName, context.Password);
 
                 if (user == null)
                 {
-                    context.SetError("invalid_grant", "The user name or password is incorrect.");
+                    context.SetError("auth_fail", "Authentication failed. Username or password is incorrect.");
                     return;
                 }
             }
@@ -39,16 +39,16 @@ namespace Innovic
                 new Dictionary<string, string>
                 {
                     {
-                        "api_version", AppConstants.ApiVersion
+                        "username", user.UserName
                     }
                 });
 
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
-            identity.AddClaim(new Claim("sub", context.UserName));
-            identity.AddClaim(new Claim("role", "user"));
-            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
+
+            identity.AddClaim(new Claim("sub", user.Id));
 
             var ticket = new AuthenticationTicket(identity, props);
+
             context.Validated(ticket);
         }
 
