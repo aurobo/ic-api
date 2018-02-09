@@ -1,9 +1,11 @@
-﻿using Microsoft.Owin;
+﻿using Innovic.Models;
+using Microsoft.Owin;
 using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json;
 using Owin;
 using System;
+using System.Data.Entity;
 using System.Web.Http;
 
 [assembly: OwinStartup(typeof(Innovic.Startup))]
@@ -15,27 +17,21 @@ namespace Innovic
 
         public void Configuration(IAppBuilder app)
         {
+            InitializeDatabase();
+
             DataProtectionProvider = app.GetDataProtectionProvider();
 
             HttpConfiguration config = new HttpConfiguration();
 
             ConfigureOAuth(app);
 
-            ConfigureWebApi(config);
+            WebApiConfig.Register(config);
+
+            app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
 
             app.UseWebApi(config);
-        }
 
-        private void ConfigureWebApi(HttpConfiguration config)
-        {
-            config.Formatters.JsonFormatter.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-            config.Formatters.JsonFormatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-            config.MapHttpAttributeRoutes();
-            config.Routes.MapHttpRoute(
-                name: "Default",
-                routeTemplate: "{controller}/{action}/{id}",
-                defaults: new { action = RouteParameter.Optional, id = RouteParameter.Optional }
-            );
+            GlobalConfiguration.Configure(WebApiConfig.Register);
         }
 
         private void ConfigureOAuth(IAppBuilder app)
@@ -45,11 +41,18 @@ namespace Innovic
                 AllowInsecureHttp = true,
                 TokenEndpointPath = new PathString("/token"),
                 AccessTokenExpireTimeSpan = new TimeSpan(24, 0, 0),
-                //Provider = new AuthProvider()
+                Provider = new AuthProvider()
             };
 
             app.UseOAuthAuthorizationServer(options);
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
+        }
+
+        private void InitializeDatabase()
+        {
+            InnovicContext context = new InnovicContext();
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<InnovicContext, Migrations.Configuration>());
+            context.Database.Initialize(true);
         }
     }
 }

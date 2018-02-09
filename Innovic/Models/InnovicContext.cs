@@ -18,5 +18,9 @@ namespace Innovic.Models
         {
             return new InnovicContext();
         }
+
+        public System.Data.Entity.DbSet<Innovic.Models.Sales.SalesOrder> SalesOrders { get; set; }
+
+        public System.Data.Entity.DbSet<Innovic.Models.Sales.Customer> Customers { get; set; }
     }
 }

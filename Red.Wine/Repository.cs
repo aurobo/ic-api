@@ -285,8 +285,15 @@ namespace Red.Wine
                     entry.Entity.CreatedBy = _userId;
                     entry.Entity.CreatedOn = DateTime.Now;
                     entry.Entity.IsActive = true;
+                    entry.Entity.KeyId = GetIncrementedKeyId();
                 }
             }
+        }
+
+        private long GetIncrementedKeyId()
+        {
+            var entity = _dbSet.OrderByDescending(t => t.KeyId).First();
+            return ++entity.KeyId;
         }
     }
 }
