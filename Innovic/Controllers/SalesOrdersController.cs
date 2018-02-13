@@ -155,6 +155,11 @@ namespace Innovic.Controllers
                     }
                 }
 
+                if (System.IO.File.Exists(provider.FileData[0].LocalFileName))
+                {
+                    System.IO.File.Delete(provider.FileData[0].LocalFileName);
+                }
+
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
