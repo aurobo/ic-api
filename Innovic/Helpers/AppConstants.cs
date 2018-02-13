@@ -11,5 +11,7 @@ namespace Innovic.Helpers
         public const string SalesOrderAbbr = "SO";
         public const string KeySeparator = "-";
         public const string FixedDigits = "D5";
+        public const string CustomerAbbr = "CR";
+        public const string MaterialAbbr = "MT";
     }
 }
