@@ -167,6 +167,7 @@
     <Compile Include="Controllers\SalesOrdersController.cs" />
     <Compile Include="Helpers\AppConstants.cs" />
     <Compile Include="Helpers\PickConfigurations.cs" />
+    <Compile Include="Helpers\TraceExceptionLogger.cs" />
     <Compile Include="JModels\SetUser.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\InnovicContext.cs" />

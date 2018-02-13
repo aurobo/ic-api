@@ -1,10 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using Innovic.Helpers;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.ExceptionHandling;
 
 namespace Innovic
 {
@@ -20,6 +22,9 @@ namespace Innovic
 
             // Web API routes
             config.MapHttpAttributeRoutes();
+
+
+            config.Services.Add(typeof(IExceptionLogger), new TraceExceptionLogger());
 
             //config.Routes.MapHttpRoute(
             //    name: "DefaultApi",
