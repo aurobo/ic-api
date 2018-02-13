@@ -1,8 +1,10 @@
-﻿using Innovic.Models;
+﻿using Innovic.Helpers;
+using Innovic.Models;
 using Innovic.Models.Sales;
 using Innovic.Services;
 using Red.Wine.Picker;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -22,19 +24,20 @@ namespace Innovic.Controllers
         [Route("")]
         public IHttpActionResult Get()
         {
-            return Ok(_db.SalesOrders.ToPickDictionaryCollection(new PickConfig(true, true)));
+            return Ok(_db.SalesOrders.ToPickDictionaryCollection(PickConfigurations.SalesOrders));
         }
 
         [Route("{id}")]
         public IHttpActionResult Get(string id)
         {
             SalesOrder salesOrder = _db.SalesOrders.Find(id);
+
             if (salesOrder == null)
             {
                 return NotFound();
             }
 
-            return Ok(salesOrder);
+            return Ok(salesOrder.ToPickDictionary(PickConfigurations.SalesOrder));
         }
 
         [Route("{id}")]
