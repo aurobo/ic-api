@@ -3,31 +3,36 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Innovic.Models;
 using Innovic.Models.Sales;
+using Innovic.Services;
 
 namespace Innovic.Controllers
 {
+    [RoutePrefix("api/salesorders")]
     public class SalesOrdersController : ApiController
     {
-        private InnovicContext db = new InnovicContext();
+        private InnovicContext _db = new InnovicContext();
 
-        // GET: api/SalesOrders
-        public IQueryable<SalesOrder> GetSalesOrders()
+        [Route("")]
+        public IQueryable<SalesOrder> Get()
         {
-            return db.SalesOrders;
+            return _db.SalesOrders;
         }
 
-        // GET: api/SalesOrders/5
-        [ResponseType(typeof(SalesOrder))]
-        public IHttpActionResult GetSalesOrder(string id)
+        [Route("{id}")]
+        public IHttpActionResult Get(string id)
         {
-            SalesOrder salesOrder = db.SalesOrders.Find(id);
+            SalesOrder salesOrder = _db.SalesOrders.Find(id);
             if (salesOrder == null)
             {
                 return NotFound();
@@ -36,9 +41,8 @@ namespace Innovic.Controllers
             return Ok(salesOrder);
         }
 
-        // PUT: api/SalesOrders/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutSalesOrder(string id, SalesOrder salesOrder)
+        [Route("{id}")]
+        public IHttpActionResult Put(string id, SalesOrder salesOrder)
         {
             if (!ModelState.IsValid)
             {
@@ -50,11 +54,11 @@ namespace Innovic.Controllers
                 return BadRequest();
             }
 
-            db.Entry(salesOrder).State = EntityState.Modified;
+            _db.Entry(salesOrder).State = EntityState.Modified;
 
             try
             {
-                db.SaveChanges();
+                _db.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -71,20 +75,19 @@ namespace Innovic.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/SalesOrders
-        [ResponseType(typeof(SalesOrder))]
-        public IHttpActionResult PostSalesOrder(SalesOrder salesOrder)
+        [Route("")]
+        public IHttpActionResult Post(SalesOrder salesOrder)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.SalesOrders.Add(salesOrder);
+            _db.SalesOrders.Add(salesOrder);
             
             try
             {
-                db.SaveChanges();
+                _db.SaveChanges();
             }
             catch (DbUpdateException)
             {
@@ -101,34 +104,79 @@ namespace Innovic.Controllers
             return Ok(salesOrder);
         }
 
-        // DELETE: api/SalesOrders/5
-        [ResponseType(typeof(SalesOrder))]
-        public IHttpActionResult DeleteSalesOrder(string id)
+        [Route("{id}")]
+        public IHttpActionResult Delete(string id)
         {
-            SalesOrder salesOrder = db.SalesOrders.Find(id);
+            SalesOrder salesOrder = _db.SalesOrders.Find(id);
             if (salesOrder == null)
             {
                 return NotFound();
             }
 
-            db.SalesOrders.Remove(salesOrder);
-            db.SaveChanges();
+            _db.SalesOrders.Remove(salesOrder);
+            _db.SaveChanges();
 
             return Ok(salesOrder);
+        }
+
+        // POST: api/SalesOrders/Upload
+        [HttpPost]
+        [Route("upload")]
+        public async Task<HttpResponseMessage> UploadAsync()
+        {
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+
+            var provider = new MultipartFormDataStreamProvider(HostingEnvironment.MapPath("~/App_Data"));
+
+            try
+            {
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                ExcelService excelService = new ExcelService();
+
+                var salesOrder = excelService.ToSalesOrder(provider.FileData[0].LocalFileName);
+
+                _db.SalesOrders.Add(salesOrder);
+
+                try
+                {
+                    _db.SaveChanges();
+                }
+                catch (DbUpdateException)
+                {
+                    if (SalesOrderExists(salesOrder.Id))
+                    {
+                        return Request.CreateResponse(HttpStatusCode.Conflict);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e);
+            }
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                db.Dispose();
+                _db.Dispose();
             }
             base.Dispose(disposing);
         }
 
         private bool SalesOrderExists(string id)
         {
-            return db.SalesOrders.Count(e => e.Id == id) > 0;
+            return _db.SalesOrders.Count(e => e.Id == id) > 0;
         }
     }
 }

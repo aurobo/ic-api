@@ -12,7 +12,7 @@ namespace Innovic.Models.Sales
     {
         public SalesOrder()
         {
-            
+            SalesOrderItems = new List<SalesOrderItem>();
         }
 
         [Column(TypeName = "datetime2")]
@@ -30,6 +30,8 @@ namespace Innovic.Models.Sales
         public SalesOrderStatus Status { get; set; }
 
         public virtual Customer Customer { get; set; }
+
+        public virtual List<SalesOrderItem> SalesOrderItems { get; set; }
 
         [NotMapped]
         public string Key
