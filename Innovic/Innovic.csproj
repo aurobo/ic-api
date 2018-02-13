@@ -142,6 +142,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\README.md" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -182,9 +183,7 @@
     <Compile Include="Services\AccountService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Red.Wine\Red.Wine.csproj">
       <Project>{6396B19E-6882-4106-B941-994887751330}</Project>
