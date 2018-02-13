@@ -49,11 +49,11 @@ namespace Innovic.Services
                                 break;
 
                             case "ExpirationDate":
-                                salesOrder.ExpirationDate = Convert.ToDateTime(value);
+                                salesOrder.ExpirationDate = DateTime.ParseExact(value.ToString(), "dd/MM/yyyy", null);
                                 break;
 
                             case "OrderDate":
-                                salesOrder.OrderDate = Convert.ToDateTime(value);
+                                salesOrder.OrderDate = DateTime.ParseExact(value.ToString(), "dd/MM/yyyy", null); ;
                                 break;
 
                             case "CustomerReference":
