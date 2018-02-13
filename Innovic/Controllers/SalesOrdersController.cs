@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using Innovic.Models;
+using Innovic.Models.Sales;
+using Innovic.Services;
+using Red.Wine.Picker;
+using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
-using System.Web.Http.Description;
-using Innovic.Models;
-using Innovic.Models.Sales;
-using Innovic.Services;
 
 namespace Innovic.Controllers
 {
@@ -24,9 +20,9 @@ namespace Innovic.Controllers
         private InnovicContext _db = new InnovicContext();
 
         [Route("")]
-        public IQueryable<SalesOrder> Get()
+        public IHttpActionResult Get()
         {
-            return _db.SalesOrders;
+            return Ok(_db.SalesOrders.ToPickDictionaryCollection(new PickConfig(true, true)));
         }
 
         [Route("{id}")]
@@ -119,7 +115,6 @@ namespace Innovic.Controllers
             return Ok(salesOrder);
         }
 
-        // POST: api/SalesOrders/Upload
         [HttpPost]
         [Route("upload")]
         public async Task<HttpResponseMessage> UploadAsync()

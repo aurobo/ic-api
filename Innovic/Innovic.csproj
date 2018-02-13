@@ -161,6 +161,8 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="AuthProvider.cs" />
+    <Compile Include="Controllers\MaterialsController.cs" />
+    <Compile Include="Controllers\CustomersController.cs" />
     <Compile Include="Controllers\SalesOrdersController.cs" />
     <Compile Include="Helpers\AppConstants.cs" />
     <Compile Include="JModels\SetUser.cs" />

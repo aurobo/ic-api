@@ -57,6 +57,9 @@
     <Compile Include="Enumerations.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Mapper.cs" />
+    <Compile Include="Picker\Pick.cs" />
+    <Compile Include="Picker\PickConfig.cs" />
+    <Compile Include="Picker\PickExtensions.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

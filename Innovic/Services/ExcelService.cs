@@ -31,10 +31,13 @@ namespace Innovic.Services
 
                     foreach (System.Data.DataRow row in result.Tables["Header Data"].Rows)
                     {
-                        switch(row[0].ToString())
+                        var key = row["Name"].ToString();
+                        var value = row["Value"];
+
+                        switch (key)
                         {
                             case "Customer":
-                                var customerName = row[1].ToString();
+                                var customerName = value.ToString();
                                 Customer customer = _customerService.Find(customerName);
 
                                 if (customer == null)
@@ -46,19 +49,19 @@ namespace Innovic.Services
                                 break;
 
                             case "ExpirationDate":
-                                salesOrder.ExpirationDate = Convert.ToDateTime(row[1]);
+                                salesOrder.ExpirationDate = Convert.ToDateTime(value);
                                 break;
 
                             case "OrderDate":
-                                salesOrder.OrderDate = Convert.ToDateTime(row[1]);
+                                salesOrder.OrderDate = Convert.ToDateTime(value);
                                 break;
 
                             case "CustomerReference":
-                                salesOrder.CustomerReference = row[1].ToString();
+                                salesOrder.CustomerReference = value.ToString();
                                 break;
 
                             case "PaymentTerms":
-                                salesOrder.PaymentTerms = row[1].ToString();
+                                salesOrder.PaymentTerms = value.ToString();
                                 break;
                         }
                     }
