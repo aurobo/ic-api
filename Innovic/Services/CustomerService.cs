@@ -9,26 +9,25 @@ namespace Innovic.Services
 {
     public class CustomerService
     {
-        private InnovicContext _db = new InnovicContext();
+        BaseService<Customer> _service = new BaseService<Customer>();
 
         public bool Exists(string name)
         {
-            return _db.Customers.Count(c => c.Name == name) > 0;
+            return _service.Exists(c => c.Name == name);
         }
 
         public Customer QuickCreate(string name)
         {
             var customer = new Customer { Name = name };
 
-            _db.Customers.Add(customer);
-            _db.SaveChanges();
+            _service.QuickCreateAndSave(customer);
 
             return customer;
         }
 
         public Customer Find(string name)
         {
-            return _db.Customers.Where(c => c.Name == name).SingleOrDefault();
+            return _service.Find(c => c.Name == name);
         }
     }
 }
