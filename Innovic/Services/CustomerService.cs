@@ -29,5 +29,8 @@ namespace Innovic.Services
         {
             return _service.Find(c => c.Name == name);
         }
+
+        //For now there is no need to create any process method 
+        //public Customer Process(Customer customer) { }
     }
 }
