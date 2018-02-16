@@ -1,5 +1,6 @@
 ﻿using Innovic.Models;
 using Innovic.Models.Master;
+using Innovic.Models.Sales;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,11 @@ namespace Innovic.Services
 {
     public class MaterialService
     {
-        private InnovicContext _db = new InnovicContext();
+        BaseService<Material> _service = new BaseService<Material>();
 
         public Material Find(string number)
         {
-            return _db.Materials.Where(m => m.Number == number).SingleOrDefault();
+            return _service.Find(m => m.Number == number);
         }
 
         public Material QuickCreate(string number, string description)
@@ -24,8 +25,7 @@ namespace Innovic.Services
                 Description = description
             };
 
-            _db.Materials.Add(material);
-            _db.SaveChanges();
+            _service.QuickCreateAndSave(material);
 
             return material;
         }
