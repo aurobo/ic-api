@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Innovic.Helpers
+namespace Innovic.App
 {
     public static class PickConfigurations
     {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Innovic.Helpers
+namespace Innovic.App
 {
-    public class AppConstants
+    public class Constants
     {
         public const string ApiVersion = "v1";
         public const string SalesOrderAbbr = "SO";

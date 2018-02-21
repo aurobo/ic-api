@@ -7,9 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Web;
 
-namespace Innovic.Services
+namespace Innovic.Infrastructure
 {
-    public class ExcelService
+    public class ExcelManager
     {
         private CustomerService _customerService = new CustomerService();
         private MaterialService _materialService = new MaterialService();

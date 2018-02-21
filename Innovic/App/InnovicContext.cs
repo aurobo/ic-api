@@ -6,7 +6,7 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 
-namespace Innovic.Models
+namespace Innovic.App
 {
     public class InnovicContext : IdentityDbContext<IdentityUser>
     {

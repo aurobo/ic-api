@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace Innovic.JModels
+namespace Innovic.Modules.Accounts.Options
 {
-    public class SetUser
+    public class UserOptions
     {
         [Required]
         [Display(Name = "User name")]

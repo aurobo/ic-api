@@ -6,7 +6,7 @@ using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Threading.Tasks;
 
-namespace Innovic.Services
+namespace Innovic.Modules.Accounts.Services
 {
     public class AccountService : IDisposable
     {
@@ -22,7 +22,7 @@ namespace Innovic.Services
             _userManager.UserTokenProvider = new DataProtectorTokenProvider<IdentityUser>(tokenProvider.Create("Email"));
         }
 
-        public async Task<IdentityResult> RegisterUser(SetUser setModel)
+        public async Task<IdentityResult> RegisterUser(UserOptions setModel)
         {
             IdentityUser user = new IdentityUser
             {

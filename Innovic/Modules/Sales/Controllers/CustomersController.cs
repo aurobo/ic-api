@@ -1,13 +1,12 @@
 ﻿using Innovic.Models;
 using Innovic.Models.Sales;
-using Red.Wine.Picker;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
 
-namespace Innovic.Controllers
+namespace Innovic.Modules.Sales.Controllers
 {
     [RoutePrefix("api/customers")]
     public class CustomersController : ApiController

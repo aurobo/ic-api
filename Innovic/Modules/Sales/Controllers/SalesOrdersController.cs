@@ -2,9 +2,7 @@
 using Innovic.Models;
 using Innovic.Models.Sales;
 using Innovic.Services;
-using Red.Wine.Picker;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -14,7 +12,7 @@ using System.Threading.Tasks;
 using System.Web.Hosting;
 using System.Web.Http;
 
-namespace Innovic.Controllers
+namespace Innovic.Modules.Sales.Controllers
 {
     [RoutePrefix("api/salesorders")]
     public class SalesOrdersController : ApiController
@@ -133,7 +131,7 @@ namespace Innovic.Controllers
             {
                 await Request.Content.ReadAsMultipartAsync(provider);
 
-                ExcelService excelService = new ExcelService();
+                ExcelManager excelService = new ExcelManager();
 
                 var salesOrder = excelService.ToSalesOrder(provider.FileData[0].LocalFileName);
 

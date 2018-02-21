@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace Innovic.Models.Master
+namespace Innovic.Modules.Master.Models
 {
     public class Material : BaseModel
     {

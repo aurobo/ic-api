@@ -7,7 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 
-namespace Innovic.Controllers
+namespace Innovic.Modules.Master.Controllers
 {
     [RoutePrefix("api/materials")]
     public class MaterialsController : ApiController

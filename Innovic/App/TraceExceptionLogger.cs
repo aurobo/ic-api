@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http.ExceptionHandling;
 
-namespace Innovic.Helpers
+namespace Innovic.App
 {
     public class TraceExceptionLogger : ExceptionLogger
     {
