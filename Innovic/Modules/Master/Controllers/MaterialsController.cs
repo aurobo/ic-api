@@ -1,5 +1,5 @@
-﻿using Innovic.Models;
-using Innovic.Models.Master;
+﻿using Innovic.App;
+using Innovic.Modules.Master.Models;
 using Red.Wine.Picker;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;

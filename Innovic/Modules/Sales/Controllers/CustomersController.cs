@@ -1,5 +1,7 @@
-﻿using Innovic.Models;
-using Innovic.Models.Sales;
+﻿using Innovic.App;
+using Innovic.Modules.Sales.Models;
+using Innovic.Modules.Sales.Options;
+using Red.Wine.Picker;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -11,18 +13,25 @@ namespace Innovic.Modules.Sales.Controllers
     [RoutePrefix("api/customers")]
     public class CustomersController : ApiController
     {
-        private InnovicContext _db = new InnovicContext();
+        private readonly InnovicContext _context;
+        private readonly GenericRepository<Customer> _customerRepository;
+
+        public CustomersController()
+        {
+            _context = new InnovicContext();
+            _customerRepository = new GenericRepository<Customer>(_context, RequestContext.Principal.Identity.GetUserId());
+        }
 
         [Route("")]
         public IHttpActionResult Get()
         {
-            return Ok(_db.Customers.ToPickDictionaryCollection(new PickConfig(true, true)));
+            return Ok(_customerRepository.Get().ToPickDictionaryCollection(new PickConfig(true, true)));
         }
 
         [Route("{id}")]
         public IHttpActionResult Get(string id)
         {
-            Customer customer = _db.Customers.Find(id);
+            Customer customer = _customerRepository.GetByID(id);
             if (customer == null)
             {
                 return NotFound();
@@ -32,23 +41,25 @@ namespace Innovic.Modules.Sales.Controllers
         }
 
         [Route("{id}")]
-        public IHttpActionResult Put(string id, Customer customer)
+        public IHttpActionResult Put(string id, CustomerUpdateOptions options)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != customer.Id)
+            if (id != options.Id)
             {
                 return BadRequest();
             }
 
-            _db.Entry(customer).State = EntityState.Modified;
+            Customer customer = _customerRepository.Update(options);
+
+            // Use Service
 
             try
             {
-                _db.SaveChanges();
+                _context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -66,18 +77,18 @@ namespace Innovic.Modules.Sales.Controllers
         }
 
         [Route("")]
-        public IHttpActionResult Post(Customer customer)
+        public IHttpActionResult Post(CustomerInsertOptions options)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _db.Customers.Add(customer);
+            Customer customer = _customerRepository.Insert(options);
 
             try
             {
-                _db.SaveChanges();
+                _context.SaveChanges();
             }
             catch (DbUpdateException)
             {
@@ -97,14 +108,14 @@ namespace Innovic.Modules.Sales.Controllers
         [Route("{id}")]
         public IHttpActionResult Delete(string id)
         {
-            Customer customer = _db.Customers.Find(id);
+            Customer customer = _context.Customers.Find(id);
             if (customer == null)
             {
                 return NotFound();
             }
 
-            _db.Customers.Remove(customer);
-            _db.SaveChanges();
+            _context.Customers.Remove(customer);
+            _context.SaveChanges();
 
             return Ok(customer);
         }
@@ -113,14 +124,14 @@ namespace Innovic.Modules.Sales.Controllers
         {
             if (disposing)
             {
-                _db.Dispose();
+                _context.Dispose();
             }
             base.Dispose(disposing);
         }
 
         private bool CustomerExists(string id)
         {
-            return _db.Customers.Count(e => e.Id == id) > 0;
+            return _context.Customers.Count(e => e.Id == id) > 0;
         }
     }
 }

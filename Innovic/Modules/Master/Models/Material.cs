@@ -1,14 +1,10 @@
-﻿using Innovic.Helpers;
+﻿using Innovic.App;
 using Red.Wine;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace Innovic.Modules.Master.Models
 {
-    public class Material : BaseModel
+    public class Material : WineModel
     {
         public string Number { get; set; }
         public string Description { get; set; }
@@ -18,7 +14,7 @@ namespace Innovic.Modules.Master.Models
         {
             get
             {
-                return (AppConstants.MaterialAbbr + AppConstants.KeySeparator + KeyId.ToString(AppConstants.FixedDigits));
+                return (Constants.MaterialAbbr + Constants.KeySeparator + KeyId.ToString(Constants.FixedDigits));
             }
         }
     }

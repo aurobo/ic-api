@@ -1,14 +1,12 @@
-﻿using Innovic.Helpers;
+﻿using Innovic.App;
 using Red.Wine;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace Innovic.Modules.Sales.Models
 {
-    public class SalesOrder : BaseModel
+    public class SalesOrder : WineModel
     {
         public SalesOrder()
         {
@@ -38,7 +36,7 @@ namespace Innovic.Modules.Sales.Models
         {
             get
             {
-                return (AppConstants.SalesOrderAbbr + AppConstants.KeySeparator + KeyId.ToString(AppConstants.FixedDigits));
+                return (Constants.SalesOrderAbbr + Constants.KeySeparator + KeyId.ToString(Constants.FixedDigits));
             }
         }
     }

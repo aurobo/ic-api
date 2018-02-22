@@ -1,7 +1,9 @@
 ﻿using ExcelDataReader;
-using Innovic.Modules.Master.Services;
+using Innovic.App;
+using Innovic.Modules.Master.Models;
+using Innovic.Modules.Master.Options;
 using Innovic.Modules.Sales.Models;
-using Innovic.Modules.Sales.Services;
+using Innovic.Modules.Sales.Options;
 using System;
 using System.IO;
 
@@ -9,8 +11,14 @@ namespace Innovic.Infrastructure
 {
     public class ExcelManager
     {
-        private CustomerService _customerService = new CustomerService();
-        private MaterialService _materialService = new MaterialService();
+        private readonly GenericRepository<Material> _materialRepository;
+        private readonly GenericRepository<Customer> _customerRepository;
+
+        public ExcelManager(InnovicContext context, string userId)
+        {
+            _materialRepository = new GenericRepository<Material>(context, userId);
+            _customerRepository = new GenericRepository<Customer>(context, userId);
+        }
 
         public SalesOrder ToSalesOrder(string filePath)
         {
@@ -36,11 +44,11 @@ namespace Innovic.Infrastructure
                         {
                             case "Customer":
                                 var customerName = value.ToString();
-                                Customer customer = _customerService.Find(customerName);
+                                Customer customer = _customerRepository.Find(c => c.Name.Equals(customerName));
 
                                 if (customer == null)
                                 {
-                                    customer = _customerService.QuickCreate(customerName);
+                                    customer = _customerRepository.Insert(new CustomerInsertOptions { Name = customerName });
                                 }
 
                                 salesOrder.CustomerId = customer.Id;
@@ -72,11 +80,11 @@ namespace Innovic.Infrastructure
                         var quantity = Convert.ToInt32(row["Quantity"]);
                         var unitPrice = Convert.ToDouble(row["Unit Price"]);
 
-                        Material material = _materialService.Find(materialNumber);
+                        Material material = _materialRepository.Find(m => m.Number.Equals(materialNumber));
 
                         if(material == null)
                         {
-                            material = _materialService.QuickCreate(materialNumber, description);
+                            material = _materialRepository.Insert(new MaterialInsertOptions { Number = materialNumber, Description = description });
                         }
 
                         var salesOrderItem = new SalesOrderItem

@@ -1,13 +1,9 @@
-﻿using Innovic.Models.Master;
+﻿using Innovic.Modules.Master.Models;
 using Red.Wine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Innovic.Modules.Sales.Models
 {
-    public class SalesOrderItem : BaseModel
+    public class SalesOrderItem : WineModel
     {
         public string Number { get; set; }
 

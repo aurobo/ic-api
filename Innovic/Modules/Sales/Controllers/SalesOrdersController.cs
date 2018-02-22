@@ -1,7 +1,9 @@
-﻿using Innovic.Helpers;
-using Innovic.Models;
-using Innovic.Models.Sales;
-using Innovic.Services;
+﻿using Innovic.App;
+using Innovic.Infrastructure;
+using Innovic.Modules.Sales.Models;
+using Innovic.Modules.Sales.Options;
+using Microsoft.AspNet.Identity;
+using Red.Wine.Picker;
 using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -17,18 +19,27 @@ namespace Innovic.Modules.Sales.Controllers
     [RoutePrefix("api/salesorders")]
     public class SalesOrdersController : ApiController
     {
-        private InnovicContext _db = new InnovicContext();
+        private readonly InnovicContext _context;
+        private readonly string _userId;
+        private readonly GenericRepository<SalesOrder> _salesOrderRepository;
+
+        public SalesOrdersController()
+        {
+            _context = new InnovicContext();
+            _userId = RequestContext.Principal.Identity.GetUserId();
+            _salesOrderRepository = new GenericRepository<SalesOrder>(_context, _userId);
+        }
 
         [Route("")]
         public IHttpActionResult Get()
         {
-            return Ok(_db.SalesOrders.ToPickDictionaryCollection(PickConfigurations.SalesOrders));
+            return Ok(_salesOrderRepository.Get().ToPickDictionaryCollection(PickConfigurations.SalesOrders));
         }
 
         [Route("{id}")]
         public IHttpActionResult Get(string id)
         {
-            SalesOrder salesOrder = _db.SalesOrders.Find(id);
+            SalesOrder salesOrder = _salesOrderRepository.GetByID(id);
 
             if (salesOrder == null)
             {
@@ -39,23 +50,23 @@ namespace Innovic.Modules.Sales.Controllers
         }
 
         [Route("{id}")]
-        public IHttpActionResult Put(string id, SalesOrder salesOrder)
+        public IHttpActionResult Put(string id, SalesOrderUpdateOptions options)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != salesOrder.Id)
+            if (id != options.Id)
             {
                 return BadRequest();
             }
 
-            _db.Entry(salesOrder).State = EntityState.Modified;
+            SalesOrder salesOrder = _salesOrderRepository.Update(options);
 
             try
             {
-                _db.SaveChanges();
+                _context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -73,18 +84,18 @@ namespace Innovic.Modules.Sales.Controllers
         }
 
         [Route("")]
-        public IHttpActionResult Post(SalesOrder salesOrder)
+        public IHttpActionResult Post(SalesOrderInsertOptions options)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _db.SalesOrders.Add(salesOrder);
+            SalesOrder salesOrder = _salesOrderRepository.Insert(options);
             
             try
             {
-                _db.SaveChanges();
+                _context.SaveChanges();
             }
             catch (DbUpdateException)
             {
@@ -104,14 +115,14 @@ namespace Innovic.Modules.Sales.Controllers
         [Route("{id}")]
         public IHttpActionResult Delete(string id)
         {
-            SalesOrder salesOrder = _db.SalesOrders.Find(id);
+            SalesOrder salesOrder = _context.SalesOrders.Find(id);
             if (salesOrder == null)
             {
                 return NotFound();
             }
 
-            _db.SalesOrders.Remove(salesOrder);
-            _db.SaveChanges();
+            _context.SalesOrders.Remove(salesOrder);
+            _context.SaveChanges();
 
             return Ok(salesOrder);
         }
@@ -131,15 +142,15 @@ namespace Innovic.Modules.Sales.Controllers
             {
                 await Request.Content.ReadAsMultipartAsync(provider);
 
-                ExcelManager excelService = new ExcelManager();
+                ExcelManager excelManager = new ExcelManager(_context, _userId);
 
-                var salesOrder = excelService.ToSalesOrder(provider.FileData[0].LocalFileName);
+                var salesOrder = excelManager.ToSalesOrder(provider.FileData[0].LocalFileName);
 
-                _db.SalesOrders.Add(salesOrder);
+                _context.SalesOrders.Add(salesOrder);
 
                 try
                 {
-                    _db.SaveChanges();
+                    _context.SaveChanges();
                 }
                 catch (DbUpdateException)
                 {
@@ -170,14 +181,14 @@ namespace Innovic.Modules.Sales.Controllers
         {
             if (disposing)
             {
-                _db.Dispose();
+                _context.Dispose();
             }
             base.Dispose(disposing);
         }
 
         private bool SalesOrderExists(string id)
         {
-            return _db.SalesOrders.Count(e => e.Id == id) > 0;
+            return _context.SalesOrders.Count(e => e.Id == id) > 0;
         }
     }
 }

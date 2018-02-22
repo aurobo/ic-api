@@ -1,36 +1,36 @@
-﻿using Innovic.Models;
-using Innovic.Models.Sales;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Web;
+using Innovic.App;
+using Innovic.Modules.Sales.Models;
 
 namespace Innovic.Modules.Sales.Services
 {
     public class CustomerService
     {
-        BaseService<Customer> _service = new BaseService<Customer>();
+        //private readonly InnovicContext _context;
 
-        public bool Exists(string name)
-        {
-            return _service.Exists(c => c.Name == name);
-        }
+        //public CustomerService()
+        //{
+        //    _context = new InnovicContext();
+        //}
 
-        public Customer QuickCreate(string name)
-        {
-            var customer = new Customer { Name = name };
+        //public Customer Find(string customerName)
+        //{
+        //    return _context.Customers.Where(c => c.Name.Equals(customerName)).SingleOrDefault();
+        //}
 
-            _service.QuickCreateAndSave(customer);
+        //public Customer QuickCreate(string customerName)
+        //{
+        //    var customer = new Customer
+        //    {
+        //        Name = customerName
+        //    };
 
-            return customer;
-        }
+        //    _context.Customers.Add(customer);
 
-        public Customer Find(string name)
-        {
-            return _service.Find(c => c.Name == name);
-        }
+        //    _context.SaveChanges();
 
-        //For now there is no need to create any process method 
-        //public Customer Process(Customer customer) { }
+        //    return customer;
+        //}
     }
 }
