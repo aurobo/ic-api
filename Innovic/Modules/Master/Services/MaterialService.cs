@@ -1,16 +1,10 @@
-﻿using Innovic.Models;
-using Innovic.Models.Master;
-using Innovic.Models.Sales;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Innovic.Modules.Master.Models;
 
 namespace Innovic.Modules.Master.Services
 {
     public class MaterialService
     {
-        BaseService<Material> _service = new BaseService<Material>();
+        MaterialService _service = new MaterialService();
 
         public Material Find(string number)
         {

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Innovic.Modules.Sales.Models
 {
-    public class Customer : BaseModel
+    public class Customer : WineModel
     {
         public string Name { get; set; }
 

@@ -1,5 +1,5 @@
-﻿using Innovic.JModels;
-using Innovic.Models;
+﻿using Innovic.App;
+using Innovic.Modules.Accounts.Options;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;

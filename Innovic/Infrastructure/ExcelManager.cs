@@ -1,11 +1,9 @@
 ﻿using ExcelDataReader;
-using Innovic.Models.Master;
-using Innovic.Models.Sales;
+using Innovic.Modules.Master.Services;
+using Innovic.Modules.Sales.Models;
+using Innovic.Modules.Sales.Services;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Web;
 
 namespace Innovic.Infrastructure
 {

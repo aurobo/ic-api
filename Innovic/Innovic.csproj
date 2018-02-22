@@ -143,10 +143,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\index.md" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -155,35 +152,36 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\index.md" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="App\AuthProvider.cs" />
-    <Compile Include="Modules\Master\Controllers\MaterialsController.cs" />
-    <Compile Include="Modules\Sales\Controllers\CustomersController.cs" />
-    <Compile Include="Modules\Sales\Controllers\SalesOrdersController.cs" />
     <Compile Include="App\Constants.cs" />
+    <Compile Include="App\InnovicContext.cs" />
     <Compile Include="App\PickConfigurations.cs" />
     <Compile Include="App\TraceExceptionLogger.cs" />
-    <Compile Include="Modules\Accounts\Options\UserOptions.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Infrastructure\ExcelManager.cs" />
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="App\InnovicContext.cs" />
+    <Compile Include="Modules\Accounts\Options\UserOptions.cs" />
+    <Compile Include="Modules\Accounts\Services\AccountService.cs" />
+    <Compile Include="Modules\Master\Controllers\MaterialsController.cs" />
     <Compile Include="Modules\Master\Models\Material.cs" />
+    <Compile Include="Modules\Master\Services\MaterialService.cs" />
+    <Compile Include="Modules\Sales\Controllers\CustomersController.cs" />
+    <Compile Include="Modules\Sales\Controllers\SalesOrdersController.cs" />
     <Compile Include="Modules\Sales\Models\Customer.cs" />
     <Compile Include="Modules\Sales\Models\SalesOrder.cs" />
     <Compile Include="Modules\Sales\Models\SalesOrderItem.cs" />
     <Compile Include="Modules\Sales\Models\SalesOrderStatus.cs" />
     <Compile Include="Modules\Sales\Options\SalesOrderInsertOptions.cs" />
     <Compile Include="Modules\Sales\Options\SalesOrderItemInsertOptions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Modules\Sales\Services\CustomerService.cs" />
-    <Compile Include="Infrastructure\ExcelManager.cs" />
-    <Compile Include="Modules\Master\Services\MaterialService.cs" />
     <Compile Include="Modules\Sales\Services\SalesOrderService.cs" />
-    <Compile Include="Modules\Accounts\Services\AccountService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup />
