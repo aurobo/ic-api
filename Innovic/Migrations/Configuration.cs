@@ -1,5 +1,5 @@
+using Innovic.App;
 using System.Data.Entity.Migrations;
-using Innovic.Models;
 
 namespace Innovic.Migrations
 {

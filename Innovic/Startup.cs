@@ -1,8 +1,7 @@
-﻿using Innovic.Models;
+﻿using Innovic.App;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.Security.OAuth;
-using Newtonsoft.Json;
 using Owin;
 using System;
 using System.Data.Entity;
