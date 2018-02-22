@@ -2,11 +2,12 @@
 using Innovic.Infrastructure;
 using Innovic.Modules.Sales.Models;
 using Innovic.Modules.Sales.Options;
+using Innovic.Modules.Sales.ProcessFlows;
+using Innovic.Modules.Sales.Services;
 using Microsoft.AspNet.Identity;
 using Red.Wine;
 using Red.Wine.Picker;
 using System;
-using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
@@ -34,20 +35,19 @@ namespace Innovic.Modules.Sales.Controllers
         [Route("")]
         public IHttpActionResult Get()
         {
-            return Ok(_salesOrderRepository.Get().ToPickDictionaryCollection(PickConfigurations.SalesOrders));
+            return Ok(_salesOrderRepository.Get().ToPickDictionaryCollection(new PickConfig(true, true)));
         }
 
         [Route("{id}")]
         public IHttpActionResult Get(string id)
         {
             SalesOrder salesOrder = _salesOrderRepository.GetByID(id);
-
             if (salesOrder == null)
             {
                 return NotFound();
             }
 
-            return Ok(salesOrder.ToPickDictionary(PickConfigurations.SalesOrder));
+            return Ok(salesOrder.ToPickDictionary(new PickConfig(true, true)));
         }
 
         [Route("{id}")]
@@ -66,6 +66,8 @@ namespace Innovic.Modules.Sales.Controllers
             SalesOrder existingSalesOrder = _salesOrderRepository.GetByID(id);
             SalesOrder updatedSalesOrder = _salesOrderRepository.UpdateExistingWineModel(existingSalesOrder, options);
             _context.SalesOrders.Attach(updatedSalesOrder);
+
+            SalesOrderService.Process(updatedSalesOrder, SalesOrderFlow.Update);
 
             try
             {
@@ -97,7 +99,9 @@ namespace Innovic.Modules.Sales.Controllers
 
             SalesOrder salesOrder = _salesOrderRepository.CreateNewWineModel(options);
             _context.SalesOrders.Add(salesOrder);
-            
+
+            SalesOrderService.Process(salesOrder, SalesOrderFlow.Insert);
+
             try
             {
                 _context.UpdateContextWithDefaultValues(_userId);
@@ -115,13 +119,13 @@ namespace Innovic.Modules.Sales.Controllers
                 }
             }
 
-            return Ok(salesOrder);
+            return Ok(salesOrder.ToPickDictionary(new PickConfig(true, true)));
         }
 
         [Route("{id}")]
         public IHttpActionResult Delete(string id)
         {
-            SalesOrder salesOrder = _context.SalesOrders.Find(id);
+            SalesOrder salesOrder = _salesOrderRepository.GetByID(id);
             if (salesOrder == null)
             {
                 return NotFound();
@@ -130,7 +134,7 @@ namespace Innovic.Modules.Sales.Controllers
             _context.SalesOrders.Remove(salesOrder);
             _context.SaveChanges();
 
-            return Ok(salesOrder);
+            return Ok(salesOrder.ToPickDictionary(new PickConfig(true, true)));
         }
 
         [HttpPost]
@@ -151,11 +155,13 @@ namespace Innovic.Modules.Sales.Controllers
                 ExcelManager excelManager = new ExcelManager(_context, _userId);
 
                 var salesOrder = excelManager.ToSalesOrder(provider.FileData[0].LocalFileName);
-
                 _context.SalesOrders.Add(salesOrder);
+
+                SalesOrderService.Process(salesOrder, SalesOrderFlow.ImportExcel);
 
                 try
                 {
+                    _context.UpdateContextWithDefaultValues(_userId);
                     _context.SaveChanges();
                 }
                 catch (DbUpdateException)

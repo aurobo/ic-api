@@ -162,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App\AuthProvider.cs" />
+    <Compile Include="App\BaseOptionsModel.cs" />
     <Compile Include="App\GenericRepository.cs" />
     <Compile Include="App\Constants.cs" />
     <Compile Include="App\InnovicContext.cs" />
@@ -188,6 +189,8 @@
     <Compile Include="Modules\Sales\Options\SalesOrderInsertOptions.cs" />
     <Compile Include="Modules\Sales\Options\SalesOrderItemInsertOptions.cs" />
     <Compile Include="Modules\Sales\Options\SalesOrderUpdateOptions.cs" />
+    <Compile Include="Modules\Sales\ProcessFlows\SalesOrderFlow.cs" />
+    <Compile Include="Modules\Sales\ProcessFlows\CustomerFlow.cs" />
     <Compile Include="Modules\Sales\Services\CustomerService.cs" />
     <Compile Include="Modules\Sales\Services\SalesOrderService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

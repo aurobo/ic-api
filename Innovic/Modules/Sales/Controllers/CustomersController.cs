@@ -1,10 +1,11 @@
 ﻿using Innovic.App;
 using Innovic.Modules.Sales.Models;
 using Innovic.Modules.Sales.Options;
+using Innovic.Modules.Sales.ProcessFlows;
+using Innovic.Modules.Sales.Services;
 using Microsoft.AspNet.Identity;
 using Red.Wine;
 using Red.Wine.Picker;
-using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
@@ -41,7 +42,7 @@ namespace Innovic.Modules.Sales.Controllers
                 return NotFound();
             }
 
-            return Ok(customer);
+            return Ok(customer.ToPickDictionary(new PickConfig(true, true)));
         }
 
         [Route("{id}")]
@@ -59,8 +60,9 @@ namespace Innovic.Modules.Sales.Controllers
 
             Customer existingCustomer = _customerRepository.GetByID(id);
             Customer updatedCustomer = _customerRepository.UpdateExistingWineModel(existingCustomer, options);
+            _context.Customers.Attach(updatedCustomer);
 
-            // Use Service
+            CustomerService.Process(updatedCustomer, CustomerFlow.Update);
 
             try
             {
@@ -93,8 +95,11 @@ namespace Innovic.Modules.Sales.Controllers
             Customer customer = _customerRepository.CreateNewWineModel(options);
             _context.Customers.Add(customer);
 
+            CustomerService.Process(customer, CustomerFlow.Insert);
+
             try
             {
+                _context.UpdateContextWithDefaultValues(_userId);
                 _context.SaveChanges();
             }
             catch (DbUpdateException)
@@ -109,13 +114,13 @@ namespace Innovic.Modules.Sales.Controllers
                 }
             }
 
-            return Ok(customer);
+            return Ok(customer.ToPickDictionary(new PickConfig(true, true)));
         }
 
         [Route("{id}")]
         public IHttpActionResult Delete(string id)
         {
-            Customer customer = _context.Customers.Find(id);
+            Customer customer = _customerRepository.GetByID(id);
             if (customer == null)
             {
                 return NotFound();
@@ -124,7 +129,7 @@ namespace Innovic.Modules.Sales.Controllers
             _context.Customers.Remove(customer);
             _context.SaveChanges();
 
-            return Ok(customer);
+            return Ok(customer.ToPickDictionary(new PickConfig(true, true)));
         }
 
         protected override void Dispose(bool disposing)

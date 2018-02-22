@@ -1,7 +1,9 @@
 ﻿using Innovic.App;
 using Innovic.Modules.Master.Models;
+using Innovic.Modules.Master.Options;
+using Microsoft.AspNet.Identity;
+using Red.Wine;
 using Red.Wine.Picker;
-using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
@@ -12,44 +14,58 @@ namespace Innovic.Modules.Master.Controllers
     [RoutePrefix("api/materials")]
     public class MaterialsController : ApiController
     {
-        private InnovicContext _db = new InnovicContext();
+        private readonly InnovicContext _context;
+        private readonly string _userId;
+        private readonly GenericRepository<Material> _materialRepository;
+
+        public MaterialsController()
+        {
+            _context = new InnovicContext();
+            _userId = RequestContext.Principal.Identity.GetUserId();
+            _materialRepository = new GenericRepository<Material>(_context, _userId);
+        }
 
         [Route("")]
         public IHttpActionResult Get()
         {
-            return Ok(_db.Materials.ToPickDictionaryCollection(new PickConfig(true, true)));
+            return Ok(_materialRepository.Get().ToPickDictionaryCollection(new PickConfig(true, true)));
         }
 
         [Route("{id}")]
         public IHttpActionResult Get(string id)
         {
-            Material material = _db.Materials.Find(id);
+            Material material = _materialRepository.GetByID(id);
             if (material == null)
             {
                 return NotFound();
             }
 
-            return Ok(material);
+            return Ok(material.ToPickDictionary(new PickConfig(true, true)));
         }
 
         [Route("{id}")]
-        public IHttpActionResult Put(string id, Material material)
+        public IHttpActionResult Put(string id, MaterialUpdateOptions options)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != material.Id)
+            if (id != options.Id)
             {
                 return BadRequest();
             }
 
-            _db.Entry(material).State = EntityState.Modified;
+            Material existingMaterial = _materialRepository.GetByID(id);
+            Material updatedMaterial = _materialRepository.UpdateExistingWineModel(existingMaterial, options);
+            _context.Materials.Attach(updatedMaterial);
+
+            // Service calls go here
 
             try
             {
-                _db.SaveChanges();
+                _context.UpdateContextWithDefaultValues(_userId);
+                _context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -67,18 +83,22 @@ namespace Innovic.Modules.Master.Controllers
         }
 
         [Route("")]
-        public IHttpActionResult Post(Material material)
+        public IHttpActionResult Post(MaterialInsertOptions options)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _db.Materials.Add(material);
+            Material material = _materialRepository.CreateNewWineModel(options);
+            _context.Materials.Add(material);
+
+            // Service calls go here
 
             try
             {
-                _db.SaveChanges();
+                _context.UpdateContextWithDefaultValues(_userId);
+                _context.SaveChanges();
             }
             catch (DbUpdateException)
             {
@@ -92,36 +112,36 @@ namespace Innovic.Modules.Master.Controllers
                 }
             }
 
-            return Ok(material);
+            return Ok(material.ToPickDictionary(new PickConfig(true, true)));
         }
 
         [Route("{id}")]
         public IHttpActionResult Delete(string id)
         {
-            Material material = _db.Materials.Find(id);
+            Material material = _materialRepository.GetByID(id);
             if (material == null)
             {
                 return NotFound();
             }
 
-            _db.Materials.Remove(material);
-            _db.SaveChanges();
+            _context.Materials.Remove(material);
+            _context.SaveChanges();
 
-            return Ok(material);
+            return Ok(material.ToPickDictionary(new PickConfig(true, true)));
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                _db.Dispose();
+                _context.Dispose();
             }
             base.Dispose(disposing);
         }
 
         private bool MaterialExists(string id)
         {
-            return _db.Materials.Count(e => e.Id == id) > 0;
+            return _context.Materials.Count(e => e.Id == id) > 0;
         }
     }
 }
