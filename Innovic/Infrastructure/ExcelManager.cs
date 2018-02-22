@@ -48,7 +48,7 @@ namespace Innovic.Infrastructure
 
                                 if (customer == null)
                                 {
-                                    customer = _customerRepository.Insert(new CustomerInsertOptions { Name = customerName });
+                                    customer = _customerRepository.CreateNewWineModel(new CustomerInsertOptions { Name = customerName });
                                 }
 
                                 salesOrder.CustomerId = customer.Id;
@@ -84,7 +84,7 @@ namespace Innovic.Infrastructure
 
                         if(material == null)
                         {
-                            material = _materialRepository.Insert(new MaterialInsertOptions { Number = materialNumber, Description = description });
+                            material = _materialRepository.CreateNewWineModel(new MaterialInsertOptions { Number = materialNumber, Description = description });
                         }
 
                         var salesOrderItem = new SalesOrderItem

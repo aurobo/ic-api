@@ -24,6 +24,6 @@ namespace Innovic.App
         public InnovicContext Create()
         {
             return new InnovicContext();
-        }       
+        }
     }
 }

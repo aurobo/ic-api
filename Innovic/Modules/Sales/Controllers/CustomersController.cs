@@ -1,6 +1,8 @@
 ﻿using Innovic.App;
 using Innovic.Modules.Sales.Models;
 using Innovic.Modules.Sales.Options;
+using Microsoft.AspNet.Identity;
+using Red.Wine;
 using Red.Wine.Picker;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -14,12 +16,14 @@ namespace Innovic.Modules.Sales.Controllers
     public class CustomersController : ApiController
     {
         private readonly InnovicContext _context;
+        private readonly string _userId;
         private readonly GenericRepository<Customer> _customerRepository;
 
         public CustomersController()
         {
             _context = new InnovicContext();
-            _customerRepository = new GenericRepository<Customer>(_context, RequestContext.Principal.Identity.GetUserId());
+            _userId = RequestContext.Principal.Identity.GetUserId();
+            _customerRepository = new GenericRepository<Customer>(_context, _userId);
         }
 
         [Route("")]
@@ -53,12 +57,14 @@ namespace Innovic.Modules.Sales.Controllers
                 return BadRequest();
             }
 
-            Customer customer = _customerRepository.Update(options);
+            Customer existingCustomer = _customerRepository.GetByID(id);
+            Customer updatedCustomer = _customerRepository.UpdateExistingWineModel(existingCustomer, options);
 
             // Use Service
 
             try
             {
+                _context.UpdateContextWithDefaultValues(_userId);
                 _context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
@@ -84,7 +90,8 @@ namespace Innovic.Modules.Sales.Controllers
                 return BadRequest(ModelState);
             }
 
-            Customer customer = _customerRepository.Insert(options);
+            Customer customer = _customerRepository.CreateNewWineModel(options);
+            _context.Customers.Add(customer);
 
             try
             {

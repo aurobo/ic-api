@@ -3,6 +3,7 @@ using Innovic.Infrastructure;
 using Innovic.Modules.Sales.Models;
 using Innovic.Modules.Sales.Options;
 using Microsoft.AspNet.Identity;
+using Red.Wine;
 using Red.Wine.Picker;
 using System;
 using System.Data.Entity;
@@ -62,10 +63,13 @@ namespace Innovic.Modules.Sales.Controllers
                 return BadRequest();
             }
 
-            SalesOrder salesOrder = _salesOrderRepository.Update(options);
+            SalesOrder existingSalesOrder = _salesOrderRepository.GetByID(id);
+            SalesOrder updatedSalesOrder = _salesOrderRepository.UpdateExistingWineModel(existingSalesOrder, options);
+            _context.SalesOrders.Attach(updatedSalesOrder);
 
             try
             {
+                _context.UpdateContextWithDefaultValues(_userId);
                 _context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
@@ -91,10 +95,12 @@ namespace Innovic.Modules.Sales.Controllers
                 return BadRequest(ModelState);
             }
 
-            SalesOrder salesOrder = _salesOrderRepository.Insert(options);
+            SalesOrder salesOrder = _salesOrderRepository.CreateNewWineModel(options);
+            _context.SalesOrders.Add(salesOrder);
             
             try
             {
+                _context.UpdateContextWithDefaultValues(_userId);
                 _context.SaveChanges();
             }
             catch (DbUpdateException)
