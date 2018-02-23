@@ -18,7 +18,7 @@ using System.Web.Http;
 
 namespace Innovic.Modules.Sales.Controllers
 {
-    [RoutePrefix("api/salesorders")]
+    [RoutePrefix("api/SalesOrders")]
     public class SalesOrdersController : ApiController
     {
         private readonly InnovicContext _context;

@@ -11,7 +11,7 @@ using System.Web.Http;
 
 namespace Innovic.Modules.Master.Controllers
 {
-    [RoutePrefix("api/materials")]
+    [RoutePrefix("api/Materials")]
     public class MaterialsController : ApiController
     {
         private readonly InnovicContext _context;
