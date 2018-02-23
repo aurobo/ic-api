@@ -6,16 +6,19 @@ using Innovic.Modules.Sales.Models;
 using Innovic.Modules.Sales.Options;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace Innovic.Infrastructure
 {
     public class ExcelManager
     {
+        private readonly InnovicContext _context;
         private readonly GenericRepository<Material> _materialRepository;
         private readonly GenericRepository<Customer> _customerRepository;
 
         public ExcelManager(InnovicContext context, string userId)
         {
+            _context = context;
             _materialRepository = new GenericRepository<Material>(context, userId);
             _customerRepository = new GenericRepository<Customer>(context, userId);
         }
@@ -44,7 +47,7 @@ namespace Innovic.Infrastructure
                         {
                             case "Customer":
                                 var customerName = value.ToString();
-                                Customer customer = _customerRepository.Find(c => c.Name.Equals(customerName));
+                                Customer customer = _context.Customers.Where(c => c.Name.Equals(customerName)).SingleOrDefault();
 
                                 if (customer == null)
                                 {
@@ -80,7 +83,7 @@ namespace Innovic.Infrastructure
                         var quantity = Convert.ToInt32(row["Quantity"]);
                         var unitPrice = Convert.ToDouble(row["Unit Price"]);
 
-                        Material material = _materialRepository.Find(m => m.Number.Equals(materialNumber));
+                        Material material = _context.Materials.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
 
                         if(material == null)
                         {

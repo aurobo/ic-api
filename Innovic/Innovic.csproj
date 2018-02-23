@@ -155,6 +155,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".gitignore" />
     <Content Include="App_Data\index.md" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

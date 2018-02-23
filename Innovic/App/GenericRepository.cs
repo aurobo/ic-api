@@ -20,10 +20,5 @@ namespace Innovic.App
             _userId = userId;
             _dbSet = _context.Set<TEntity>();
         }
-
-        public TEntity Find(Expression<Func<TEntity, bool>> expression)
-        {
-            return _dbSet.Find(expression);
-        }
     }
 }
