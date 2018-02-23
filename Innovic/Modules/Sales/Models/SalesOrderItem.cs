@@ -19,6 +19,8 @@ namespace Innovic.Modules.Sales.Models
 
         public string SalesOrderId { get; set; }
 
+        public bool IsDeleted { get; set; } // Shift to WineModel
+
         public virtual SalesOrder SalesOrder { get; set; }
         public virtual Material Material { get; set; }
     }

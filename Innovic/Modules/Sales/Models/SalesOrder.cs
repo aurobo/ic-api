@@ -27,6 +27,8 @@ namespace Innovic.Modules.Sales.Models
 
         public SalesOrderStatus Status { get; set; }
 
+        public bool IsDeleted { get; set; } // Shift to WineModel
+
         public virtual Customer Customer { get; set; }
 
         public virtual List<SalesOrderItem> SalesOrderItems { get; set; }
