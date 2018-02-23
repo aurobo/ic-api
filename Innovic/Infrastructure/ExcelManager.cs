@@ -47,12 +47,17 @@ namespace Innovic.Infrastructure
                         {
                             case "Customer":
                                 var customerName = value.ToString();
-                                Customer customer = _context.Customers.Where(c => c.Name.Equals(customerName)).SingleOrDefault();
+                                Customer customer = _context.Customers.Local.Where(c => c.Name.Equals(customerName)).SingleOrDefault();
 
                                 if (customer == null)
                                 {
-                                    customer = _customerRepository.CreateNewWineModel(new CustomerInsertOptions { Name = customerName });
-                                    _context.Customers.Add(customer);
+                                    customer = _context.Customers.Where(c => c.Name.Equals(customerName)).SingleOrDefault();
+
+                                    if(customer == null)
+                                    {
+                                        customer = _customerRepository.CreateNewWineModel(new CustomerInsertOptions { Name = customerName });
+                                        _context.Customers.Add(customer);
+                                    }
                                 }
 
                                 salesOrder.CustomerId = customer.Id;
@@ -84,12 +89,17 @@ namespace Innovic.Infrastructure
                         var quantity = Convert.ToInt32(row["Quantity"]);
                         var unitPrice = Convert.ToDouble(row["Unit Price"]);
 
-                        Material material = _context.Materials.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
+                        Material material = _context.Materials.Local.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
 
                         if(material == null)
                         {
-                            material = _materialRepository.CreateNewWineModel(new MaterialInsertOptions { Number = materialNumber, Description = description });
-                            _context.Materials.Add(material);
+                            material = _context.Materials.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
+
+                            if(material == null)
+                            {
+                                material = _materialRepository.CreateNewWineModel(new MaterialInsertOptions { Number = materialNumber, Description = description });
+                                _context.Materials.Add(material);
+                            }
                         }
 
                         var salesOrderItem = new SalesOrderItem

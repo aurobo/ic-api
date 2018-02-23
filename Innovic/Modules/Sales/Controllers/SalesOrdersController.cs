@@ -35,7 +35,7 @@ namespace Innovic.Modules.Sales.Controllers
         [Route("")]
         public IHttpActionResult Get()
         {
-            return Ok(_salesOrderRepository.Get().ToPickDictionaryCollection(new PickConfig(true, true)));
+            return Ok(_salesOrderRepository.Get().ToPickDictionaryCollection(PickConfigurations.SalesOrders));
         }
 
         [Route("{id}")]
@@ -47,7 +47,7 @@ namespace Innovic.Modules.Sales.Controllers
                 return NotFound();
             }
 
-            return Ok(salesOrder.ToPickDictionary(new PickConfig(true, true)));
+            return Ok(salesOrder.ToPickDictionary(PickConfigurations.SalesOrder));
         }
 
         [Route("{id}")]
