@@ -1,4 +1,7 @@
 using Innovic.App;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Data.Entity.Migrations;
 
 namespace Innovic.Migrations
@@ -12,10 +15,17 @@ namespace Innovic.Migrations
 
         protected override void Seed(InnovicContext context)
         {
-            //  This method will be called after migrating to the latest version.
+            PasswordHasher hasher = new PasswordHasher();
 
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data.
+            context.Users.AddOrUpdate(
+                x => x.UserName,
+                new IdentityUser
+                {
+                    UserName = "admin",
+                    PasswordHash = hasher.HashPassword("Admin123!"),
+                    SecurityStamp = new Guid().ToString()
+                }
+            );
         }
     }
 }

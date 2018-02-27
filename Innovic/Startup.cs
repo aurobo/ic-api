@@ -38,7 +38,7 @@ namespace Innovic
             OAuthAuthorizationServerOptions options = new OAuthAuthorizationServerOptions()
             {
                 AllowInsecureHttp = true,
-                TokenEndpointPath = new PathString("/token"),
+                TokenEndpointPath = new PathString("/api/token"),
                 AccessTokenExpireTimeSpan = new TimeSpan(24, 0, 0),
                 Provider = new AuthProvider()
             };
