@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Innovic.Modules.Sales.Models
 {
-    public class SalesOrder : WineModel
+    public class SalesOrder : BaseModel
     {
         public SalesOrder()
         {
@@ -26,8 +26,6 @@ namespace Innovic.Modules.Sales.Models
         public string CustomerId { get; set; }
 
         public SalesOrderStatus Status { get; set; }
-
-        public bool IsDeleted { get; set; } // Shift to WineModel
 
         public virtual Customer Customer { get; set; }
 

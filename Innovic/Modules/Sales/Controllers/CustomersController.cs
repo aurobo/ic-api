@@ -18,13 +18,13 @@ namespace Innovic.Modules.Sales.Controllers
     {
         private readonly InnovicContext _context;
         private readonly string _userId;
-        private readonly GenericRepository<Customer> _customerRepository;
+        private readonly BaseRepository<Customer> _customerRepository;
 
         public CustomersController()
         {
             _context = new InnovicContext();
             _userId = RequestContext.Principal.Identity.GetUserId();
-            _customerRepository = new GenericRepository<Customer>(_context, _userId);
+            _customerRepository = new BaseRepository<Customer>(_context, _userId);
         }
 
         [Route("")]

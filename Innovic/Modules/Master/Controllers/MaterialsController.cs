@@ -16,13 +16,13 @@ namespace Innovic.Modules.Master.Controllers
     {
         private readonly InnovicContext _context;
         private readonly string _userId;
-        private readonly GenericRepository<Material> _materialRepository;
+        private readonly BaseRepository<Material> _materialRepository;
 
         public MaterialsController()
         {
             _context = new InnovicContext();
             _userId = RequestContext.Principal.Identity.GetUserId();
-            _materialRepository = new GenericRepository<Material>(_context, _userId);
+            _materialRepository = new BaseRepository<Material>(_context, _userId);
         }
 
         [Route("")]

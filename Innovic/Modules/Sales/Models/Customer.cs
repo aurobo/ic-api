@@ -4,10 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Innovic.Modules.Sales.Models
 {
-    public class Customer : WineModel
+    public class Customer : BaseModel
     {
         public string Name { get; set; }
-        public bool IsDeleted { get; set; } // Shift to WineModel
 
         [NotMapped]
         public string Key

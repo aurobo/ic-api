@@ -1,9 +1,9 @@
-﻿using Innovic.Modules.Master.Models;
-using Red.Wine;
+﻿using Innovic.App;
+using Innovic.Modules.Master.Models;
 
 namespace Innovic.Modules.Sales.Models
 {
-    public class SalesOrderItem : WineModel
+    public class SalesOrderItem : BaseModel
     {
         public string Number { get; set; }
 
@@ -18,8 +18,6 @@ namespace Innovic.Modules.Sales.Models
         public string MaterialId { get; set; }
 
         public string SalesOrderId { get; set; }
-
-        public bool IsDeleted { get; set; } // Shift to WineModel
 
         public virtual SalesOrder SalesOrder { get; set; }
         public virtual Material Material { get; set; }

@@ -13,14 +13,14 @@ namespace Innovic.Infrastructure
     public class ExcelManager
     {
         private readonly InnovicContext _context;
-        private readonly GenericRepository<Material> _materialRepository;
-        private readonly GenericRepository<Customer> _customerRepository;
+        private readonly BaseRepository<Material> _materialRepository;
+        private readonly BaseRepository<Customer> _customerRepository;
 
         public ExcelManager(InnovicContext context, string userId)
         {
             _context = context;
-            _materialRepository = new GenericRepository<Material>(context, userId);
-            _customerRepository = new GenericRepository<Customer>(context, userId);
+            _materialRepository = new BaseRepository<Material>(context, userId);
+            _customerRepository = new BaseRepository<Customer>(context, userId);
         }
 
         public SalesOrder ToSalesOrder(string filePath)

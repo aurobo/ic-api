@@ -8,13 +8,13 @@ using System.Web;
 
 namespace Innovic.App
 {
-    public class GenericRepository<TEntity> : WineRepository<TEntity> where TEntity : WineModel
+    public class BaseRepository<TEntity> : WineRepository<TEntity> where TEntity : WineModel
     {
         private readonly InnovicContext _context;
         private readonly string _userId;
         private readonly DbSet<TEntity> _dbSet;
 
-        public GenericRepository(InnovicContext context, string userId) : base(context, userId)
+        public BaseRepository(InnovicContext context, string userId) : base(context, userId)
         {
             _context = context;
             _userId = userId;
