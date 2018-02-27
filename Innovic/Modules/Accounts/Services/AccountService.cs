@@ -1,4 +1,5 @@
 ﻿using Innovic.App;
+using Innovic.Modules.Accounts.Models;
 using Innovic.Modules.Accounts.Options;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -11,20 +12,20 @@ namespace Innovic.Modules.Accounts.Services
     public class AccountService : IDisposable
     {
         private InnovicContext _context;
-        private UserManager<IdentityUser> _userManager;
+        private UserManager<User> _userManager;
 
         public AccountService()
         {
             _context = new InnovicContext();
-            _userManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(_context));
+            _userManager = new UserManager<User>(new UserStore<User>(_context));
 
             var tokenProvider = Startup.DataProtectionProvider;
-            _userManager.UserTokenProvider = new DataProtectorTokenProvider<IdentityUser>(tokenProvider.Create("Email"));
+            _userManager.UserTokenProvider = new DataProtectorTokenProvider<User>(tokenProvider.Create("Email"));
         }
 
         public async Task<IdentityResult> RegisterUser(UserOptions setModel)
         {
-            IdentityUser user = new IdentityUser
+            User user = new User
             {
                 UserName = setModel.UserName,
                 Email = setModel.Email
@@ -35,9 +36,9 @@ namespace Innovic.Modules.Accounts.Services
             return result;
         }
 
-        public async Task<IdentityUser> FindUser(string userName, string password)
+        public async Task<User> FindUser(string userName, string password)
         {
-            IdentityUser user = await _userManager.FindAsync(userName, password);
+            User user = await _userManager.FindAsync(userName, password);
             return user;
         }
 

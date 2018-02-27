@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Innovic.Modules.Accounts.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Red.Wine;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace Innovic.App
         [ForeignKey("LastModifiedByUser")]
         public override string LastModifiedBy { get; protected set; }
 
-        public virtual IdentityUser CreatedByUser { get; set; }
-        public virtual IdentityUser LastModifiedByUser { get; set; }
+        public virtual User CreatedByUser { get; set; }
+        public virtual User LastModifiedByUser { get; set; }
     }
 }

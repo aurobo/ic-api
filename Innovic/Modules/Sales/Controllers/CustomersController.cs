@@ -14,6 +14,7 @@ using System.Web.Http;
 namespace Innovic.Modules.Sales.Controllers
 {
     [RoutePrefix("api/Customers")]
+    [Authorize]
     public class CustomersController : ApiController
     {
         private readonly InnovicContext _context;
@@ -30,7 +31,7 @@ namespace Innovic.Modules.Sales.Controllers
         [Route("")]
         public IHttpActionResult Get()
         {
-            return Ok(_customerRepository.Get().ToPickDictionaryCollection(new PickConfig(true, true)));
+            return Ok(_customerRepository.Get().ToPickDictionaryCollection(PickConfigurations.Default));
         }
 
         [Route("{id}")]

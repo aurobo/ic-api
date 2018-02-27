@@ -1,8 +1,10 @@
 using Innovic.App;
+using Innovic.Modules.Accounts.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Data.Entity.Migrations;
+using System.Linq;
 
 namespace Innovic.Migrations
 {
@@ -19,13 +21,27 @@ namespace Innovic.Migrations
 
             context.Users.AddOrUpdate(
                 x => x.UserName,
-                new IdentityUser
+                new User
                 {
+                    Name = "Tony Stark",
                     UserName = "admin",
                     PasswordHash = hasher.HashPassword("Admin123!"),
                     SecurityStamp = new Guid().ToString()
                 }
             );
+
+            //var identityUser = context.Users.Single(u => u.UserName.Equals("admin"));
+            //var appUser = new AppUser
+            //{
+            //    Name = "Tony Stark"
+            //};
+
+            //appUser.SetId(identityUser.Id);
+
+            //context.AppUsers.AddOrUpdate(
+            //    x => x.IdentityUser.UserName, 
+            //    appUser
+            //);
         }
     }
 }

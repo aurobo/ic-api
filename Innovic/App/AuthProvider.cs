@@ -1,4 +1,5 @@
-﻿using Innovic.Modules.Accounts.Services;
+﻿using Innovic.Modules.Accounts.Models;
+using Innovic.Modules.Accounts.Services;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
@@ -17,7 +18,7 @@ namespace Innovic.App
 
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
-            IdentityUser user;
+            User user;
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
 
             using (AccountService _service = new AccountService())
@@ -41,7 +42,8 @@ namespace Innovic.App
 
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
 
-            identity.AddClaim(new Claim("sub", user.Id));
+            identity.AddClaim(new Claim("sub", user.UserName));
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
 
             var ticket = new AuthenticationTicket(identity, props);
 

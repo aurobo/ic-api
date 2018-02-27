@@ -8,6 +8,23 @@ namespace Innovic.App
 {
     public static class PickConfigurations
     {
+        public static PickConfig Default
+        {
+            get
+            {
+                return new PickConfig(true, true, new List<Pick>
+                {
+                    new Pick("LastModifiedByUser", new PickConfig(false, true, new List<Pick>
+                    {
+                        new Pick("Name")
+                    })),
+                    new Pick("CreatedByUser", new PickConfig(false, true, new List<Pick>
+                    {
+                        new Pick("Name")
+                    }))
+                });
+            }
+        }
         public static PickConfig SalesOrders
         {
             get
