@@ -23,8 +23,8 @@ namespace Innovic.Modules.Sales.Controllers
 
         public CustomersController()
         {
-            _context = new InnovicContext();
             _userId = RequestContext.Principal.Identity.GetUserId();
+            _context = new InnovicContext(_userId);
             _customerRepository = new BaseRepository<Customer>(_context, _userId);
         }
 
@@ -61,13 +61,11 @@ namespace Innovic.Modules.Sales.Controllers
 
             Customer existingCustomer = _customerRepository.GetByID(id);
             Customer updatedCustomer = _customerRepository.UpdateExistingWineModel(existingCustomer, options);
-            _context.Customers.Attach(updatedCustomer);
 
             CustomerService.Process(updatedCustomer, CustomerFlow.Update);
 
             try
             {
-                _context.UpdateContextWithDefaultValues(_userId);
                 _context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
@@ -94,13 +92,11 @@ namespace Innovic.Modules.Sales.Controllers
             }
 
             Customer customer = _customerRepository.CreateNewWineModel(options);
-            _context.Customers.Add(customer);
 
             CustomerService.Process(customer, CustomerFlow.Insert);
 
             try
             {
-                _context.UpdateContextWithDefaultValues(_userId);
                 _context.SaveChanges();
             }
             catch (DbUpdateException)

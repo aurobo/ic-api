@@ -12,15 +12,19 @@ namespace Innovic.App
 {
     public class InnovicContext : IdentityDbContext<User>
     {
+        private readonly string _userId;
+
         public DbSet<SalesOrder> SalesOrders { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Material> Materials { get; set; }
         public DbSet<SalesOrderItem> SalesOrderItems { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<InvoiceItem> InvoiceItems { get; set; }
 
-        public InnovicContext()
+        public InnovicContext(string userId = null)
             : base("dbConnection")
         {
-
+            _userId = userId;
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -48,6 +52,12 @@ namespace Innovic.App
         public InnovicContext Create()
         {
             return new InnovicContext();
+        }
+
+        public override int SaveChanges()
+        {
+            this.UpdateContextWithDefaultValues(_userId);
+            return base.SaveChanges();
         }
     }
 }

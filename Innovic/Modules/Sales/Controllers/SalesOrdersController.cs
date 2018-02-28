@@ -28,8 +28,8 @@ namespace Innovic.Modules.Sales.Controllers
 
         public SalesOrdersController()
         {
-            _context = new InnovicContext();
             _userId = RequestContext.Principal.Identity.GetUserId();
+            _context = new InnovicContext(_userId);
             _salesOrderRepository = new BaseRepository<SalesOrder>(_context, _userId);
         }
 
@@ -66,13 +66,11 @@ namespace Innovic.Modules.Sales.Controllers
 
             SalesOrder existingSalesOrder = _salesOrderRepository.GetByID(id);
             SalesOrder updatedSalesOrder = _salesOrderRepository.UpdateExistingWineModel(existingSalesOrder, options);
-            _context.SalesOrders.Attach(updatedSalesOrder);
 
             SalesOrderService.Process(updatedSalesOrder, SalesOrderFlow.Update);
 
             try
             {
-                _context.UpdateContextWithDefaultValues(_userId);
                 _context.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
@@ -99,13 +97,11 @@ namespace Innovic.Modules.Sales.Controllers
             }
 
             SalesOrder salesOrder = _salesOrderRepository.CreateNewWineModel(options);
-            _context.SalesOrders.Add(salesOrder);
 
             SalesOrderService.Process(salesOrder, SalesOrderFlow.Insert);
 
             try
             {
-                _context.UpdateContextWithDefaultValues(_userId);
                 _context.SaveChanges();
             }
             catch (DbUpdateException)
@@ -156,13 +152,11 @@ namespace Innovic.Modules.Sales.Controllers
                 ExcelManager excelManager = new ExcelManager(_context, _userId);
 
                 var salesOrder = excelManager.ToSalesOrder(provider.FileData[0].LocalFileName);
-                _context.SalesOrders.Add(salesOrder);
 
                 SalesOrderService.Process(salesOrder, SalesOrderFlow.ImportExcel);
 
                 try
                 {
-                    _context.UpdateContextWithDefaultValues(_userId);
                     _context.SaveChanges();
                 }
                 catch (DbUpdateException)

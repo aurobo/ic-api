@@ -1,6 +1,8 @@
 ﻿using Innovic.App;
-using Innovic.Modules.Master.Models;
-using Innovic.Modules.Master.Options;
+using Innovic.Modules.Sales.Models;
+using Innovic.Modules.Sales.Options;
+using Innovic.Modules.Sales.ProcessFlows;
+using Innovic.Modules.Sales.Services;
 using Microsoft.AspNet.Identity;
 using Red.Wine;
 using Red.Wine.Picker;
@@ -9,43 +11,43 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 
-namespace Innovic.Modules.Master.Controllers
+namespace Innovic.Modules.Sales.Controllers
 {
-    [RoutePrefix("api/Materials")]
+    [RoutePrefix("api/Invoices")]
     [Authorize]
-    public class MaterialsController : ApiController
+    public class InvoicesController : ApiController
     {
         private readonly InnovicContext _context;
         private readonly string _userId;
-        private readonly BaseRepository<Material> _materialRepository;
+        private readonly BaseRepository<Invoice> _invoiceRepository;
 
-        public MaterialsController()
+        public InvoicesController()
         {
             _userId = RequestContext.Principal.Identity.GetUserId();
             _context = new InnovicContext(_userId);
-            _materialRepository = new BaseRepository<Material>(_context, _userId);
+            _invoiceRepository = new BaseRepository<Invoice>(_context, _userId);
         }
 
         [Route("")]
         public IHttpActionResult Get()
         {
-            return Ok(_materialRepository.Get().ToPickDictionaryCollection(new PickConfig(true, true)));
+            return Ok(_invoiceRepository.Get().ToPickDictionaryCollection(PickConfigurations.Default));
         }
 
         [Route("{id}")]
         public IHttpActionResult Get(string id)
         {
-            Material material = _materialRepository.GetByID(id);
-            if (material == null)
+            Invoice invoice = _invoiceRepository.GetByID(id);
+            if (invoice == null)
             {
                 return NotFound();
             }
 
-            return Ok(material.ToPickDictionary(new PickConfig(true, true)));
+            return Ok(invoice.ToPickDictionary(PickConfigurations.Default));
         }
 
         [Route("{id}")]
-        public IHttpActionResult Put(string id, MaterialUpdateOptions options)
+        public IHttpActionResult Put(string id, InvoiceUpdateOptions options)
         {
             if (!ModelState.IsValid)
             {
@@ -57,10 +59,10 @@ namespace Innovic.Modules.Master.Controllers
                 return BadRequest();
             }
 
-            Material existingMaterial = _materialRepository.GetByID(id);
-            Material updatedMaterial = _materialRepository.UpdateExistingWineModel(existingMaterial, options);
+            Invoice existingInvoice = _invoiceRepository.GetByID(id);
+            Invoice updatedInvoice = _invoiceRepository.UpdateExistingWineModel(existingInvoice, options);
 
-            // Service calls go here
+            InvoiceService.Process(updatedInvoice, InvoiceFlow.Update);
 
             try
             {
@@ -68,7 +70,7 @@ namespace Innovic.Modules.Master.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MaterialExists(id))
+                if (!InvoiceExists(id))
                 {
                     return NotFound();
                 }
@@ -82,16 +84,16 @@ namespace Innovic.Modules.Master.Controllers
         }
 
         [Route("")]
-        public IHttpActionResult Post(MaterialInsertOptions options)
+        public IHttpActionResult Post(InvoiceInsertOptions options)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            Material material = _materialRepository.CreateNewWineModel(options);
+            Invoice invoice = _invoiceRepository.CreateNewWineModel(options);
 
-            // Service calls go here
+            InvoiceService.Process(invoice, InvoiceFlow.Insert);
 
             try
             {
@@ -99,7 +101,7 @@ namespace Innovic.Modules.Master.Controllers
             }
             catch (DbUpdateException)
             {
-                if (MaterialExists(material.Id))
+                if (InvoiceExists(invoice.Id))
                 {
                     return Conflict();
                 }
@@ -109,22 +111,22 @@ namespace Innovic.Modules.Master.Controllers
                 }
             }
 
-            return Ok(material.ToPickDictionary(new PickConfig(true, true)));
+            return Ok(invoice.ToPickDictionary(new PickConfig(true, true)));
         }
 
         [Route("{id}")]
         public IHttpActionResult Delete(string id)
         {
-            Material material = _materialRepository.GetByID(id);
-            if (material == null)
+            Invoice invoice = _invoiceRepository.GetByID(id);
+            if (invoice == null)
             {
                 return NotFound();
             }
 
-            _context.Materials.Remove(material);
+            _context.Invoices.Remove(invoice);
             _context.SaveChanges();
 
-            return Ok(material.ToPickDictionary(new PickConfig(true, true)));
+            return Ok(invoice.ToPickDictionary(new PickConfig(true, true)));
         }
 
         protected override void Dispose(bool disposing)
@@ -136,9 +138,9 @@ namespace Innovic.Modules.Master.Controllers
             base.Dispose(disposing);
         }
 
-        private bool MaterialExists(string id)
+        private bool InvoiceExists(string id)
         {
-            return _context.Materials.Count(e => e.Id == id) > 0;
+            return _context.Invoices.Count(e => e.Id == id) > 0;
         }
     }
 }

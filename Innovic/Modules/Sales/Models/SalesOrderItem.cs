@@ -1,10 +1,16 @@
 ﻿using Innovic.App;
 using Innovic.Modules.Master.Models;
+using System.Collections.Generic;
 
 namespace Innovic.Modules.Sales.Models
 {
     public class SalesOrderItem : BaseModel
     {
+        public SalesOrderItem()
+        {
+            InvoiceItems = new List<InvoiceItem>();
+        }
+
         public string Number { get; set; }
 
         public string Description { get; set; }
@@ -21,5 +27,6 @@ namespace Innovic.Modules.Sales.Models
 
         public virtual SalesOrder SalesOrder { get; set; }
         public virtual Material Material { get; set; }
+        public virtual List<InvoiceItem> InvoiceItems { get; set; }
     }
 }

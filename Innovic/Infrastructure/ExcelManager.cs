@@ -56,7 +56,6 @@ namespace Innovic.Infrastructure
                                     if(customer == null)
                                     {
                                         customer = _customerRepository.CreateNewWineModel(new CustomerInsertOptions { Name = customerName });
-                                        _context.Customers.Add(customer);
                                     }
                                 }
 
@@ -98,7 +97,6 @@ namespace Innovic.Infrastructure
                             if(material == null)
                             {
                                 material = _materialRepository.CreateNewWineModel(new MaterialInsertOptions { Number = materialNumber, Description = description });
-                                _context.Materials.Add(material);
                             }
                         }
 
@@ -111,12 +109,10 @@ namespace Innovic.Infrastructure
                             UnitPrice = unitPrice,
                             Value = quantity * unitPrice
                         };
-
-                        salesOrder.SalesOrderItems.Add(salesOrderItem);
                     }
                 }
             }
-
+            _context.SalesOrders.Add(salesOrder);
             return salesOrder;
         }
     }
