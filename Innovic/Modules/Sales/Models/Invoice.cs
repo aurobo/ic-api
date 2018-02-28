@@ -13,6 +13,9 @@ namespace Innovic.Modules.Sales.Models
             InvoiceItems = new List<InvoiceItem>();
         }
 
+        public string SalesOrderId { get; set; }
+
+        public virtual SalesOrder SalesOrder { get; set; }
         public virtual List<InvoiceItem> InvoiceItems { get; set; }
     }
 }

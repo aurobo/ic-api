@@ -193,6 +193,7 @@
     <Compile Include="Modules\Sales\Options\CustomerInsertOptions.cs" />
     <Compile Include="Modules\Sales\Options\CustomerUpdateOptions.cs" />
     <Compile Include="Modules\Sales\Options\InvoiceInsertOptions.cs" />
+    <Compile Include="Modules\Sales\Options\InvoiceItemInsertOptions.cs" />
     <Compile Include="Modules\Sales\Options\InvoiceUpdateOptions.cs" />
     <Compile Include="Modules\Sales\Options\SalesOrderInsertOptions.cs" />
     <Compile Include="Modules\Sales\Options\SalesOrderItemInsertOptions.cs" />
