@@ -8,11 +8,11 @@ namespace Innovic.App
 {
     public static class PickConfigurations
     {
-        public static PickConfig Default
+        public static List<Pick> UserData
         {
             get
             {
-                return new PickConfig(true, true, new List<Pick>
+                return new List<Pick>
                 {
                     new Pick("LastModifiedByUser", new PickConfig(false, true, new List<Pick>
                     {
@@ -22,7 +22,15 @@ namespace Innovic.App
                     {
                         new Pick("Name")
                     }))
-                });
+                };
+            }
+        }
+
+        public static PickConfig Default
+        {
+            get
+            {
+                return new PickConfig(true, true, UserData);
             }
         }
         public static PickConfig SalesOrders
@@ -31,7 +39,7 @@ namespace Innovic.App
             {
                 return new PickConfig(true, true, new List<Pick>
                 {
-                    new Pick("Customer", new PickConfig(false, true, new List<Pick>
+                    new Pick("Customer", new PickConfig(false, true, new List<Pick>(UserData)
                     {
                         new Pick("Name")
                     }))
@@ -43,7 +51,7 @@ namespace Innovic.App
         {
             get
             {
-                return new PickConfig(true, true, new List<Pick>
+                return new PickConfig(true, true, new List<Pick>(UserData)
                 {
                     new Pick("Customer", new PickConfig(false, true, new List<Pick>
                     {
