@@ -13,5 +13,6 @@ namespace Innovic.App
         public const string FixedDigits = "D5";
         public const string CustomerAbbr = "CR";
         public const string MaterialAbbr = "MT";
+        public const string InvoiceAbbr = "INV";
     }
 }

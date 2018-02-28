@@ -1,6 +1,7 @@
 ﻿using Innovic.App;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -17,5 +18,14 @@ namespace Innovic.Modules.Sales.Models
 
         public virtual SalesOrder SalesOrder { get; set; }
         public virtual List<InvoiceItem> InvoiceItems { get; set; }
+
+        [NotMapped]
+        public string Key
+        {
+            get
+            {
+                return (Constants.InvoiceAbbr + Constants.KeySeparator + KeyId.ToString(Constants.FixedDigits));
+            }
+        }
     }
 }
