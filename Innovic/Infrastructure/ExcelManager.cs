@@ -67,7 +67,7 @@ namespace Innovic.Infrastructure
                                 break;
 
                             case "OrderDate":
-                                salesOrder.OrderDate = DateTime.ParseExact(value.ToString(), "dd/MM/yyyy", null); ;
+                                salesOrder.OrderDate = DateTime.ParseExact(value.ToString(), "dd/MM/yyyy", null);
                                 break;
 
                             case "CustomerReference":
@@ -109,6 +109,8 @@ namespace Innovic.Infrastructure
                             UnitPrice = unitPrice,
                             Value = quantity * unitPrice
                         };
+
+                        salesOrder.SalesOrderItems.Add(salesOrderItem);
                     }
                 }
             }
