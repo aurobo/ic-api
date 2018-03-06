@@ -8,7 +8,7 @@ namespace Innovic.App
 {
     public static class PickConfigurations
     {
-        public static List<Pick> DefaultData
+        private static List<Pick> DefaultData
         {
             get
             {
@@ -34,6 +34,7 @@ namespace Innovic.App
                 return new PickConfig(true, true, DefaultData);
             }
         }
+
         public static PickConfig SalesOrders
         {
             get
@@ -66,6 +67,33 @@ namespace Innovic.App
                         }))
                     })),
                     new Pick("Invoices", new PickConfig(true, true, new List<Pick>(DefaultData)))
+                });
+            }
+        }
+
+        public static PickConfig Invoice
+        {
+            get
+            {
+                return new PickConfig(true, true, new List<Pick>(DefaultData)
+                {
+                    new Pick("SalesOrder", new PickConfig(false, true, new List<Pick>
+                    {
+                        new Pick("Customer", new PickConfig(false, true, new List<Pick>
+                        {
+                            new Pick("Name")
+                        }))
+                    })),
+                    new Pick("InvoiceItems", new PickConfig(true, true, new List<Pick>(DefaultData)
+                    {
+                        new Pick("SalesOrderItem", new PickConfig(true, true, new List<Pick>
+                        {
+                            new Pick("Material", new PickConfig(false, true, new List<Pick>
+                            {
+                                new Pick("Number")
+                            }))
+                        }))
+                    }))
                 });
             }
         }

@@ -43,7 +43,7 @@ namespace Innovic.Modules.Sales.Controllers
                 return NotFound();
             }
 
-            return Ok(invoice.ToPickDictionary(PickConfigurations.Default));
+            return Ok(invoice.ToPickDictionary(PickConfigurations.Invoice));
         }
 
         [Route("{id}")]
