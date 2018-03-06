@@ -63,11 +63,15 @@ namespace Innovic.Infrastructure
                                 break;
 
                             case "ExpirationDate":
-                                salesOrder.ExpirationDate = DateTime.ParseExact(value.ToString(), "dd/MM/yyyy", null);
+                                DateTime expirationDate;
+                                DateTime.TryParse(value.ToString(), out expirationDate);
+                                salesOrder.ExpirationDate = expirationDate;
                                 break;
 
                             case "OrderDate":
-                                salesOrder.OrderDate = DateTime.ParseExact(value.ToString(), "dd/MM/yyyy", null);
+                                DateTime orderDate;
+                                DateTime.TryParse(value.ToString(), out orderDate);
+                                salesOrder.OrderDate = orderDate;
                                 break;
 
                             case "CustomerReference":
