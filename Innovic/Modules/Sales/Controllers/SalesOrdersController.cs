@@ -43,10 +43,13 @@ namespace Innovic.Modules.Sales.Controllers
         public IHttpActionResult Get(string id)
         {
             SalesOrder salesOrder = _salesOrderRepository.GetByID(id);
+
             if (salesOrder == null)
             {
                 return NotFound();
             }
+
+            SalesOrderService.Process(salesOrder, SalesOrderFlow.AddRemainingQuantity);
 
             return Ok(salesOrder.ToPickDictionary(PickConfigurations.SalesOrder));
         }

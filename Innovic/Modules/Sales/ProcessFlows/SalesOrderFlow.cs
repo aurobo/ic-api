@@ -9,6 +9,7 @@ namespace Innovic.Modules.Sales.ProcessFlows
     {
         Insert,
         Update,
-        ImportExcel
+        ImportExcel,
+        AddRemainingQuantity
     }
 }

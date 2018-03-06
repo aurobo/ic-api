@@ -21,6 +21,11 @@ namespace Innovic.App
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<InvoiceItem> InvoiceItems { get; set; }
 
+        public InnovicContext()
+            : base("dbConnection")
+        {
+        }
+
         public InnovicContext(string userId = null)
             : base("dbConnection")
         {

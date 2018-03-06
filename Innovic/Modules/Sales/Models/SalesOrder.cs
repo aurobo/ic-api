@@ -11,6 +11,7 @@ namespace Innovic.Modules.Sales.Models
         public SalesOrder()
         {
             SalesOrderItems = new List<SalesOrderItem>();
+            Invoices = new List<Invoice>();
         }
 
         [Column(TypeName = "datetime2")]
@@ -30,6 +31,8 @@ namespace Innovic.Modules.Sales.Models
         public virtual Customer Customer { get; set; }
 
         public virtual List<SalesOrderItem> SalesOrderItems { get; set; }
+
+        public virtual List<Invoice> Invoices { get; set; }
 
         [NotMapped]
         public string Key

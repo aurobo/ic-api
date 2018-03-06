@@ -8,7 +8,7 @@ namespace Innovic.App
 {
     public static class PickConfigurations
     {
-        public static List<Pick> UserData
+        public static List<Pick> DefaultData
         {
             get
             {
@@ -21,7 +21,8 @@ namespace Innovic.App
                     new Pick("CreatedByUser", new PickConfig(false, true, new List<Pick>
                     {
                         new Pick("Name")
-                    }))
+                    })),
+                    new Pick("MetaData", new PickConfig(true, true))
                 };
             }
         }
@@ -30,7 +31,7 @@ namespace Innovic.App
         {
             get
             {
-                return new PickConfig(true, true, UserData);
+                return new PickConfig(true, true, DefaultData);
             }
         }
         public static PickConfig SalesOrders
@@ -39,7 +40,7 @@ namespace Innovic.App
             {
                 return new PickConfig(true, true, new List<Pick>
                 {
-                    new Pick("Customer", new PickConfig(false, true, new List<Pick>(UserData)
+                    new Pick("Customer", new PickConfig(false, true, new List<Pick>(DefaultData)
                     {
                         new Pick("Name")
                     }))
@@ -51,19 +52,20 @@ namespace Innovic.App
         {
             get
             {
-                return new PickConfig(true, true, new List<Pick>(UserData)
+                return new PickConfig(true, true, new List<Pick>(DefaultData)
                 {
                     new Pick("Customer", new PickConfig(false, true, new List<Pick>
                     {
                         new Pick("Name")
                     })),
-                    new Pick("SalesOrderItems", new PickConfig(true, true, new List<Pick>
+                    new Pick("SalesOrderItems", new PickConfig(true, true, new List<Pick>(DefaultData)
                     {
                         new Pick("Material", new PickConfig(false, true, new List<Pick>
                         {
                             new Pick("Number")
                         }))
-                    }))
+                    })),
+                    new Pick("Invoices", new PickConfig(true, true, new List<Pick>(DefaultData)))
                 });
             }
         }
