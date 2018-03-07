@@ -50,6 +50,7 @@ namespace Innovic.Modules.Sales.Controllers
             }
 
             SalesOrderService.Process(salesOrder, SalesOrderFlow.AddRemainingQuantity);
+            SalesOrderService.Process(salesOrder, SalesOrderFlow.PendingSalesOrderValue);
 
             return Ok(salesOrder.ToPickDictionary(PickConfigurations.SalesOrder));
         }

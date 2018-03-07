@@ -10,6 +10,7 @@ namespace Innovic.Modules.Sales.ProcessFlows
         Insert,
         Update,
         ImportExcel,
-        AddRemainingQuantity
+        AddRemainingQuantity,
+        PendingSalesOrderValue
     }
 }
