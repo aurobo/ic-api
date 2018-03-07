@@ -26,6 +26,8 @@ namespace Innovic.Modules.Sales.Models
 
         public string CustomerId { get; set; }
 
+        public string Description { get; set; }
+
         public SalesOrderStatus Status { get; set; }
 
         public virtual Customer Customer { get; set; }
