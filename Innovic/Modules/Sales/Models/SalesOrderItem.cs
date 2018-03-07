@@ -1,6 +1,8 @@
 ﻿using Innovic.App;
 using Innovic.Modules.Master.Models;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Innovic.Modules.Sales.Models
 {
@@ -20,6 +22,11 @@ namespace Innovic.Modules.Sales.Models
         public double Value { get; set; }
 
         public int Quantity { get; set; }
+
+        [Column(TypeName = "datetime2")]
+        public DateTime DeliveryDate { get; set; }
+
+        public string WBSElement { get; set; }
 
         public string MaterialId { get; set; }
 
