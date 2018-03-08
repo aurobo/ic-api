@@ -31,7 +31,8 @@ namespace Innovic.Infrastructure
             {
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
-                    var result = reader.AsDataSet(new ExcelDataSetConfiguration() {
+                    var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                    {
                         ConfigureDataTable = (tableReader) => new ExcelDataTableConfiguration()
                         {
                             UseHeaderRow = true
@@ -53,7 +54,7 @@ namespace Innovic.Infrastructure
                                 {
                                     customer = _context.Customers.Where(c => c.Name.Equals(customerName)).SingleOrDefault();
 
-                                    if(customer == null)
+                                    if (customer == null)
                                     {
                                         customer = _customerRepository.CreateNewWineModel(new CustomerInsertOptions { Name = customerName });
                                     }
@@ -84,21 +85,23 @@ namespace Innovic.Infrastructure
                         }
                     }
 
-                    foreach(System.Data.DataRow row in result.Tables["Line Items"].Rows)
+                    foreach (System.Data.DataRow row in result.Tables["Line Items"].Rows)
                     {
                         var itemNumber = row["Item Number"].ToString();
                         var materialNumber = row["Material Number"].ToString();
                         var description = row["Description"].ToString();
                         var quantity = Convert.ToInt32(row["Quantity"]);
                         var unitPrice = Convert.ToDouble(row["Unit Price"]);
+                        var deliveryDate = DateTime.Parse(row["Delivery Date"].ToString());
+                        var wbsElement = row["WBS Element"].ToString();
 
                         Material material = _context.Materials.Local.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
 
-                        if(material == null)
+                        if (material == null)
                         {
                             material = _context.Materials.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
 
-                            if(material == null)
+                            if (material == null)
                             {
                                 material = _materialRepository.CreateNewWineModel(new MaterialInsertOptions { Number = materialNumber, Description = description });
                             }
@@ -111,7 +114,9 @@ namespace Innovic.Infrastructure
                             Description = string.IsNullOrEmpty(description) ? material.Description : description,
                             Quantity = quantity,
                             UnitPrice = unitPrice,
-                            Value = quantity * unitPrice
+                            Value = quantity * unitPrice,
+                            DeliveryDate = deliveryDate,
+                            WBSElement = wbsElement
                         };
 
                         salesOrder.SalesOrderItems.Add(salesOrderItem);
