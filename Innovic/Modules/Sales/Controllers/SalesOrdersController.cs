@@ -155,6 +155,7 @@ namespace Innovic.Modules.Sales.Controllers
 
                 ExcelManager excelManager = new ExcelManager(_context, _userId);
 
+                var errors = excelManager.ValidateForSalesOrder(provider.FileData[0].LocalFileName);
                 var salesOrder = excelManager.ToSalesOrder(provider.FileData[0].LocalFileName);
 
                 SalesOrderService.Process(salesOrder, SalesOrderFlow.ImportExcel);
