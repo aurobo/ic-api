@@ -82,6 +82,10 @@ namespace Innovic.Infrastructure
                             case "PaymentTerms":
                                 salesOrder.PaymentTerms = value.ToString();
                                 break;
+
+                            case "Description":
+                                salesOrder.Description = value.ToString();
+                                break;
                         }
                     }
 
