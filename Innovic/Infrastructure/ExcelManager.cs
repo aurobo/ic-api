@@ -137,6 +137,9 @@ namespace Innovic.Infrastructure
 
         public List<string> ValidateForSalesOrder(string filePath)
         {
+
+            var greaterDate = string.Empty;
+            var lessDate = string.Empty;
             List<string> errors = new List<string>();
 
             using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
@@ -159,20 +162,20 @@ namespace Innovic.Infrastructure
                         return errors;
                     }
 
-                    
+
                     #region -- Columns Validation --
                     errors.AddRange(validateColumns(SalesOrderExcel.HeaderDataColumns, result.Tables[SalesOrderExcel.HeaderDataSheet]));
                     errors.AddRange(validateColumns(SalesOrderExcel.LineItemsColumns, result.Tables[SalesOrderExcel.LineItemsSheet]));
-                    
+
                     if (errors.Count > 0)
                     {
                         return errors;
                     }
-                    
+
                     #endregion -- Columns Validation --
 
 
-                    
+
 
                     #region -- Column fields Validation
 
@@ -190,60 +193,100 @@ namespace Innovic.Infrastructure
 
                 }
             }
-                    #region --- Check date format and Unitprice, Quantity ---
-                    using (var streams = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            #region --- Check date format and Unitprice, Quantity ---
+            using (var streams = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var newreader = ExcelReaderFactory.CreateReader(streams))
+                {
+                    var newresult = newreader.AsDataSet(new ExcelDataSetConfiguration()
                     {
-                        using (var newreader = ExcelReaderFactory.CreateReader(streams))
+                        ConfigureDataTable = (tableReader) => new ExcelDataTableConfiguration()
                         {
-                            var newresult = newreader.AsDataSet(new ExcelDataSetConfiguration()
-                            {
-                                ConfigureDataTable = (tableReader) => new ExcelDataTableConfiguration()
+                            UseHeaderRow = true
+                        }
+                    });
+
+                    foreach (DataRow row in newresult.Tables[SalesOrderExcel.HeaderDataSheet].Rows)
+                    {
+                        List<string> dateFormatErrors = new List<string>();
+                        var key = row["Name"].ToString();
+                        switch (key)
+                        {
+                            case "ExpirationDate":
+                                var value = row["Value"];
+                                dateFormatErrors = validateDateFormat(value.ToString(), newresult.Tables[SalesOrderExcel.HeaderDataSheet]);
+                                if (dateFormatErrors.Count > 0)
                                 {
-                                    UseHeaderRow = true
+                                    errors.AddRange(dateFormatErrors);
                                 }
-                            });
-
-                            foreach (DataRow row in newresult.Tables[SalesOrderExcel.HeaderDataSheet].Rows)
-                            {
-                                var key = row["Name"].ToString();
-                                switch (key)
+                                else
                                 {
-                                    case "ExpirationDate":
-                                        var value = row["Value"];
-                                        errors.AddRange(validateDateFormat(value.ToString(), newresult.Tables[SalesOrderExcel.HeaderDataSheet]));
-                                        break;
-                                    case "OrderDate":
-                                        value = row["Value"];
-                                        errors.AddRange(validateDateFormat(value.ToString(), newresult.Tables[SalesOrderExcel.HeaderDataSheet]));
-                                        break;
+                                    greaterDate = value.ToString();
                                 }
-                            }
 
 
-                            foreach (System.Data.DataRow row in newresult.Tables[SalesOrderExcel.LineItemsSheet].Rows)
-                            {
+                                break;
+                            case "OrderDate":
+                                value = row["Value"];
+                                dateFormatErrors = validateDateFormat(value.ToString(), newresult.Tables[SalesOrderExcel.HeaderDataSheet]);
+                                if (dateFormatErrors.Count > 0)
+                                {
+                                    errors.AddRange(dateFormatErrors);
+                                }
+                                else
+                                {
+                                    lessDate = value.ToString();
+                                }
 
-                                var unitPrice = row["Unit Price"];
-                                errors.AddRange(validateValueType(unitPrice.ToString(), newresult.Tables[SalesOrderExcel.LineItemsSheet], "Double"));
-
-                                var quantity = row["Quantity"];
-                                errors.AddRange(validateValueType(quantity.ToString(), newresult.Tables[SalesOrderExcel.LineItemsSheet], "Integer"));
-
-                                var value = row["Delivery Date"];
-                                errors.AddRange(validateDateFormat(value.ToString(), newresult.Tables[SalesOrderExcel.LineItemsSheet]));
-                            }
+                                errors.AddRange(dateFormatErrors);
+                                break;
                         }
                     }
-                    
-                    #endregion
+
+                    if (!string.IsNullOrEmpty(greaterDate) && !string.IsNullOrEmpty(lessDate))
+                    {
+                        errors.AddRange(checkDateIsGreater(greaterDate, lessDate, newresult.Tables[SalesOrderExcel.HeaderDataSheet]));
+                    }
+
+
+                    foreach (System.Data.DataRow row in newresult.Tables[SalesOrderExcel.LineItemsSheet].Rows)
+                    {
+
+                        var unitPrice = row["Unit Price"];
+                        errors.AddRange(validateValueType(unitPrice.ToString(), newresult.Tables[SalesOrderExcel.LineItemsSheet], "Double"));
+
+                        var quantity = row["Quantity"];
+                        errors.AddRange(validateValueType(quantity.ToString(), newresult.Tables[SalesOrderExcel.LineItemsSheet], "Integer"));
+
+                        var value = row["Delivery Date"];
+                        errors.AddRange(validateDateFormat(value.ToString(), newresult.Tables[SalesOrderExcel.LineItemsSheet]));
+                    }
+                }
+            }
+
+            #endregion
             return errors;
         }
 
 
-        public  List<string> validateColumns(List<string> staticColumns, DataTable table)
+        public List<string> checkDateIsGreater(string greaterDate, string lessDate, DataTable table)
         {
             List<string> errors = new List<string>();
-            foreach(var column in staticColumns)
+            DateTime gtDate = DateTime.ParseExact(greaterDate, "dd/MM/yyyy", null);
+            DateTime lsdDate = DateTime.ParseExact(lessDate, "dd/MM/yyyy", null);
+
+            if (gtDate < lsdDate)
+            {
+                errors.Add(gtDate + " " + "is not greater than " + lsdDate + " in sheet " + table.TableName);
+            }
+
+            return errors;
+        }
+
+        public List<string> validateColumns(List<string> staticColumns, DataTable table)
+        {
+            List<string> errors = new List<string>();
+            foreach (var column in staticColumns)
             {
                 if (!table.Rows[0].ItemArray.Contains(column))
                 {
@@ -266,7 +309,7 @@ namespace Innovic.Infrastructure
                         errors.Add(value + " is not valid in sheet " + table.TableName);
                     }
                     break;
-                    
+
                 case "Integer":
                     int integervalue;
                     if (!int.TryParse(value, out integervalue))
@@ -293,7 +336,7 @@ namespace Innovic.Infrastructure
 
             return errors;
         }
-        
+
         public List<string> validateCells(List<string> cells, DataTable sheet)
         {
             List<string> errors = new List<string>();
