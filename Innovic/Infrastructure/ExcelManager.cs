@@ -7,6 +7,7 @@ using Innovic.Modules.Sales.Options;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -153,82 +154,170 @@ namespace Innovic.Infrastructure
                     // Sheets Validation
                     errors.AddRange(ValidateSheets(result.Tables, new List<string> { SalesOrderExcel.HeaderDataSheet, SalesOrderExcel.LineItemsSheet }));
 
-                    if(errors.Count > 0)
+                    if (errors.Count > 0)
                     {
                         return errors;
                     }
 
-                    // Columns Validation
-
-                    #region -- Sheets Validation --
-                    if(!result.Tables.Contains(SalesOrderExcel.HeaderDataSheet))
-                    {
-                        errors.Add("Does not contain " + SalesOrderExcel.HeaderDataSheet + " sheet.");
-                    }
-
-                    if (!result.Tables.Contains(SalesOrderExcel.LineItemsSheet))
-                    {
-                        errors.Add("Does not contain " + SalesOrderExcel.HeaderDataSheet + " sheet.");
-                    }
-                    #endregion -- Sheets Validation --
-
+                    
                     #region -- Columns Validation --
-                    SalesOrderExcel.HeaderDataColumns.ForEach(delegate(string column) {
-                        if(!result.Tables[SalesOrderExcel.HeaderDataSheet].Rows[0].ItemArray.Contains(column))
-                        {
-                            errors.Add("Column " + column + " is not present in sheet " + SalesOrderExcel.HeaderDataSheet);
-                        }
-                    });
-
-                    SalesOrderExcel.LineItemsColumns.ForEach(delegate (string column) {
-                        if (!result.Tables[SalesOrderExcel.LineItemsSheet].Rows[0].ItemArray.Contains(column))
-                        {
-                            errors.Add("Column " + column + " is not present in sheet " + SalesOrderExcel.LineItemsSheet);
-                        }
-                    });
+                    errors.AddRange(validateColumns(SalesOrderExcel.HeaderDataColumns, result.Tables[SalesOrderExcel.HeaderDataSheet]));
+                    errors.AddRange(validateColumns(SalesOrderExcel.LineItemsColumns, result.Tables[SalesOrderExcel.LineItemsSheet]));
+                    
+                    if (errors.Count > 0)
+                    {
+                        return errors;
+                    }
+                    
                     #endregion -- Columns Validation --
+
+
+                    
+
+                    #region -- Column fields Validation
+
+                    List<string> cells = result.Tables[SalesOrderExcel.HeaderDataSheet].GetCellsForColumn(0);
+
+                    errors.AddRange(validateCells(cells, result.Tables[SalesOrderExcel.HeaderDataSheet]));
+
+                    if (errors.Count > 0)
+                    {
+                        return errors;
+                    }
+
+                    #endregion
+
+
                 }
+            }
+                    #region --- Check date format and Unitprice, Quantity ---
+                    using (var streams = File.Open(filePath, FileMode.Open, FileAccess.Read))
+                    {
+                        using (var newreader = ExcelReaderFactory.CreateReader(streams))
+                        {
+                            var newresult = newreader.AsDataSet(new ExcelDataSetConfiguration()
+                            {
+                                ConfigureDataTable = (tableReader) => new ExcelDataTableConfiguration()
+                                {
+                                    UseHeaderRow = true
+                                }
+                            });
+
+                            foreach (DataRow row in newresult.Tables[SalesOrderExcel.HeaderDataSheet].Rows)
+                            {
+                                var key = row["Name"].ToString();
+                                switch (key)
+                                {
+                                    case "ExpirationDate":
+                                        var value = row["Value"];
+                                        errors.AddRange(validateDateFormat(value.ToString(), newresult.Tables[SalesOrderExcel.HeaderDataSheet]));
+                                        break;
+                                    case "OrderDate":
+                                        value = row["Value"];
+                                        errors.AddRange(validateDateFormat(value.ToString(), newresult.Tables[SalesOrderExcel.HeaderDataSheet]));
+                                        break;
+                                }
+                            }
+
+
+                            foreach (System.Data.DataRow row in newresult.Tables[SalesOrderExcel.LineItemsSheet].Rows)
+                            {
+
+                                var unitPrice = row["Unit Price"];
+                                errors.AddRange(validateValueType(unitPrice.ToString(), newresult.Tables[SalesOrderExcel.LineItemsSheet], "Double"));
+
+                                var quantity = row["Quantity"];
+                                errors.AddRange(validateValueType(quantity.ToString(), newresult.Tables[SalesOrderExcel.LineItemsSheet], "Integer"));
+
+                                var value = row["Delivery Date"];
+                                errors.AddRange(validateDateFormat(value.ToString(), newresult.Tables[SalesOrderExcel.LineItemsSheet]));
+                            }
+                        }
+                    }
+                    
+                    #endregion
+            return errors;
+        }
+
+
+        public  List<string> validateColumns(List<string> staticColumns, DataTable table)
+        {
+            List<string> errors = new List<string>();
+            foreach(var column in staticColumns)
+            {
+                if (!table.Rows[0].ItemArray.Contains(column))
+                {
+                    errors.Add("Column " + column + " is not present in sheet " + table.TableName);
+                }
+
+            }
+            return errors;
+        }
+
+        public List<string> validateValueType(string value, DataTable table, string type)
+        {
+            List<string> errors = new List<string>();
+            switch (type)
+            {
+                case "Double":
+                    double doubleValue;
+                    if (!double.TryParse(value, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out doubleValue))
+                    {
+                        errors.Add(value + " is not valid in sheet " + table.TableName);
+                    }
+                    break;
+                    
+                case "Integer":
+                    int integervalue;
+                    if (!int.TryParse(value, out integervalue))
+                    {
+                        errors.Add(value + " is not valid in sheet " + table.TableName);
+                    }
+                    break;
             }
 
             return errors;
         }
+
+
+        public List<string> validateDateFormat(string date, DataTable table)
+        {
+            List<string> errors = new List<string>();
+            string[] formats = { "dd/MM/yyyy", "dd-MM-yyyy", "d-M-yyyy", "M/d/yyyy", "MM/dd/yyyy", "yyyy-MM-dd" };
+            DateTime resultDate = new DateTime();
+
+            if (!DateTime.TryParseExact(date, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out resultDate))
+            {
+                errors.Add(date + " is not valid date in sheet " + table.TableName);
+            }
+
+            return errors;
+        }
+        
+        public List<string> validateCells(List<string> cells, DataTable sheet)
+        {
+            List<string> errors = new List<string>();
+            SalesOrderExcel.HeaderDataColumnsFields.ForEach(delegate (string cell)
+            {
+                if (!cells.Contains(cell))
+                {
+                    errors.Add("Cell " + cell + " is not present in sheet " + SalesOrderExcel.HeaderDataSheet);
+                }
+            });
+            return errors;
+        }
+
+
 
         public List<string> ValidateSheets(DataTableCollection sheets, List<string> sheetNames)
         {
             List<string> errors = new List<string>();
 
-            foreach(var sheetName in sheetNames)
+            foreach (var sheetName in sheetNames)
             {
                 if (!sheets.Contains(sheetName))
                 {
                     errors.Add("Does not contain " + sheetName + " sheet.");
-                }
-            }
-
-            return errors;
-        }
-
-        public List<string> ValidateSheet(DataTableCollection sheets, string sheetName)
-        {
-            List<string> errors = new List<string>();
-
-            if (!sheets.Contains(sheetName))
-            {
-                errors.Add("Does not contain " + sheetName + " sheet.");
-            }
-
-            return errors;
-        }
-
-        public List<string> ValidateColumns(DataTable sheet, List<string> columns)
-        {
-            List<string> errors = new List<string>();
-
-            foreach (var column in columns)
-            {
-                if (!sheet.Rows[0].ItemArray.Contains(column))
-                {
-                    errors.Add("Column " + column + " is not present in sheet " + sheet.TableName);
                 }
             }
 

@@ -148,7 +148,7 @@ namespace Innovic.Modules.Sales.Controllers
             }
 
             var provider = new MultipartFormDataStreamProvider(HostingEnvironment.MapPath("~/App_Data"));
-
+            
             try
             {
                 await Request.Content.ReadAsMultipartAsync(provider);
@@ -156,32 +156,41 @@ namespace Innovic.Modules.Sales.Controllers
                 ExcelManager excelManager = new ExcelManager(_context, _userId);
 
                 var errors = excelManager.ValidateForSalesOrder(provider.FileData[0].LocalFileName);
-                var salesOrder = excelManager.ToSalesOrder(provider.FileData[0].LocalFileName);
 
-                SalesOrderService.Process(salesOrder, SalesOrderFlow.ImportExcel);
+                if (errors.Count == 0)
+                {
 
-                try
-                {
-                    _context.SaveChanges();
-                }
-                catch (DbUpdateException)
-                {
-                    if (SalesOrderExists(salesOrder.Id))
+                    var salesOrder = excelManager.ToSalesOrder(provider.FileData[0].LocalFileName);
+
+                    SalesOrderService.Process(salesOrder, SalesOrderFlow.ImportExcel);
+
+                    try
                     {
-                        return Request.CreateResponse(HttpStatusCode.Conflict);
+                        _context.SaveChanges();
                     }
-                    else
+                    catch (DbUpdateException)
                     {
-                        throw;
+                        if (SalesOrderExists(salesOrder.Id))
+                        {
+                            return Request.CreateResponse(HttpStatusCode.Conflict);
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
-                }
 
-                if (System.IO.File.Exists(provider.FileData[0].LocalFileName))
+                    if (System.IO.File.Exists(provider.FileData[0].LocalFileName))
+                    {
+                        System.IO.File.Delete(provider.FileData[0].LocalFileName);
+                    }
+
+                    return Request.CreateResponse(HttpStatusCode.OK);
+                }
+                else
                 {
-                    System.IO.File.Delete(provider.FileData[0].LocalFileName);
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
                 }
-
-                return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
             {
