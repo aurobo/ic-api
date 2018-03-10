@@ -304,14 +304,16 @@ namespace Innovic.Infrastructure
 
         public bool IsDateValid(string date, out DateTime resultDate)
         {
-            string[] formats = { "dd/MM/yyyy", "dd-MM-yyyy", "d-M-yyyy", "M/d/yyyy", "MM/dd/yyyy", "yyyy-MM-dd" };
-
-            if (!DateTime.TryParseExact(date, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out resultDate))
+            try
             {
+                resultDate = Convert.ToDateTime(date);
+                return true;
+            }
+            catch (FormatException e)
+            {
+                resultDate = DateTime.MinValue;
                 return false;
             }
-
-            return true;
         }
 
         public List<string> ValidateCells(List<string> cells, DataTable sheet)
