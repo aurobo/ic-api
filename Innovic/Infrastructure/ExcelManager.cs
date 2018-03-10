@@ -225,11 +225,11 @@ namespace Innovic.Infrastructure
                         }
                     }
 
+                    // Because header row has index = 1 in excel sheet
+                    int index = 2; // In excel sheet
+
                     foreach (DataRow row in result.Tables[SalesOrderExcel.LineItemsSheet].Rows)
                     {
-                        // Because header row has index = 1 in excel sheet
-                        int index = 2; // In excel sheet
-
                         string unitPrice = row["Unit Price"].ToString();
                         errors.AddRange(ValidateValueType(unitPrice, result.Tables[SalesOrderExcel.LineItemsSheet], "Double"));
 
