@@ -173,7 +173,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Infrastructure\ExcelManager.cs" />
     <Compile Include="Infrastructure\SalesOrderExcel.cs" />
-    <Compile Include="Infrastructure\SalesOrderExtension.cs" />
+    <Compile Include="Infrastructure\ExcelManagerExtensions.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modules\Accounts\Models\User.cs" />
     <Compile Include="Modules\Accounts\Options\UserOptions.cs" />

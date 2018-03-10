@@ -157,40 +157,35 @@ namespace Innovic.Modules.Sales.Controllers
 
                 var errors = excelManager.ValidateForSalesOrder(provider.FileData[0].LocalFileName);
 
-                if (errors.Count == 0)
-                {
-
-                    var salesOrder = excelManager.ToSalesOrder(provider.FileData[0].LocalFileName);
-
-                    SalesOrderService.Process(salesOrder, SalesOrderFlow.ImportExcel);
-
-                    try
-                    {
-                        _context.SaveChanges();
-                    }
-                    catch (DbUpdateException)
-                    {
-                        if (SalesOrderExists(salesOrder.Id))
-                        {
-                            return Request.CreateResponse(HttpStatusCode.Conflict);
-                        }
-                        else
-                        {
-                            throw;
-                        }
-                    }
-
-                    if (System.IO.File.Exists(provider.FileData[0].LocalFileName))
-                    {
-                        System.IO.File.Delete(provider.FileData[0].LocalFileName);
-                    }
-
-                    return Request.CreateResponse(HttpStatusCode.OK);
-                }
-                else
+                if (errors.Count > 0)
                 {
                     return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
                 }
+
+                var salesOrder = excelManager.ToSalesOrder(provider.FileData[0].LocalFileName);
+
+                try
+                {
+                    _context.SaveChanges();
+                }
+                catch (DbUpdateException)
+                {
+                    if (SalesOrderExists(salesOrder.Id))
+                    {
+                        return Request.CreateResponse(HttpStatusCode.Conflict);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                if (System.IO.File.Exists(provider.FileData[0].LocalFileName))
+                {
+                    System.IO.File.Delete(provider.FileData[0].LocalFileName);
+                }
+
+                return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception e)
             {
