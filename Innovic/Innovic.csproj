@@ -173,6 +173,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Infrastructure\ExcelManager.cs" />
     <Compile Include="Infrastructure\SalesOrderExcel.cs" />
+    <Compile Include="Infrastructure\ExcelManagerExtensions.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modules\Accounts\Models\User.cs" />
     <Compile Include="Modules\Accounts\Options\UserOptions.cs" />
@@ -207,6 +208,14 @@
     <Compile Include="Modules\Sales\Services\SalesOrderService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\" />
+    <Folder Include="fonts\" />
+    <Folder Include="Scripts\" />
+    <Folder Include="Views\Reports\" />
+    <Folder Include="Views\Report\" />
+    <Folder Include="Views\Shared\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

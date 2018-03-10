@@ -148,7 +148,7 @@ namespace Innovic.Modules.Sales.Controllers
             }
 
             var provider = new MultipartFormDataStreamProvider(HostingEnvironment.MapPath("~/App_Data"));
-
+            
             try
             {
                 await Request.Content.ReadAsMultipartAsync(provider);
@@ -156,9 +156,13 @@ namespace Innovic.Modules.Sales.Controllers
                 ExcelManager excelManager = new ExcelManager(_context, _userId);
 
                 var errors = excelManager.ValidateForSalesOrder(provider.FileData[0].LocalFileName);
-                var salesOrder = excelManager.ToSalesOrder(provider.FileData[0].LocalFileName);
 
-                SalesOrderService.Process(salesOrder, SalesOrderFlow.ImportExcel);
+                if (errors.Count > 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+
+                var salesOrder = excelManager.ToSalesOrder(provider.FileData[0].LocalFileName);
 
                 try
                 {
