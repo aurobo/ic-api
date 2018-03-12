@@ -8,6 +8,7 @@ namespace Innovic.Modules.Sales.ProcessFlows
     public enum InvoiceFlow
     {
         Update,
-        Insert
+        Insert,
+        IsInsertionAllow
     }
 }

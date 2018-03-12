@@ -92,7 +92,11 @@ namespace Innovic.Modules.Sales.Controllers
             }
 
             Invoice invoice = _invoiceRepository.CreateNewWineModel(options);
-
+            var isInsertionAllow = invoice.Process(InvoiceFlow.IsInsertionAllow).MetaData.FirstOrDefault().Value.ToString();
+            if (!bool.Parse(isInsertionAllow))
+            {
+                throw new System.Exception("Pending salesOrder value is zero");
+            }
             InvoiceService.Process(invoice, InvoiceFlow.Insert);
 
             try
