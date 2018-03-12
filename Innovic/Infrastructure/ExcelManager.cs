@@ -2,6 +2,7 @@
 using Innovic.App;
 using Innovic.Modules.Master.Models;
 using Innovic.Modules.Master.Options;
+using Innovic.Modules.Purchase.Models;
 using Innovic.Modules.Sales.Models;
 using Innovic.Modules.Sales.Options;
 using System;
@@ -347,5 +348,201 @@ namespace Innovic.Infrastructure
 
             return errors;
         }
+
+        #region ---- Purchase Request -----
+
+
+        //..... Add Purchase Request...
+
+        public PurchaseRequest ToPurchaseRequest(string filePath)
+        {
+            var purchaseRequest = new PurchaseRequest();
+
+            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                    {
+                        ConfigureDataTable = (tableReader) => new ExcelDataTableConfiguration()
+                        {
+                            UseHeaderRow = true
+                        }
+                    });
+
+                    foreach (DataRow row in result.Tables["Header Data"].Rows)
+                    {
+                        var key = row["Name"].ToString();
+                        var value = row["Value"];
+
+                        switch (key)
+                        {
+                            case "Date":
+                                DateTime date;
+                                DateTime.TryParse(value.ToString(), out date);
+                                purchaseRequest.Date = date;
+                                break;
+                        }
+                    }
+
+                    foreach (DataRow row in result.Tables["Line Items"].Rows)
+                    {
+                        var materialNumber = row["Material Number"].ToString();
+                        var lineNumber = Convert.ToInt32(row["Line Number"]);
+                        var quantity = Convert.ToInt32(row["Quantity"]);
+                        var make = row["Make"].ToString();
+                        var reason = row["Reason"].ToString();
+                        var expectedDate = DateTime.Parse(row["Expected Date"].ToString());
+                        
+
+                        Material material = _context.Materials.Local.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
+
+                        if (material == null)
+                        {
+                            material = _context.Materials.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
+
+                            if (material == null)
+                            {
+                                material = _materialRepository.CreateNewWineModel(new MaterialInsertOptions { Number = materialNumber });
+                            }
+                        }
+
+                        var purchaseRequestItem = new PurchaseRequestItem
+                        {
+                            MaterialId = material.Id,
+                            LineNumber = lineNumber,
+                            Quantity = quantity,
+                            Make = make,
+                            Reason = reason,
+                            ExpectedDate = expectedDate
+                        };
+
+                        purchaseRequest.PurchaseRequestItems.Add(purchaseRequestItem);
+                    }
+                }
+            }
+            _context.PurchaseRequests.Add(purchaseRequest);
+            return purchaseRequest;
+        }
+
+
+        public List<string> ValidateForPurchaseRequest(string filePath)
+        {
+            List<string> errors = new List<string>();
+
+            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                    {
+                        ConfigureDataTable = (tableReader) => new ExcelDataTableConfiguration()
+                        {
+                            UseHeaderRow = false
+                        }
+                    });
+
+                    // Sheet Validation
+                    errors.AddRange(ValidateSheets(result.Tables, new List<string> { SalesOrderExcel.HeaderDataSheet, SalesOrderExcel.LineItemsSheet }));
+
+                    if (errors.Count > 0)
+                    {
+                        return errors;
+                    }
+
+                    // Column Validation
+                    errors.AddRange(ValidateColumns(SalesOrderExcel.HeaderDataColumns, result.Tables[SalesOrderExcel.HeaderDataSheet]));
+                    errors.AddRange(ValidateColumns(SalesOrderExcel.LineItemsColumnsForPurchaseRequest, result.Tables[SalesOrderExcel.LineItemsSheet]));
+
+                    if (errors.Count > 0)
+                    {
+                        return errors;
+                    }
+
+                    // Cell Validation
+                    var cells = result.Tables[SalesOrderExcel.HeaderDataSheet].GetCellsForColumn(0, false);
+
+                    errors.AddRange(ValidateCellsForPurchaseRequest(cells, result.Tables[SalesOrderExcel.HeaderDataSheet]));
+
+                    if (errors.Count > 0)
+                    {
+                        return errors;
+                    }
+                }
+            }
+
+            // Date Validation
+            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    DateTime date = new DateTime();
+                    
+                    var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                    {
+                        ConfigureDataTable = (tableReader) => new ExcelDataTableConfiguration()
+                        {
+                            UseHeaderRow = true
+                        }
+                    });
+
+                    foreach (DataRow row in result.Tables[SalesOrderExcel.HeaderDataSheet].Rows)
+                    {
+                        string key = row["Name"].ToString();
+                        object value = row["Value"];
+
+                        switch (key)
+                        {
+                            case "Date":
+                                if (!IsDateValid(value.ToString(), out date))
+                                {
+                                    errors.Add("Date in sheet " + SalesOrderExcel.HeaderDataSheet + " is not in valid format.");
+                                }
+                                break;
+                        }
+                    }
+                    
+                    // Because header row has index = 1 in excel sheet
+                    int index = 2; // In excel sheet
+
+                    foreach (DataRow row in result.Tables[SalesOrderExcel.LineItemsSheet].Rows)
+                    {
+                        var quantity = row["Quantity"];
+                        errors.AddRange(ValidateValueType(quantity.ToString(), result.Tables[SalesOrderExcel.LineItemsSheet], "Integer"));
+
+                        var value = row["Expected Date"];
+                        DateTime expectedDate = new DateTime();
+                        if (!IsDateValid(value.ToString(), out expectedDate))
+                        {
+                            errors.Add("Expected Date at row " + index + " is invalid");
+                        }
+                        index++;
+                    }
+                }
+            }
+
+            return errors;
+        }
+
+
+
+        //.... Validate Cells for purchase request ...
+        public List<string> ValidateCellsForPurchaseRequest(List<string> cells, DataTable sheet)
+        {
+            List<string> errors = new List<string>();
+
+            SalesOrderExcel.HeaderDataNameRowsForPurchaseRequest.ForEach(delegate (string cell)
+            {
+                if (!cells.Contains(cell))
+                {
+                    errors.Add("Cell " + cell + " is not present in sheet " + SalesOrderExcel.HeaderDataSheet);
+                }
+            });
+
+            return errors;
+        }
+
+        #endregion ---Purchase Request End ----
+
     }
 }

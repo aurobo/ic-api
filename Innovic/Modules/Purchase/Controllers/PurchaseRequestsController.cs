@@ -49,14 +49,14 @@ namespace Innovic.Modules.Purchase.Controllers
 
                 ExcelManager excelManager = new ExcelManager(_context, _userId);
 
-                var errors = excelManager.ValidateForSalesOrder(provider.FileData[0].LocalFileName);
+                var errors = excelManager.ValidateForPurchaseRequest(provider.FileData[0].LocalFileName);
 
                 if (errors.Count > 0)
                 {
                     return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
                 }
 
-                var salesOrder = excelManager.ToSalesOrder(provider.FileData[0].LocalFileName);
+                var purchaseRequest = excelManager.ToPurchaseRequest(provider.FileData[0].LocalFileName);
 
                 try
                 {
@@ -64,14 +64,14 @@ namespace Innovic.Modules.Purchase.Controllers
                 }
                 catch (DbUpdateException)
                 {
-                    //if (SalesOrderExists(salesOrder.Id))
-                    //{
-                    //    return Request.CreateResponse(HttpStatusCode.Conflict);
-                    //}
-                    //else
-                    //{
-                    //    throw;
-                    //}
+                    if (PurchaseRequestExists(purchaseRequest.Id))
+                    {
+                        return Request.CreateResponse(HttpStatusCode.Conflict);
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
 
                 if (System.IO.File.Exists(provider.FileData[0].LocalFileName))
@@ -89,5 +89,9 @@ namespace Innovic.Modules.Purchase.Controllers
 
 
 
+        private bool PurchaseRequestExists(string id)
+        {
+            return _context.PurchaseRequests.Count(e => e.Id == id) > 0;
+        }
     }
 }
