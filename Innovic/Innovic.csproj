@@ -183,6 +183,11 @@
     <Compile Include="Modules\Master\Options\MaterialInsertOptions.cs" />
     <Compile Include="Modules\Master\Options\MaterialUpdateOptions.cs" />
     <Compile Include="Modules\Master\Services\MaterialService.cs" />
+    <Compile Include="Modules\Purchase\Controllers\PurchaseRequestsController.cs" />
+    <Compile Include="Modules\Purchase\Models\PurchaseRequest.cs" />
+    <Compile Include="Modules\Purchase\Models\PurchaseRequestItem.cs" />
+    <Compile Include="Modules\Purchase\Models\PurchaseRequestItemStatus.cs" />
+    <Compile Include="Modules\Purchase\Models\PurchaseRequestStatus.cs" />
     <Compile Include="Modules\Sales\Controllers\CustomersController.cs" />
     <Compile Include="Modules\Sales\Controllers\InvoicesController.cs" />
     <Compile Include="Modules\Sales\Controllers\SalesOrdersController.cs" />
