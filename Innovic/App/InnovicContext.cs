@@ -1,5 +1,6 @@
 ﻿using Innovic.Modules.Accounts.Models;
 using Innovic.Modules.Master.Models;
+using Innovic.Modules.Purchase.Models;
 using Innovic.Modules.Sales.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Red.Wine;
@@ -20,6 +21,8 @@ namespace Innovic.App
         public DbSet<SalesOrderItem> SalesOrderItems { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<InvoiceItem> InvoiceItems { get; set; }
+        public DbSet<GoodsIssue> GoodsIssues { get; set; }
+        public DbSet<GoodsIssueItem> GoodsIssueItems { get; set; }
 
         public InnovicContext()
             : base("dbConnection")

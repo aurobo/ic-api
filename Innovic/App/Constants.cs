@@ -14,5 +14,7 @@ namespace Innovic.App
         public const string CustomerAbbr = "CR";
         public const string MaterialAbbr = "MT";
         public const string InvoiceAbbr = "INV";
+        public const string GoodsIssueAbbr = "GI";
+        public const string GoodsIssueItemAbbr = "GII";
     }
-}
+}  
