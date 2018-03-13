@@ -9,7 +9,7 @@ namespace Innovic.Modules.Purchase.Models
     {
         public PurchaseRequest()
         {
-            PurchaseRequestItems = new HashSet<PurchaseRequestItem>();
+            PurchaseRequestItems = new List<PurchaseRequestItem>();
         }
 
         [Column(TypeName = "datetime2")]
@@ -17,14 +17,14 @@ namespace Innovic.Modules.Purchase.Models
 
         public PurchaseRequestStatus Status { get; set; }
 
-        public virtual HashSet<PurchaseRequestItem> PurchaseRequestItems { get; set; }
+        public virtual List<PurchaseRequestItem> PurchaseRequestItems { get; set; }
 
         [NotMapped]
         public string Key
         {
             get
             {
-                return (Constants.PurchaseRequestCode + Constants.CodeSeparator + KeyId.ToString(Constants.FixDidit6));
+                return (Constants. PurchaseRequestAbbr+ Constants.KeySeparator + KeyId.ToString(Constants.FixedDigits));
             }
         }
 

@@ -14,10 +14,8 @@ namespace Innovic.App
         public const string CustomerAbbr = "CR";
         public const string MaterialAbbr = "MT";
         public const string InvoiceAbbr = "INV";
-        public const string PurchaseRequestCode = "PR";
-        public const string CodeSeparator = "-";
-        public const string FixDidit6 = "D6";
-        public const string PurchaseRequestItemCode = "PRI";
+        public const string PurchaseRequestAbbr = "PR";
+        public const string PurchaseRequestItemAbbr = "PRI";
 
     }
 }

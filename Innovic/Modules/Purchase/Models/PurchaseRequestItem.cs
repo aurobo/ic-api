@@ -35,7 +35,7 @@ namespace Innovic.Modules.Purchase.Models
         {
             get
             {
-                return (Constants.PurchaseRequestItemCode + Constants.CodeSeparator + KeyId.ToString(Constants.FixDidit6));
+                return (Constants.PurchaseRequestItemAbbr+ Constants.KeySeparator + KeyId.ToString(Constants.FixedDigits));
             }
         }
 
