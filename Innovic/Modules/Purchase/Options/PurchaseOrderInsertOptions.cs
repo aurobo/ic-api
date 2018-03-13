@@ -12,7 +12,6 @@ namespace Innovic.Modules.Purchase.Options
         public PurchaseOrderInsertOptions()
         {
             PurchaseRequests = new List<string>();
-            PurchaseOrderItems = new List<PurchaseOrderItemInsertOptions>();
         }
 
         public string Type { get; set; }
@@ -26,10 +25,7 @@ namespace Innovic.Modules.Purchase.Options
 
         public string TermsAndConditions { get; set; }
 
-        [CopyTo(typeof(PurchaseOrderItem), Red.Wine.Relationship.Dependent)]
-        public List<PurchaseOrderItemInsertOptions> PurchaseOrderItems { get; set; }
-
         [CopyTo(typeof(PurchaseRequest), Red.Wine.Relationship.Dependency, true)]
-        public List<string> PurchaseRequests { get; set; }
+        public List<string> PurchaseRequests { get; set; }    
     }
 }

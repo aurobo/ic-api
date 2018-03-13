@@ -25,6 +25,7 @@ namespace Innovic.App
         public DbSet<PurchaseRequestItem> PurchaseRequestItems { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         public DbSet<PurchaseOrderItem> PurchaseOrderItems { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
 
         public InnovicContext()
             : base("dbConnection")

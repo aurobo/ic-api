@@ -1,8 +1,8 @@
 ﻿using Innovic.App;
 using Innovic.Modules.Purchase.Models;
-using Innovic.Modules.Purchase.Options;
 using Innovic.Modules.Purchase.ProcessFlows;
 using Innovic.Modules.Purchase.Services;
+using Innovic.Modules.Sales.Options;
 using Microsoft.AspNet.Identity;
 using Red.Wine.Picker;
 using System;
@@ -11,48 +11,45 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Hosting;
 using System.Web.Http;
 
 namespace Innovic.Modules.Purchase.Controllers
 {
-    [RoutePrefix("api/PurchaseOrders")]
+    [RoutePrefix("api/Suppliers")]
     [Authorize]
-    public class PurchaseOrdersController : ApiController
+    public class SuppliersController : ApiController
     {
         private readonly InnovicContext _context;
         private readonly string _userId;
-        private readonly BaseRepository<PurchaseOrder> _purchaseOrderRepository;
+        private readonly BaseRepository<Supplier> _customerRepository;
 
-        public PurchaseOrdersController()
+        public SuppliersController()
         {
             _userId = RequestContext.Principal.Identity.GetUserId();
             _context = new InnovicContext(_userId);
-            _purchaseOrderRepository = new BaseRepository<PurchaseOrder>(_context, _userId);
+            _customerRepository = new BaseRepository<Supplier>(_context, _userId);
         }
 
         [Route("")]
         public IHttpActionResult Get()
         {
-            return Ok(_purchaseOrderRepository.Get().ToPickDictionaryCollection(PickConfigurations.PurchaseOrders));
+            return Ok(_customerRepository.Get().ToPickDictionaryCollection(PickConfigurations.Default));
         }
 
         [Route("{id}")]
         public IHttpActionResult Get(string id)
         {
-            PurchaseOrder purchaseOrder = _purchaseOrderRepository.GetByID(id);
-
-            if (purchaseOrder == null)
+            Supplier supplier = _customerRepository.GetByID(id);
+            if (supplier == null)
             {
                 return NotFound();
             }
 
-            return Ok(purchaseOrder.ToPickDictionary(PickConfigurations.PurchaseOrder));
+            return Ok(supplier.ToPickDictionary(new PickConfig(true, true)));
         }
 
         [Route("{id}")]
-        public IHttpActionResult Put(string id, PurchaseOrderUpdateOptions options)
+        public IHttpActionResult Put(string id, SupplierUpdateOptions options)
         {
             if (!ModelState.IsValid)
             {
@@ -64,10 +61,10 @@ namespace Innovic.Modules.Purchase.Controllers
                 return BadRequest();
             }
 
-            PurchaseOrder existingPurchaseOrder = _purchaseOrderRepository.GetByID(id);
-            PurchaseOrder updatedPurchaseOrder = _purchaseOrderRepository.UpdateExistingWineModel(existingPurchaseOrder, options);
+            Supplier existingSupplier = _customerRepository.GetByID(id);
+            Supplier updatedSupplier = _customerRepository.UpdateExistingWineModel(existingSupplier, options);
 
-            PurchaseOrderService.Process(updatedPurchaseOrder, PurchaseOrderFlow.Update);
+            SupplierService.Process(updatedSupplier, SupplierFlow.Update);
 
             try
             {
@@ -75,7 +72,7 @@ namespace Innovic.Modules.Purchase.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PurchaseOrderExists(id))
+                if (!CustomerExists(id))
                 {
                     return NotFound();
                 }
@@ -89,16 +86,16 @@ namespace Innovic.Modules.Purchase.Controllers
         }
 
         [Route("")]
-        public IHttpActionResult Post(PurchaseOrderInsertOptions options)
+        public IHttpActionResult Post(CustomerInsertOptions options)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            PurchaseOrder purchaseOrder = _purchaseOrderRepository.CreateNewWineModel(options);
-            PurchaseOrderService.Process(purchaseOrder, PurchaseOrderFlow.PopulateItemsFromPurchaseRequests, false);
-            PurchaseOrderService.Process(purchaseOrder, PurchaseOrderFlow.CalculateItemCost);
+            Supplier supplier = _customerRepository.CreateNewWineModel(options);
+
+            SupplierService.Process(supplier, SupplierFlow.Insert);
 
             try
             {
@@ -106,7 +103,7 @@ namespace Innovic.Modules.Purchase.Controllers
             }
             catch (DbUpdateException)
             {
-                if (PurchaseOrderExists(purchaseOrder.Id))
+                if (CustomerExists(supplier.Id))
                 {
                     return Conflict();
                 }
@@ -116,22 +113,22 @@ namespace Innovic.Modules.Purchase.Controllers
                 }
             }
 
-            return Ok(purchaseOrder.ToPickDictionary(new PickConfig(true, true)));
+            return Ok(supplier.ToPickDictionary(new PickConfig(true, true)));
         }
 
         [Route("{id}")]
         public IHttpActionResult Delete(string id)
         {
-            PurchaseOrder purchaseOrder = _purchaseOrderRepository.GetByID(id);
-            if (purchaseOrder == null)
+            Supplier supplier = _customerRepository.GetByID(id);
+            if (supplier == null)
             {
                 return NotFound();
             }
 
-            _context.PurchaseOrders.Remove(purchaseOrder);
+            _context.Suppliers.Remove(supplier);
             _context.SaveChanges();
 
-            return Ok(purchaseOrder.ToPickDictionary(new PickConfig(true, true)));
+            return Ok(supplier.ToPickDictionary(new PickConfig(true, true)));
         }
 
         protected override void Dispose(bool disposing)
@@ -143,9 +140,9 @@ namespace Innovic.Modules.Purchase.Controllers
             base.Dispose(disposing);
         }
 
-        private bool PurchaseOrderExists(string id)
+        private bool CustomerExists(string id)
         {
-            return _context.PurchaseOrders.Count(e => e.Id == id) > 0;
+            return _context.Customers.Count(e => e.Id == id) > 0;
         }
     }
 }

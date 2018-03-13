@@ -5,10 +5,9 @@ using System.Web;
 
 namespace Innovic.Modules.Purchase.ProcessFlows
 {
-    public enum PurchaseOrderFlow
+    public enum SupplierFlow
     {
-        CalculateItemCost,
-        Update,
-        PopulateItemsFromPurchaseRequests
+        Insert,
+        Update
     }
 }

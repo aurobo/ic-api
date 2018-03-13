@@ -162,6 +162,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App\AppMapper.cs" />
     <Compile Include="App\AuthProvider.cs" />
     <Compile Include="App\BaseModel.cs" />
     <Compile Include="App\BaseOptionsModel.cs" />
@@ -184,6 +185,8 @@
     <Compile Include="Modules\Master\Options\MaterialUpdateOptions.cs" />
     <Compile Include="Modules\Master\Services\MaterialService.cs" />
     <Compile Include="Modules\Purchase\Controllers\PurchaseOrdersController.cs" />
+    <Compile Include="Modules\Purchase\Controllers\PurchaseRequestsController.cs" />
+    <Compile Include="Modules\Purchase\Controllers\SuppliersController.cs" />
     <Compile Include="Modules\Purchase\Models\PurchaseOrder.cs" />
     <Compile Include="Modules\Purchase\Models\PurchaseOrderItem.cs" />
     <Compile Include="Modules\Purchase\Models\PurchaseOrderItemStatus.cs" />
@@ -199,8 +202,12 @@
     <Compile Include="Modules\Purchase\Options\PurchaseOrderUpdateOptions.cs" />
     <Compile Include="Modules\Purchase\ProcessFlows\PurchaseOrderFlow.cs" />
     <Compile Include="Modules\Purchase\ProcessFlows\PurchaseOrderItemFlow.cs" />
+    <Compile Include="Modules\Purchase\ProcessFlows\PurchaseRequestItemFlow.cs" />
+    <Compile Include="Modules\Purchase\ProcessFlows\SupplierFlow.cs" />
     <Compile Include="Modules\Purchase\Services\PurchaseOrderItemService.cs" />
     <Compile Include="Modules\Purchase\Services\PurchaseOrderService.cs" />
+    <Compile Include="Modules\Purchase\Services\PurchaseRequestItemService.cs" />
+    <Compile Include="Modules\Purchase\Services\SupplierService.cs" />
     <Compile Include="Modules\Sales\Controllers\CustomersController.cs" />
     <Compile Include="Modules\Sales\Controllers\InvoicesController.cs" />
     <Compile Include="Modules\Sales\Controllers\SalesOrdersController.cs" />
@@ -218,6 +225,7 @@
     <Compile Include="Modules\Sales\Options\SalesOrderInsertOptions.cs" />
     <Compile Include="Modules\Sales\Options\SalesOrderItemInsertOptions.cs" />
     <Compile Include="Modules\Sales\Options\SalesOrderUpdateOptions.cs" />
+    <Compile Include="Modules\Sales\Options\SupplierUpdateOptions.cs" />
     <Compile Include="Modules\Sales\ProcessFlows\InvoiceFlow.cs" />
     <Compile Include="Modules\Sales\ProcessFlows\SalesOrderFlow.cs" />
     <Compile Include="Modules\Sales\ProcessFlows\CustomerFlow.cs" />
