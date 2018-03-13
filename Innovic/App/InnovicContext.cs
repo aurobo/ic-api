@@ -21,6 +21,11 @@ namespace Innovic.App
         public DbSet<SalesOrderItem> SalesOrderItems { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<InvoiceItem> InvoiceItems { get; set; }
+        public DbSet<PurchaseRequest> PurchaseRequests { get; set; }
+        public DbSet<PurchaseRequestItem> PurchaseRequestItems { get; set; }
+        public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
+        public DbSet<PurchaseOrderItem> PurchaseOrderItems { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<GoodsIssue> GoodsIssues { get; set; }
         public DbSet<GoodsIssueItem> GoodsIssueItems { get; set; }
 

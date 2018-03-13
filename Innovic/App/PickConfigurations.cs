@@ -97,6 +97,41 @@ namespace Innovic.App
                 });
             }
         }
+
+        public static PickConfig PurchaseOrders
+        {
+            get
+            {
+                return new PickConfig(true, true, new List<Pick>
+                {
+                    new Pick("Supplier", new PickConfig(false, true, new List<Pick>(DefaultData)
+                    {
+                        new Pick("Name")
+                    }))
+                });
+            }
+        }
+
+        public static PickConfig PurchaseOrder
+        {
+            get
+            {
+                return new PickConfig(true, true, new List<Pick>(DefaultData)
+                {
+                    new Pick("Supplier", new PickConfig(false, true, new List<Pick>
+                    {
+                        new Pick("Name")
+                    })),
+                    new Pick("PurchaseOrderItems", new PickConfig(true, true, new List<Pick>(DefaultData)
+                    {
+                        new Pick("Material", new PickConfig(false, true, new List<Pick>
+                        {
+                            new Pick("Number")
+                        }))
+                    }))
+                });
+            }
+        }
         
         public static PickConfig GoodsIssue
         {
