@@ -132,5 +132,42 @@ namespace Innovic.App
                 });
             }
         }
+
+        public static PickConfig GoodsReceipts
+        {
+            get
+            {
+                return new PickConfig(true, true, new List<Pick>
+                {
+                    new Pick("Vendor", new PickConfig(false, true, new List<Pick>(DefaultData)
+                    {
+                        new Pick("Name")
+                    }))
+                });
+            }
+        }
+
+        public static PickConfig GoodsReceipt
+        {
+            get
+            {
+                return new PickConfig(true, true, new List<Pick>(DefaultData)
+                {
+                    new Pick("Vendor", new PickConfig(false, true, new List<Pick>
+                    {
+                        new Pick("Name")
+                    })),
+                    new Pick("GoodsReceiptItems", new PickConfig(true, true, new List<Pick>(DefaultData)
+                    {
+                        new Pick("Material", new PickConfig(false, true, new List<Pick>
+                        {
+                            new Pick("Number")
+                        }))
+                    }))
+                });
+            }
+        }
+
+
     }
 }

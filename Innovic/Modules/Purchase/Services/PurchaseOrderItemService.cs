@@ -22,5 +22,17 @@ namespace Innovic.Modules.Purchase.Services
 
             return purchaseOrderItem;
         }
+
+        internal static int GetRemainingReceiveQuantity(this PurchaseOrderItem purchaseOrderItem)
+        {
+            int remainingQuantity = purchaseOrderItem.Quantity;
+
+            foreach (var gri in purchaseOrderItem.GoodsReceiptItems)
+            {
+                remainingQuantity -= gri.Quantity;
+            }
+
+            return remainingQuantity;
+        }
     }
 }
