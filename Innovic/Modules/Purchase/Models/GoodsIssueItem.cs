@@ -12,26 +12,25 @@ namespace Innovic.Modules.Purchase.Models
     {
         public GoodsIssueItem()
         {
-
+            PurchaseOrderItems = new List<PurchaseOrderItem>();
         }
         
         public string GoodsIssueId { get; set; }
         public GoodsIssueItemStatus Status { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public UnitOfMeasurement UOM { get; set; }
         public string Text { get; set; }
         public string Size { get; set; }
         public string Notes { get; set; }
         public int Quantity { get; set; }
-        public int MaterialId { get; set; }
+        public string MaterialId { get; set; }
         public double Cost { get; set; }
         public double UnitCost { get; set; }
 
         
         public virtual GoodsIssue GoodsIssue { get; set; }
         public virtual Material Material { get; set; }
-        
+
+        public virtual List<PurchaseOrderItem> PurchaseOrderItems { get; set; }
+
 
         [NotMapped]
         public string Key
@@ -41,6 +40,6 @@ namespace Innovic.Modules.Purchase.Models
                 return (Constants.GoodsIssueItemAbbr + Constants.KeySeparator + KeyId.ToString(Constants.FixedDigits));
             }
         }
-
+        
     }
 }

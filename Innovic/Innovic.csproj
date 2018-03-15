@@ -196,14 +196,19 @@
     <Compile Include="Modules\Purchase\Models\PurchaseRequestItemStatus.cs" />
     <Compile Include="Modules\Purchase\Models\PurchaseRequestStatus.cs" />
     <Compile Include="Modules\Purchase\Models\Supplier.cs" />
+    <Compile Include="Modules\Purchase\Options\GoodsIssueItemInsertOptions.cs" />
+    <Compile Include="Modules\Purchase\Options\GoodsIssueItemUpdateOptions.cs" />
+    <Compile Include="Modules\Purchase\Options\GoodsIssueUpdateOptions.cs" />
     <Compile Include="Modules\Purchase\Options\PurchaseOrderInsertOptions.cs" />
     <Compile Include="Modules\Purchase\Options\PurchaseOrderItemInsertOptions.cs" />
     <Compile Include="Modules\Purchase\Options\PurchaseOrderItemUpdateOptions.cs" />
     <Compile Include="Modules\Purchase\Options\PurchaseOrderUpdateOptions.cs" />
+    <Compile Include="Modules\Purchase\ProcessFlows\GoodsIssueItemFlow.cs" />
     <Compile Include="Modules\Purchase\ProcessFlows\PurchaseOrderFlow.cs" />
     <Compile Include="Modules\Purchase\ProcessFlows\PurchaseOrderItemFlow.cs" />
     <Compile Include="Modules\Purchase\ProcessFlows\PurchaseRequestItemFlow.cs" />
     <Compile Include="Modules\Purchase\ProcessFlows\SupplierFlow.cs" />
+    <Compile Include="Modules\Purchase\Services\GoodsIssueItemService.cs" />
     <Compile Include="Modules\Purchase\Services\PurchaseOrderItemService.cs" />
     <Compile Include="Modules\Purchase\Services\PurchaseOrderService.cs" />
     <Compile Include="Modules\Purchase\Services\PurchaseRequestItemService.cs" />
@@ -214,7 +219,6 @@
     <Compile Include="Modules\Purchase\Models\GoodsIssueItemStatus.cs" />
     <Compile Include="Modules\Purchase\Models\GoodsIssueReference.cs" />
     <Compile Include="Modules\Purchase\Models\GoodsIssueStatus.cs" />
-    <Compile Include="Modules\Purchase\Models\PurchaseOrderType.cs" />
     <Compile Include="Modules\Purchase\Models\UnitOfMeasurement.cs" />
     <Compile Include="Modules\Purchase\Options\GoodsIssueInsertOptions.cs" />
     <Compile Include="Modules\Purchase\ProcessFlows\GoodsIssueFlow.cs" />

@@ -22,6 +22,14 @@ namespace Innovic.Modules.Purchase.Services
                     break;
                 case PurchaseOrderFlow.Update:
                     break;
+
+                case PurchaseOrderFlow.ChangeStatusTo:
+                    var isOpenstatus = purchaseOrder.PurchaseOrderItems.Any(g => g.Status == PurchaseOrderItemStatus.Open);
+
+                    purchaseOrder.Status = isOpenstatus ? PurchaseOrderStatus.Open : PurchaseOrderStatus.Closed;
+
+                    break;
+
                 case PurchaseOrderFlow.PopulateItemsFromPurchaseRequests:
 
                     AppMapper mapper = new AppMapper();

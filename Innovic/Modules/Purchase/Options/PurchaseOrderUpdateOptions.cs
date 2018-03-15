@@ -11,20 +11,16 @@ namespace Innovic.Modules.Purchase.Options
     {
         public PurchaseOrderUpdateOptions()
         {
-            PurchaseOrderItems = new List<PurchaseOrderItemInsertOptions>();
+            PurchaseOrderItems = new List<PurchaseOrderItemUpdateOptions>();
         }
 
         public string Id { get; set; }
-
-        public string Type { get; set; }
-
-        public string Reference { get; set; }
 
         public DateTime Date { get; set; }
 
         public string TermsAndConditions { get; set; }
 
         [CopyTo(typeof(PurchaseOrderItem), Red.Wine.Relationship.Dependent)]
-        public List<PurchaseOrderItemInsertOptions> PurchaseOrderItems { get; set; }
+        public List<PurchaseOrderItemUpdateOptions> PurchaseOrderItems { get; set; }
     }
 }
