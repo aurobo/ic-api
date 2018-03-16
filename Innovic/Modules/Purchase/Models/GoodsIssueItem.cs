@@ -10,10 +10,6 @@ namespace Innovic.Modules.Purchase.Models
 {
     public class GoodsIssueItem : BaseModel
     {
-        public GoodsIssueItem()
-        {
-            PurchaseOrderItems = new List<PurchaseOrderItem>();
-        }
         
         public string GoodsIssueId { get; set; }
         public GoodsIssueItemStatus Status { get; set; }
@@ -24,13 +20,11 @@ namespace Innovic.Modules.Purchase.Models
         public string MaterialId { get; set; }
         public double Cost { get; set; }
         public double UnitCost { get; set; }
+        public string PurchaseOrderItemId { get; set; }
 
-        
         public virtual GoodsIssue GoodsIssue { get; set; }
         public virtual Material Material { get; set; }
-
-        public virtual List<PurchaseOrderItem> PurchaseOrderItems { get; set; }
-
+        public virtual PurchaseOrderItem PurchaseOrderItem { get; set; }
 
         [NotMapped]
         public string Key

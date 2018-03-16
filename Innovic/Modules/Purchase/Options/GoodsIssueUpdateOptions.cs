@@ -12,7 +12,7 @@ namespace Innovic.Modules.Purchase.Options
     {
         public GoodsIssueUpdateOptions()
         {
-            GoodsIssueItemsUpdateOptions = new List<GoodsIssueItemUpdateOptions>();
+            GoodsIssueItems = new List<GoodsIssueItemUpdateOptions>();
         }
 
         public string Id { get; set; }
@@ -22,7 +22,7 @@ namespace Innovic.Modules.Purchase.Options
         public string SlipLevelNote { get; set; }
 
         [CopyTo(typeof(GoodsIssueItem), Red.Wine.Relationship.Dependent)]
-        public virtual List<GoodsIssueItemUpdateOptions> GoodsIssueItemsUpdateOptions { get; set; }
+        public virtual List<GoodsIssueItemUpdateOptions> GoodsIssueItems { get; set; }
         
     }
 }

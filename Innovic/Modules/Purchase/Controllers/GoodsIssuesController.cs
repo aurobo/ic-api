@@ -58,7 +58,6 @@ namespace Innovic.Modules.Purchase.Controllers
 
             GoodsIssue goodsIssue = _goodsIssueRepository.CreateNewWineModel(options);
 
-            GoodsIssueService.Process(goodsIssue, GoodsIssueFlow.PopulateItemsFromPurchaseOrder);
             GoodsIssueService.Process(goodsIssue, GoodsIssueFlow.SetDefaultStatus);
             GoodsIssueService.Process(goodsIssue, GoodsIssueFlow.CalculateTotalValue);
 
@@ -75,7 +74,7 @@ namespace Innovic.Modules.Purchase.Controllers
                 }
                 else
                 {
-                    throw; 
+                    throw;
                 }
             }
 

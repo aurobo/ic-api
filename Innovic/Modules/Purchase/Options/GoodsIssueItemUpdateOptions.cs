@@ -12,7 +12,7 @@ namespace Innovic.Modules.Purchase.Options
         public string Id { get; set; }
 
         [CopyTo(typeof(GoodsIssue),Red.Wine.Relationship.Dependency, true)]
-        public int GoodsIssueId { get; set; }
+        public string GoodsIssueId { get; set; }
 
         public string Text { get; set; }
         public string Size { get; set; }
