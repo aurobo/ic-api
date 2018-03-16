@@ -10,7 +10,7 @@ namespace Innovic.Modules.Purchase.Services
 {
     public static class PurchaseOrderService
     {
-        public static PurchaseOrder Process(this PurchaseOrder purchaseOrder, PurchaseOrderFlow flow, bool mergeDuplicates = true)
+        public static PurchaseOrder Process(this PurchaseOrder purchaseOrder, PurchaseOrderFlow flow, bool mergeDuplicates = true, PurchaseOrderStatus status = PurchaseOrderStatus.Closed)
         {
             switch (flow)
             {
@@ -61,6 +61,10 @@ namespace Innovic.Modules.Purchase.Services
                         }
                     }
 
+                    break;
+                case PurchaseOrderFlow.ChangeStatusTo:
+                    var isOpenstatus = purchaseOrder.PurchaseOrderItems.Any(g => g.Status == PurchaseOrderItemStatus.Open);
+                    purchaseOrder.Status = isOpenstatus ? PurchaseOrderStatus.Open : status;
                     break;
             }
 

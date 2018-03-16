@@ -9,7 +9,7 @@ namespace Innovic.Modules.Purchase.Services
 {
     public static class PurchaseOrderItemService
     {
-        public static PurchaseOrderItem Process(this PurchaseOrderItem purchaseOrderItem, PurchaseOrderItemFlow flow)
+        public static PurchaseOrderItem Process(this PurchaseOrderItem purchaseOrderItem, PurchaseOrderItemFlow flow, PurchaseOrderItemStatus status = PurchaseOrderItemStatus.Closed)
         {
             switch (flow)
             {
@@ -17,6 +17,26 @@ namespace Innovic.Modules.Purchase.Services
                     purchaseOrderItem.Cost = purchaseOrderItem.Quantity * purchaseOrderItem.UnitPrice;
                     break;
                 case PurchaseOrderItemFlow.Update:
+                    break;
+                case PurchaseOrderItemFlow.ChangeStatusTo:
+                    purchaseOrderItem.Status = status;
+                    break;
+                case PurchaseOrderItemFlow.UpdatePRIStatus:
+                    foreach (var purchaseRequestItem in purchaseOrderItem.PurchaseRequestItems)
+                    {
+                        if (purchaseOrderItem.Quantity == purchaseRequestItem.Quantity)
+                        {
+                            PurchaseRequestItemService.Process(purchaseRequestItem, PurchaseRequestItemFlow.ChangeStatusTo);
+                            //purchaseRequestItems.ChangeStatusTo(PurchaseRequestItemStatus.Closed);
+                        }
+                        else
+                        {
+                            PurchaseRequestItemService.Process(purchaseRequestItem, PurchaseRequestItemFlow.ChangeStatusTo);
+                            //purchaseRequestItems.ChangeStatusTo(PurchaseRequestItemStatus.Open);
+                        }
+                        purchaseRequestItem.PurchaseRequest.Process(PurchaseRequestFlow.ChangeStatusTo);
+                        //purchaseRequestItems.PurchaseRequest.ChangeStatusTo(PurchaseRequestStatus.Closed);
+                    }
                     break;
             }
 

@@ -9,6 +9,7 @@ namespace Innovic.Modules.Purchase.ProcessFlows
     {
         Insert,
         Update,
-        GetRemainingQuantity
+        GetRemainingQuantity,
+        ChangeStatusTo
     }
 }

@@ -9,6 +9,7 @@ namespace Innovic.Modules.Purchase.ProcessFlows
     {
         CalculateItemCost,
         Update,
-        PopulateItemsFromPurchaseRequests
+        PopulateItemsFromPurchaseRequests,
+        ChangeStatusTo
     }
 }

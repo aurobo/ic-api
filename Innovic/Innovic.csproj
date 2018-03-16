@@ -213,6 +213,7 @@
     <Compile Include="Modules\Purchase\ProcessFlows\GoodsReceiptItemFlow.cs" />
     <Compile Include="Modules\Purchase\ProcessFlows\PurchaseOrderFlow.cs" />
     <Compile Include="Modules\Purchase\ProcessFlows\PurchaseOrderItemFlow.cs" />
+    <Compile Include="Modules\Purchase\ProcessFlows\PurchaseRequestFlow.cs" />
     <Compile Include="Modules\Purchase\ProcessFlows\PurchaseRequestItemFlow.cs" />
     <Compile Include="Modules\Purchase\ProcessFlows\SupplierFlow.cs" />
     <Compile Include="Modules\Purchase\Services\GoodsReceiptItemService.cs" />
@@ -220,6 +221,7 @@
     <Compile Include="Modules\Purchase\Services\PurchaseOrderItemService.cs" />
     <Compile Include="Modules\Purchase\Services\PurchaseOrderService.cs" />
     <Compile Include="Modules\Purchase\Services\PurchaseRequestItemService.cs" />
+    <Compile Include="Modules\Purchase\Services\PurchaseRequestService.cs" />
     <Compile Include="Modules\Purchase\Services\SupplierService.cs" />
     <Compile Include="Modules\Sales\Controllers\CustomersController.cs" />
     <Compile Include="Modules\Sales\Controllers\InvoicesController.cs" />
