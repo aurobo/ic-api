@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Innovic.Modules.Purchase.Models;
+using Red.Wine.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,8 +15,11 @@ namespace Innovic.Modules.Purchase.Options
 
         public int Quantity { get; set; }
 
-        public double Rate { get; set; }
+        public double UnitPrice { get; set; }
 
         public DateTime DeliveryDate { get; set; }
+
+        [CopyTo(typeof(PurchaseOrder), Red.Wine.Relationship.Dependency, true)]
+        public string PurchaseOrderId { get; set; }
     }
 }

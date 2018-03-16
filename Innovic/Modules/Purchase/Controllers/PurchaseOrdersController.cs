@@ -67,7 +67,7 @@ namespace Innovic.Modules.Purchase.Controllers
             PurchaseOrder existingPurchaseOrder = _purchaseOrderRepository.GetByID(id);
             PurchaseOrder updatedPurchaseOrder = _purchaseOrderRepository.UpdateExistingWineModel(existingPurchaseOrder, options);
 
-            PurchaseOrderService.Process(updatedPurchaseOrder, PurchaseOrderFlow.Update);
+            PurchaseOrderService.Process(updatedPurchaseOrder, PurchaseOrderFlow.CalculateItemCost);
 
             try
             {
