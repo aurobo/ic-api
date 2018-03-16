@@ -14,17 +14,23 @@ namespace Innovic.Modules.Purchase.Options
         {
             PurchaseOrders = new List<string>();
             GoodsReceiptItems = new List<GoodsReceiptItemInsertOptions>();
+            GoodsIssues = new List<string>();
         }
 
         public string Reference { get; set; }
 
         public DateTime Date { get; set; }
 
+        public string SlipLevelNote { get; set; }
+
         [CopyTo(typeof(Customer), Red.Wine.Relationship.Dependency, true)]
         public string VendorId { get; set; }
 
         [CopyTo(typeof(PurchaseOrder), Red.Wine.Relationship.Dependency, true)]
         public List<string> PurchaseOrders { get; set; }
+
+        [CopyTo(typeof(GoodsIssue), Red.Wine.Relationship.Dependency, true)]
+        public List<string> GoodsIssues { get; set; }
 
         [CopyTo(typeof(GoodsReceiptItem), Red.Wine.Relationship.Dependent)]
         public virtual List<GoodsReceiptItemInsertOptions> GoodsReceiptItems { get; set; }

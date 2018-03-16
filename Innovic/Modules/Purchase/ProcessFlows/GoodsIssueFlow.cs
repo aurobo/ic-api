@@ -9,11 +9,6 @@ namespace Innovic.Modules.Purchase.ProcessFlows
     {
         Insert,
         Update,
-        ImportExcel,
-        AddRemainingQuantity,
-        PendingSalesOrderValue,
-        SetDefaultStatus,
-        PopulateItemsFromPurchaseOrder,
-        CalculateTotalValue
+        SetDefaultStatus
     }
 }

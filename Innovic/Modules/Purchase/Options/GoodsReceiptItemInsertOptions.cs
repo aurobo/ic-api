@@ -15,7 +15,7 @@ namespace Innovic.Modules.Purchase.Options
 
         public int Quantity { get; set; }
 
-        public double Cost { get; set; }
+        public string Notes { get; set; }
 
         public string MaterialId { get; set; }
 
@@ -23,5 +23,8 @@ namespace Innovic.Modules.Purchase.Options
 
         [CopyTo(typeof(PurchaseOrderItem), Red.Wine.Relationship.Dependency, true)]
         public string PurchaseOrderItemId { get; set; }
+
+        [CopyTo(typeof(GoodsIssueItem), Red.Wine.Relationship.Dependency, true)]
+        public string GoodsIssueItemId { get; set; }
     }
 }

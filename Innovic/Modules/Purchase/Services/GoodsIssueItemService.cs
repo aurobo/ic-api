@@ -28,7 +28,7 @@ namespace Innovic.Modules.Purchase.Services
 
                 case GoodsIssueItemFlow.CalCulateCost:
 
-                   goodsIssueItem.Cost = goodsIssueItem.UnitCost * goodsIssueItem.Quantity;
+                   goodsIssueItem.Cost = goodsIssueItem.UnitPrice * goodsIssueItem.Quantity;
                     break;
             }
 

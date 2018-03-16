@@ -12,7 +12,7 @@ using System.Web.Http;
 
 namespace Innovic.Modules.Purchase.Controllers
 {
-    [RoutePrefix("api/GoodsIssue")]
+    [RoutePrefix("api/GoodsIssues")]
     [Authorize]
     public class GoodsIssuesController : ApiController
     {
@@ -57,10 +57,7 @@ namespace Innovic.Modules.Purchase.Controllers
             }
 
             GoodsIssue goodsIssue = _goodsIssueRepository.CreateNewWineModel(options);
-
-            GoodsIssueService.Process(goodsIssue, GoodsIssueFlow.SetDefaultStatus);
-            GoodsIssueService.Process(goodsIssue, GoodsIssueFlow.CalculateTotalValue);
-
+            GoodsIssueService.Process(goodsIssue, GoodsIssueFlow.Insert);
 
             try
             {
@@ -99,7 +96,6 @@ namespace Innovic.Modules.Purchase.Controllers
 
             GoodsIssue existingGoodsIssue = _goodsIssueRepository.GetByID(id);
             GoodsIssue updatedGoodsIssue = _goodsIssueRepository.UpdateExistingWineModel(existingGoodsIssue, options);
-            GoodsIssueService.Process(updatedGoodsIssue, GoodsIssueFlow.CalculateTotalValue);
 
             try
             {

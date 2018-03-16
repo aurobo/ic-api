@@ -15,7 +15,10 @@ namespace Innovic.Modules.Purchase.Services
             switch (flow)
             {
                 case GoodsIssueFlow.Insert:
-
+                    foreach (var item in goodsIssue.GoodsIssueItems)
+                    {
+                        item.Process(GoodsIssueItemFlow.CalCulateCost);
+                    }
                     break;
 
                 case GoodsIssueFlow.Update:
@@ -30,17 +33,6 @@ namespace Innovic.Modules.Purchase.Services
                     }
                     goodsIssue.Status = GoodsIssueStatus.Open;
 
-                    break;
-
-
-                case GoodsIssueFlow.CalculateTotalValue:
-                     
-
-                    foreach (var item in goodsIssue.GoodsIssueItems)
-                    {
-                        GoodsIssueItemService.Process(item, GoodsIssueItemFlow.CalCulateCost);
-                        goodsIssue.TotalValue += item.Cost;
-                    }
                     break;
             }
             return goodsIssue;

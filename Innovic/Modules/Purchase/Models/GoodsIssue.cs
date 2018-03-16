@@ -10,11 +10,11 @@ namespace Innovic.Modules.Purchase.Models
 {
     public class GoodsIssue : BaseModel
     {
-
         public GoodsIssue()
         {
             GoodsIssueItems = new List<GoodsIssueItem>();
             PurchaseOrders = new List<PurchaseOrder>();
+            GoodsReceipts = new List<GoodsReceipt>();
         }
         
         public GoodsIssueReference Reference { get; set; }
@@ -25,11 +25,10 @@ namespace Innovic.Modules.Purchase.Models
 
         public string VendorId { get; set; }
         public string SlipLevelNote { get; set; }
-        public double TotalValue { get; set; }
-
 
         public virtual List<GoodsIssueItem> GoodsIssueItems { get; set; }
         public virtual List<PurchaseOrder> PurchaseOrders { get; set; }
+        public virtual List<GoodsReceipt> GoodsReceipts { get; set; }
 
         [ForeignKey("VendorId")]
         public virtual Customer Vendor { get; set; }

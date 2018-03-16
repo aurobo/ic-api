@@ -15,7 +15,7 @@ namespace Innovic.Modules.Purchase.Options
         
         public int Quantity { get; set; }
 
-        public double Cost { get; set; }
+        public double UnitPrice { get; set; }
 
         [CopyTo(typeof(Material), Red.Wine.Relationship.Dependency, true)]
         public string MaterialId { get; set; }
