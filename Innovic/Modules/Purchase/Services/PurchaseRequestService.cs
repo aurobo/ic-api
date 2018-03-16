@@ -9,7 +9,7 @@ namespace Innovic.Modules.Purchase.Services
 {
     public static class PurchaseRequestService
     {
-        public static PurchaseRequest Process(this PurchaseRequest purchaseRequest, PurchaseRequestFlow flow, PurchaseRequestStatus status = PurchaseRequestStatus.Closed)
+        public static PurchaseRequest Process(this PurchaseRequest purchaseRequest, PurchaseRequestFlow flow)
         {
             switch (flow)
             {
@@ -19,7 +19,7 @@ namespace Innovic.Modules.Purchase.Services
                     break;
                 case PurchaseRequestFlow.ChangeStatusTo:
                     var isOpenstatus = purchaseRequest.PurchaseRequestItems.Any(g => g.Status == PurchaseRequestItemStatus.Open);
-                    purchaseRequest.Status = isOpenstatus ? PurchaseRequestStatus.Open : status;
+                    purchaseRequest.Status = isOpenstatus ? PurchaseRequestStatus.Open : PurchaseRequestStatus.Closed;
                     break;
             }
 

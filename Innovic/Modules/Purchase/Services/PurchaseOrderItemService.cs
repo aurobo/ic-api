@@ -9,7 +9,7 @@ namespace Innovic.Modules.Purchase.Services
 {
     public static class PurchaseOrderItemService
     {
-        public static PurchaseOrderItem Process(this PurchaseOrderItem purchaseOrderItem, PurchaseOrderItemFlow flow, PurchaseOrderItemStatus status = PurchaseOrderItemStatus.Closed)
+        public static PurchaseOrderItem Process(this PurchaseOrderItem purchaseOrderItem, PurchaseOrderItemFlow flow)
         {
             switch (flow)
             {
@@ -19,7 +19,7 @@ namespace Innovic.Modules.Purchase.Services
                 case PurchaseOrderItemFlow.Update:
                     break;
                 case PurchaseOrderItemFlow.ChangeStatusTo:
-                    purchaseOrderItem.Status = status;
+                    purchaseOrderItem.Status = PurchaseOrderItemStatus.Closed;
                     break;
                 case PurchaseOrderItemFlow.UpdatePRIStatus:
                     foreach (var purchaseRequestItem in purchaseOrderItem.PurchaseRequestItems)

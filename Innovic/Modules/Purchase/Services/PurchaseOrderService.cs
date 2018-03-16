@@ -10,7 +10,7 @@ namespace Innovic.Modules.Purchase.Services
 {
     public static class PurchaseOrderService
     {
-        public static PurchaseOrder Process(this PurchaseOrder purchaseOrder, PurchaseOrderFlow flow, bool mergeDuplicates = true, PurchaseOrderStatus status = PurchaseOrderStatus.Closed)
+        public static PurchaseOrder Process(this PurchaseOrder purchaseOrder, PurchaseOrderFlow flow)
         {
             switch (flow)
             {
@@ -25,6 +25,7 @@ namespace Innovic.Modules.Purchase.Services
                 case PurchaseOrderFlow.PopulateItemsFromPurchaseRequests:
 
                     AppMapper mapper = new AppMapper();
+                    bool mergeDuplicates = false;
 
                     var openPurchaseRequests = purchaseOrder.PurchaseRequests.Where(pr => pr.Status == PurchaseRequestStatus.Open);
 
@@ -64,7 +65,7 @@ namespace Innovic.Modules.Purchase.Services
                     break;
                 case PurchaseOrderFlow.ChangeStatusTo:
                     var isOpenstatus = purchaseOrder.PurchaseOrderItems.Any(g => g.Status == PurchaseOrderItemStatus.Open);
-                    purchaseOrder.Status = isOpenstatus ? PurchaseOrderStatus.Open : status;
+                    purchaseOrder.Status = isOpenstatus ? PurchaseOrderStatus.Open : PurchaseOrderStatus.Closed;
                     break;
             }
 
