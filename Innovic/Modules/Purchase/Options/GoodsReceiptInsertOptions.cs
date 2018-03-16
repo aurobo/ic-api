@@ -13,6 +13,7 @@ namespace Innovic.Modules.Purchase.Options
         public GoodsReceiptInsertOptions()
         {
             PurchaseOrders = new List<string>();
+            GoodsReceiptItems = new List<GoodsReceiptItemInsertOptions>();
         }
 
         public string Reference { get; set; }
@@ -22,9 +23,10 @@ namespace Innovic.Modules.Purchase.Options
         [CopyTo(typeof(Customer), Red.Wine.Relationship.Dependency, true)]
         public string VendorId { get; set; }
 
-        public string SlipLevelNote { get; set; }
-
         [CopyTo(typeof(PurchaseOrder), Red.Wine.Relationship.Dependency, true)]
         public List<string> PurchaseOrders { get; set; }
+
+        [CopyTo(typeof(GoodsReceiptItem), Red.Wine.Relationship.Dependent)]
+        public virtual List<GoodsReceiptItemInsertOptions> GoodsReceiptItems { get; set; }
     }
 }

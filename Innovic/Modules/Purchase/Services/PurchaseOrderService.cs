@@ -17,7 +17,7 @@ namespace Innovic.Modules.Purchase.Services
                 case PurchaseOrderFlow.CalculateItemCost:
                     foreach (var purchaseOrderItem in purchaseOrder.PurchaseOrderItems)
                     {
-                        purchaseOrderItem.Process(PurchaseOrderItemFlow.Insert);
+                        purchaseOrderItem.Process(PurchaseOrderItemFlow.CalculateCost);
                     }
                     break;
                 case PurchaseOrderFlow.Update:

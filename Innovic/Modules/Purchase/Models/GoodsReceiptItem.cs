@@ -9,11 +9,6 @@ namespace Innovic.Modules.Purchase.Models
 {
     public class GoodsReceiptItem : BaseModel
     {
-        public GoodsReceiptItem()
-        {
-            PurchaseOrderItems = new List<PurchaseOrderItem>();
-        }
-
         public string GoodsReceiptId { get; set; }
 
         public string Text { get; set; }
@@ -26,14 +21,16 @@ namespace Innovic.Modules.Purchase.Models
 
         public string MaterialId { get; set; }
 
-        public double UnitCost { get; set; }
+        public double UnitPrice { get; set; }
 
         public GoodsReceiptItemStatus Status { get; set; }
+
+        public string PurchaseOrderItemId { get; set; }
 
         public virtual Material Material { get; set; }
 
         public virtual GoodsReceipt GoodsReceipt { get; set; }
 
-        public virtual List<PurchaseOrderItem> PurchaseOrderItems { get; set; }
+        public virtual PurchaseOrderItem PurchaseOrderItem { get; set; }
     }
 }

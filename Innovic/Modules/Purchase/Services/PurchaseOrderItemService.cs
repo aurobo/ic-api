@@ -13,7 +13,7 @@ namespace Innovic.Modules.Purchase.Services
         {
             switch (flow)
             {
-                case PurchaseOrderItemFlow.Insert:
+                case PurchaseOrderItemFlow.CalculateCost:
                     purchaseOrderItem.Cost = purchaseOrderItem.Quantity * purchaseOrderItem.UnitPrice;
                     break;
                 case PurchaseOrderItemFlow.Update:

@@ -8,7 +8,7 @@ namespace Innovic.Modules.Purchase.ProcessFlows
     public enum GoodsReceiptItemFlow
     {
         Insert,
-        Update
-
+        Update,
+        CalculateCost
     }
 }

@@ -12,6 +12,7 @@ namespace Innovic.Modules.Purchase.Options
         public PurchaseOrderInsertOptions()
         {
             PurchaseRequests = new List<string>();
+            PurchaseOrderItems = new List<PurchaseOrderItemInsertOptions>();
         }
 
         public DateTime Date { get; set; }
