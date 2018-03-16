@@ -31,7 +31,7 @@ namespace Innovic.Modules.Purchase.Controllers
         [Route("")]
         public IHttpActionResult Get()
         {
-            return Ok(_goodsIssueRepository.Get().ToPickDictionaryCollection(PickConfigurations.GoodsIssue));
+            return Ok(_goodsIssueRepository.Get().ToPickDictionaryCollection(PickConfigurations.GoodsIssues));
         }
 
         [Route("{id}")]

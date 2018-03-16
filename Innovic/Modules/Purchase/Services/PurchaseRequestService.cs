@@ -7,19 +7,19 @@ using System.Web;
 
 namespace Innovic.Modules.Purchase.Services
 {
-    public static class PurchaseRequestItemService
+    public static class PurchaseRequestService
     {
-        public static PurchaseRequestItem Process(this PurchaseRequestItem purchaseRequestItem, PurchaseRequestItemFlow flow)
+        public static PurchaseRequest Process(this PurchaseRequest purchaseRequest, PurchaseRequestFlow flow)
         {
             switch (flow)
             {
-                case PurchaseRequestItemFlow.Insert:
+                case PurchaseRequestFlow.Insert:
                     break;
-                case PurchaseRequestItemFlow.Update:
+                case PurchaseRequestFlow.Update:
                     break;
             }
 
-            return purchaseRequestItem;
+            return purchaseRequest;
         }
     }
 }

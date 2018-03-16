@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Innovic.Modules.Purchase.ProcessFlows
 {
-    public enum PurchaseRequestItemFlow
+    public enum PurchaseRequestFlow
     {
         Insert,
         Update

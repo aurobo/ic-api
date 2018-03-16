@@ -17,7 +17,7 @@ namespace Innovic.Modules.Purchase.Options
             GoodsIssueItems = new List<GoodsIssueItemInsertOptions>();
         }
 
-        public string Reference { get; set; }
+        public GoodsIssueReference Reference { get; set; }
         public DateTime Date { get; set; }
         
         [CopyTo(typeof(PurchaseOrder), Red.Wine.Relationship.Dependency, true)]

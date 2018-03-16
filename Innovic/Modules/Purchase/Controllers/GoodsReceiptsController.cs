@@ -11,48 +11,46 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Hosting;
 using System.Web.Http;
 
 namespace Innovic.Modules.Purchase.Controllers
 {
-    [RoutePrefix("api/PurchaseOrders")]
+    [RoutePrefix("api/GoodsReceipts")]
     [Authorize]
-    public class PurchaseOrdersController : ApiController
+    public class GoodsReceiptsController : ApiController
     {
         private readonly InnovicContext _context;
         private readonly string _userId;
-        private readonly BaseRepository<PurchaseOrder> _purchaseOrderRepository;
+        private readonly BaseRepository<GoodsReceipt> _goodsReceiptRepository;
 
-        public PurchaseOrdersController()
+        public GoodsReceiptsController()
         {
             _userId = RequestContext.Principal.Identity.GetUserId();
             _context = new InnovicContext(_userId);
-            _purchaseOrderRepository = new BaseRepository<PurchaseOrder>(_context, _userId);
+            _goodsReceiptRepository = new BaseRepository<GoodsReceipt>(_context, _userId);
         }
 
         [Route("")]
         public IHttpActionResult Get()
         {
-            return Ok(_purchaseOrderRepository.Get().ToPickDictionaryCollection(PickConfigurations.PurchaseOrders));
+            return Ok(_goodsReceiptRepository.Get().ToPickDictionaryCollection(PickConfigurations.GoodsReceipts));
         }
 
         [Route("{id}")]
         public IHttpActionResult Get(string id)
         {
-            PurchaseOrder purchaseOrder = _purchaseOrderRepository.GetByID(id);
+            GoodsReceipt goodsReceipt = _goodsReceiptRepository.GetByID(id);
 
-            if (purchaseOrder == null)
+            if (goodsReceipt == null)
             {
                 return NotFound();
             }
 
-            return Ok(purchaseOrder.ToPickDictionary(PickConfigurations.PurchaseOrder));
+            return Ok(goodsReceipt.ToPickDictionary(PickConfigurations.GoodsReceipt));
         }
 
         [Route("{id}")]
-        public IHttpActionResult Put(string id, PurchaseOrderUpdateOptions options)
+        public IHttpActionResult Put(string id, GoodsReceiptUpdateOptions options)
         {
             if (!ModelState.IsValid)
             {
@@ -64,10 +62,10 @@ namespace Innovic.Modules.Purchase.Controllers
                 return BadRequest();
             }
 
-            PurchaseOrder existingPurchaseOrder = _purchaseOrderRepository.GetByID(id);
-            PurchaseOrder updatedPurchaseOrder = _purchaseOrderRepository.UpdateExistingWineModel(existingPurchaseOrder, options);
+            GoodsReceipt existinggoodsReceipt = _goodsReceiptRepository.GetByID(id);
+            GoodsReceipt updatedgoodsReceipt = _goodsReceiptRepository.UpdateExistingWineModel(existinggoodsReceipt, options);
 
-            PurchaseOrderService.Process(updatedPurchaseOrder, PurchaseOrderFlow.CalculateItemCost);
+            GoodsReceiptService.Process(updatedgoodsReceipt, GoodsReceiptFlow.Update);
 
             try
             {
@@ -75,7 +73,7 @@ namespace Innovic.Modules.Purchase.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PurchaseOrderExists(id))
+                if (!goodsReceiptExists(id))
                 {
                     return NotFound();
                 }
@@ -89,15 +87,14 @@ namespace Innovic.Modules.Purchase.Controllers
         }
 
         [Route("")]
-        public IHttpActionResult Post(PurchaseOrderInsertOptions options)
+        public IHttpActionResult Post(GoodsReceiptInsertOptions options)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            PurchaseOrder purchaseOrder = _purchaseOrderRepository.CreateNewWineModel(options);
-            PurchaseOrderService.Process(purchaseOrder, PurchaseOrderFlow.CalculateItemCost);
+            GoodsReceipt goodsReceipt = _goodsReceiptRepository.CreateNewWineModel(options);
 
             try
             {
@@ -105,7 +102,7 @@ namespace Innovic.Modules.Purchase.Controllers
             }
             catch (DbUpdateException)
             {
-                if (PurchaseOrderExists(purchaseOrder.Id))
+                if (goodsReceiptExists(goodsReceipt.Id))
                 {
                     return Conflict();
                 }
@@ -115,22 +112,22 @@ namespace Innovic.Modules.Purchase.Controllers
                 }
             }
 
-            return Ok(purchaseOrder.ToPickDictionary(new PickConfig(true, true)));
+            return Ok(goodsReceipt.ToPickDictionary(new PickConfig(true, true)));
         }
 
         [Route("{id}")]
         public IHttpActionResult Delete(string id)
         {
-            PurchaseOrder purchaseOrder = _purchaseOrderRepository.GetByID(id);
-            if (purchaseOrder == null)
+            GoodsReceipt goodsReceipt = _goodsReceiptRepository.GetByID(id);
+            if (goodsReceipt == null)
             {
                 return NotFound();
             }
 
-            _context.PurchaseOrders.Remove(purchaseOrder);
+            _context.GoodsReceipts.Remove(goodsReceipt);
             _context.SaveChanges();
 
-            return Ok(purchaseOrder.ToPickDictionary(new PickConfig(true, true)));
+            return Ok(goodsReceipt.ToPickDictionary(new PickConfig(true, true)));
         }
 
         protected override void Dispose(bool disposing)
@@ -142,9 +139,9 @@ namespace Innovic.Modules.Purchase.Controllers
             base.Dispose(disposing);
         }
 
-        private bool PurchaseOrderExists(string id)
+        private bool goodsReceiptExists(string id)
         {
-            return _context.PurchaseOrders.Count(e => e.Id == id) > 0;
+            return _context.GoodsReceipts.Count(e => e.Id == id) > 0;
         }
     }
 }

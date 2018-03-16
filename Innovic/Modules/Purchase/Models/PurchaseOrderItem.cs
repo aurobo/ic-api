@@ -12,7 +12,7 @@ namespace Innovic.Modules.Purchase.Models
     {
         public PurchaseOrderItem()
         {
-            PurchaseRequestItems = new List<PurchaseRequestItem>();
+            GoodsReceiptItems = new List<GoodsReceiptItem>();
             GoodsIssueItems = new List<GoodsIssueItem>();
         }
 
@@ -42,7 +42,8 @@ namespace Innovic.Modules.Purchase.Models
 
         public virtual PurchaseOrder PurchaseOrder { get; set; }
 
-        public virtual List<PurchaseRequestItem> PurchaseRequestItems { get; set; }
+        public virtual PurchaseRequestItem PurchaseRequestItem { get; set; }
+        public virtual List<GoodsReceiptItem> GoodsReceiptItems { get; set; }
         public virtual List<GoodsIssueItem> GoodsIssueItems { get; set; }
 
         [NotMapped]

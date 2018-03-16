@@ -14,6 +14,7 @@ namespace Innovic.Modules.Purchase.Models
         {
             PurchaseRequests = new List<PurchaseRequest>();
             PurchaseOrderItems = new List<PurchaseOrderItem>();
+            GoodsReceipts = new List<GoodsReceipt>();
         }
 
         [Column(TypeName = "datetime2")]
@@ -25,9 +26,7 @@ namespace Innovic.Modules.Purchase.Models
 
         public string SupplierId { get; set; }
 
-        public string TermsAndConditions { get; set; }
-
-        public string PurchaseRequestId { get; set; }
+        public string TermsAndConditions { get; set; }  
 
         public PurchaseOrderStatus Status { get; set; }
 
@@ -36,6 +35,8 @@ namespace Innovic.Modules.Purchase.Models
         public virtual List<PurchaseOrderItem> PurchaseOrderItems { get; set; }
 
         public virtual List<PurchaseRequest> PurchaseRequests { get; set; }
+
+        public virtual List<GoodsReceipt> GoodsReceipts { get; set; }
 
         [NotMapped]
         public string Key
