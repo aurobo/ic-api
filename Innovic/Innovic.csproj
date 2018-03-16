@@ -162,7 +162,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App\AppMapper.cs" />
     <Compile Include="App\AuthProvider.cs" />
     <Compile Include="App\BaseModel.cs" />
     <Compile Include="App\BaseOptionsModel.cs" />
