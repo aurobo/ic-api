@@ -18,41 +18,9 @@ namespace Innovic.Modules.Purchase.Services
                     break;
                 case PurchaseOrderItemFlow.Update:
                     break;
-                case PurchaseOrderItemFlow.ChangeStatusTo:
-                    purchaseOrderItem.Status = PurchaseOrderItemStatus.Closed;
-                    break;
-                case PurchaseOrderItemFlow.UpdatePRIStatus:
-                    foreach (var purchaseRequestItem in purchaseOrderItem.PurchaseRequestItems)
-                    {
-                        if (purchaseOrderItem.Quantity == purchaseRequestItem.Quantity)
-                        {
-                            PurchaseRequestItemService.Process(purchaseRequestItem, PurchaseRequestItemFlow.ChangeStatusTo);
-                            //purchaseRequestItems.ChangeStatusTo(PurchaseRequestItemStatus.Closed);
-                        }
-                        else
-                        {
-                            PurchaseRequestItemService.Process(purchaseRequestItem, PurchaseRequestItemFlow.ChangeStatusTo);
-                            //purchaseRequestItems.ChangeStatusTo(PurchaseRequestItemStatus.Open);
-                        }
-                        purchaseRequestItem.PurchaseRequest.Process(PurchaseRequestFlow.ChangeStatusTo);
-                        //purchaseRequestItems.PurchaseRequest.ChangeStatusTo(PurchaseRequestStatus.Closed);
-                    }
-                    break;
             }
 
             return purchaseOrderItem;
-        }
-
-        internal static int GetRemainingReceiveQuantity(this PurchaseOrderItem purchaseOrderItem)
-        {
-            int remainingQuantity = purchaseOrderItem.Quantity;
-
-            foreach (var gri in purchaseOrderItem.GoodsReceiptItems)
-            {
-                remainingQuantity -= gri.Quantity;
-            }
-
-            return remainingQuantity;
         }
     }
 }

@@ -17,24 +17,9 @@ namespace Innovic.Modules.Purchase.Services
                     break;
                 case PurchaseRequestItemFlow.Update:
                     break;
-                case PurchaseRequestItemFlow.ChangeStatusTo:
-                    purchaseRequestItem.Status = PurchaseRequestItemStatus.Closed;
-                    break;
             }
 
             return purchaseRequestItem;
-        }
-
-        public static int GetRemainingQuantity(this PurchaseRequestItem purchaseRequestItem)
-        {
-            int remainingQuantity = purchaseRequestItem.Quantity;
-
-            foreach (var poi in purchaseRequestItem.PurchaseOrderItems)
-            {
-                remainingQuantity -= poi.Quantity;
-            }
-
-            return remainingQuantity;
         }
     }
 }

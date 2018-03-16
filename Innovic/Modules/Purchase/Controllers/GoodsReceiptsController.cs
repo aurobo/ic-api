@@ -95,8 +95,6 @@ namespace Innovic.Modules.Purchase.Controllers
             }
 
             GoodsReceipt goodsReceipt = _goodsReceiptRepository.CreateNewWineModel(options);
-            GoodsReceiptService.Process(goodsReceipt, GoodsReceiptFlow.PopulateFromPurchaseOrder);
-            GoodsReceiptService.Process(goodsReceipt,GoodsReceiptFlow.SetDefaultStatus); 
 
             try
             {

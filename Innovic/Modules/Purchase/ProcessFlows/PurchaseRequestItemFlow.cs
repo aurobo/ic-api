@@ -8,8 +8,6 @@ namespace Innovic.Modules.Purchase.ProcessFlows
     public enum PurchaseRequestItemFlow
     {
         Insert,
-        Update,
-        GetRemainingQuantity,
-        ChangeStatusTo
+        Update
     }
 }

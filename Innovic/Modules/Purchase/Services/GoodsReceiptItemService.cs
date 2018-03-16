@@ -17,9 +17,6 @@ namespace Innovic.Modules.Purchase.Services
                     break;
                 case GoodsReceiptItemFlow.Update:
                     break;
-                case GoodsReceiptItemFlow.SetDefaultStatus:
-                    goodsReceiptItem.Status = GoodsReceiptItemStatus.Open;
-                    break;
             }
 
             return goodsReceiptItem;

@@ -13,15 +13,11 @@ namespace Innovic.Modules.Purchase.Options
         [CopyTo(typeof(Material), Red.Wine.Relationship.Dependency, true)]
         public string MaterialId { get; set; }
 
-        public string Text { get; set; }
-
         public int Quantity { get; set; }
 
-        public double Rate { get; set; }
+        public double UnitPrice { get; set; }
 
-        public DateTime DeliveryDate { get; set; }
-
-        [CopyTo(typeof(PurchaseOrder), Red.Wine.Relationship.Dependency, true)]
-        public string PurchaseOrderId { get; set; }
+        [CopyTo(typeof(PurchaseRequestItem), Red.Wine.Relationship.Dependency, true)]
+        public string PurchaseRequestItemId { get; set; }
     }
 }

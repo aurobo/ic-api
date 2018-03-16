@@ -8,8 +8,6 @@ namespace Innovic.Modules.Purchase.ProcessFlows
     public enum GoodsReceiptFlow
     {
         Insert,
-        Update,
-        PopulateFromPurchaseOrder,
-        SetDefaultStatus
+        Update
     }
 }

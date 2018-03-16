@@ -17,10 +17,6 @@ namespace Innovic.Modules.Purchase.Services
                     break;
                 case PurchaseRequestFlow.Update:
                     break;
-                case PurchaseRequestFlow.ChangeStatusTo:
-                    var isOpenstatus = purchaseRequest.PurchaseRequestItems.Any(g => g.Status == PurchaseRequestItemStatus.Open);
-                    purchaseRequest.Status = isOpenstatus ? PurchaseRequestStatus.Open : PurchaseRequestStatus.Closed;
-                    break;
             }
 
             return purchaseRequest;

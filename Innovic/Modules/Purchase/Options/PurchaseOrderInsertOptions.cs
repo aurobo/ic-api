@@ -14,18 +14,15 @@ namespace Innovic.Modules.Purchase.Options
             PurchaseRequests = new List<string>();
         }
 
-        public string Type { get; set; }
-
-        public string Reference { get; set; }
-
         public DateTime Date { get; set; }
 
         [CopyTo(typeof(Supplier), Red.Wine.Relationship.Dependency, true)]
         public string SupplierId { get; set; }
 
-        public string TermsAndConditions { get; set; }
-
         [CopyTo(typeof(PurchaseRequest), Red.Wine.Relationship.Dependency, true)]
-        public List<string> PurchaseRequests { get; set; }    
+        public List<string> PurchaseRequests { get; set; }
+
+        [CopyTo(typeof(PurchaseOrderItem), Red.Wine.Relationship.Dependent)]
+        public virtual List<PurchaseOrderItemInsertOptions> PurchaseOrderItems { get; set; }
     }
 }

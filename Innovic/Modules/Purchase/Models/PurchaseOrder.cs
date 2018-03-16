@@ -26,9 +26,7 @@ namespace Innovic.Modules.Purchase.Models
 
         public string SupplierId { get; set; }
 
-        public string TermsAndConditions { get; set; }
-
-        public string PurchaseRequestId { get; set; }
+        public string TermsAndConditions { get; set; }  
 
         public PurchaseOrderStatus Status { get; set; }
 
