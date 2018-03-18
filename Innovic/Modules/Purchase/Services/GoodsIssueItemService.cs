@@ -14,20 +14,12 @@ namespace Innovic.Modules.Purchase.Services
             switch (flow)
             {
                 case GoodsIssueItemFlow.Insert:
-
                     break;
 
                 case GoodsIssueItemFlow.Update:
-
-                    break;
-
-                case GoodsIssueItemFlow.ChangeStatusTo:
-
-                   goodsIssueItem.Status = GoodsIssueItemStatus.Open;
                     break;
 
                 case GoodsIssueItemFlow.CalCulateCost:
-
                    goodsIssueItem.Cost = goodsIssueItem.UnitPrice * goodsIssueItem.Quantity;
                     break;
             }

@@ -1,10 +1,5 @@
-﻿using Innovic.App;
-using Innovic.Modules.Purchase.Models;
+﻿using Innovic.Modules.Purchase.Models;
 using Innovic.Modules.Purchase.ProcessFlows;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Innovic.Modules.Purchase.Services
 {
@@ -22,17 +17,6 @@ namespace Innovic.Modules.Purchase.Services
                     break;
 
                 case GoodsIssueFlow.Update:
-
-                    break;
-
-                case GoodsIssueFlow.SetDefaultStatus:
-
-                    foreach (var item in goodsIssue.GoodsIssueItems)
-                    {
-                        GoodsIssueItemService.Process(item, GoodsIssueItemFlow.ChangeStatusTo);
-                    }
-                    goodsIssue.Status = GoodsIssueStatus.Open;
-
                     break;
             }
             return goodsIssue;
