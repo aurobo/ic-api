@@ -172,7 +172,8 @@
     <Compile Include="App\TraceExceptionLogger.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Infrastructure\ExcelManager.cs" />
-    <Compile Include="Infrastructure\ExcelConstants.cs" />
+    <Compile Include="Infrastructure\PurchaseRequestExcel.cs" />
+    <Compile Include="Infrastructure\SalesOrderExcel.cs" />
     <Compile Include="Infrastructure\ExcelManagerExtensions.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modules\Accounts\Models\User.cs" />
@@ -215,8 +216,6 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Content\" />
-    <Folder Include="fonts\" />
     <Folder Include="Scripts\" />
     <Folder Include="Views\Reports\" />
     <Folder Include="Views\Report\" />
