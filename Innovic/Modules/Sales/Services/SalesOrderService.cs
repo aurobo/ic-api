@@ -6,7 +6,7 @@ namespace Innovic.Modules.Sales.Services
 {
     public static class SalesOrderService
     {
-        public static SalesOrder Process(this SalesOrder salesOrder, SalesOrderFlow flow)
+        internal static SalesOrder Process(this SalesOrder salesOrder, SalesOrderFlow flow)
         {
             switch (flow)
             {
@@ -17,8 +17,7 @@ namespace Innovic.Modules.Sales.Services
                 case SalesOrderFlow.ImportExcel:
                     break;
                 case SalesOrderFlow.PendingSalesOrderValue:
-                    var invoiceValue = salesOrder.Invoices.SelectMany(s => s.InvoiceItems).Sum(i => i.Quantity * i.SalesOrderItem.UnitPrice);
-                    salesOrder.MetaData.Add("PendingSalesOrderValue", salesOrder.SalesOrderItems.Sum(s => s.Value) - invoiceValue);
+                    salesOrder.MetaData.Add("PendingSalesOrderValue", salesOrder.GetPendingSalesOrderValue());
                     break;
                 case SalesOrderFlow.AddRemainingQuantity:
                     foreach (var item in salesOrder.SalesOrderItems)
@@ -29,6 +28,13 @@ namespace Innovic.Modules.Sales.Services
             }
 
             return salesOrder;
+        }
+
+        internal static double GetPendingSalesOrderValue(this SalesOrder salesOrder)
+        {
+            double invoicedValue = salesOrder.Invoices.SelectMany(s => s.InvoiceItems).Sum(i => i.Quantity * i.SalesOrderItem.UnitPrice);
+
+            return salesOrder.SalesOrderItems.Sum(s => s.Value) - invoicedValue;
         }
     }
 }
