@@ -31,7 +31,6 @@ namespace Innovic.Modules.Purchase.Controllers
             _purchaseRequestRepository = new BaseRepository<PurchaseRequest>(_context, _userId);
         }
 
-
         [HttpPost]
         [Route("upload")]
         public async Task<HttpResponseMessage> UploadAsync()
@@ -86,8 +85,6 @@ namespace Innovic.Modules.Purchase.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, e);
             }
         }
-
-
 
         private bool PurchaseRequestExists(string id)
         {

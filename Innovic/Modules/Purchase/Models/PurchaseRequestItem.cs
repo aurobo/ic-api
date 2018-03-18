@@ -17,10 +17,8 @@ namespace Innovic.Modules.Purchase.Models
 
         public string PurchaseRequestId { get; set; }
         public string MaterialId { get; set; }
-        public int LineNumber { get; set; }
+        public string Number { get; set; }
         public int Quantity { get; set; }
-        public string Make { get; set; }
-        public string Reason { get; set; }
 
         [Column(TypeName = "datetime2")]
         public DateTime ExpectedDate { get; set; }

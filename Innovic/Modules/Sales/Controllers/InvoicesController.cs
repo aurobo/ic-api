@@ -93,7 +93,10 @@ namespace Innovic.Modules.Sales.Controllers
 
             Invoice invoice = _invoiceRepository.CreateNewWineModel(options);
 
-            InvoiceService.Process(invoice, InvoiceFlow.Insert);
+            if (!invoice.IsInsertionAllowed())
+            {
+                return BadRequest("Invoice Can't Be Generated on this Sales Order.");
+            }
 
             try
             {

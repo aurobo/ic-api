@@ -9,7 +9,7 @@ namespace Innovic.Modules.Sales.Services
 {
     public static class InvoiceService
     {
-        public static Invoice Process(this Invoice invoice, InvoiceFlow flow)
+        internal static Invoice Process(this Invoice invoice, InvoiceFlow flow)
         {
             switch (flow)
             {
@@ -22,6 +22,18 @@ namespace Innovic.Modules.Sales.Services
             }
 
             return invoice;
+        }
+
+        internal static bool IsInsertionAllowed(this Invoice invoice)
+        {
+            double pendingSalesOrderValue = invoice.SalesOrder.GetPendingSalesOrderValue();
+
+            if (pendingSalesOrderValue > 0)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
