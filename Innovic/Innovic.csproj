@@ -167,6 +167,7 @@
     <Compile Include="App\BaseOptionsModel.cs" />
     <Compile Include="App\BaseRepository.cs" />
     <Compile Include="App\Constants.cs" />
+    <Compile Include="App\Extensions.cs" />
     <Compile Include="App\InnovicContext.cs" />
     <Compile Include="App\PickConfigurations.cs" />
     <Compile Include="App\TraceExceptionLogger.cs" />

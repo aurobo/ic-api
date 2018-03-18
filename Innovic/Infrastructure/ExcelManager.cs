@@ -251,7 +251,6 @@ namespace Innovic.Infrastructure
             return errors;
         }
 
-
         public bool CompareDates(DateTime greaterDate, DateTime lesserDate)
         {
             if (greaterDate < lesserDate)
@@ -302,7 +301,6 @@ namespace Innovic.Infrastructure
             return errors;
         }
 
-
         public bool IsDateValid(string date, out DateTime resultDate)
         {
             try
@@ -332,8 +330,6 @@ namespace Innovic.Infrastructure
             return errors;
         }
 
-
-
         public List<string> ValidateSheets(DataTableCollection sheets, List<string> sheetNames)
         {
             List<string> errors = new List<string>();
@@ -348,11 +344,6 @@ namespace Innovic.Infrastructure
 
             return errors;
         }
-
-        #region ---- Purchase Request -----
-
-
-        //..... Add Purchase Request...
 
         public PurchaseRequest ToPurchaseRequest(string filePath)
         {
@@ -421,7 +412,6 @@ namespace Innovic.Infrastructure
             return purchaseRequest;
         }
 
-
         public List<string> ValidateForPurchaseRequest(string filePath)
         {
             List<string> errors = new List<string>();
@@ -439,7 +429,7 @@ namespace Innovic.Infrastructure
                     });
 
                     // Sheet Validation
-                    errors.AddRange(ValidateSheets(result.Tables, new List<string> { SalesOrderExcel.HeaderDataSheet, SalesOrderExcel.LineItemsSheet }));
+                    errors.AddRange(ValidateSheets(result.Tables, new List<string> { PurchaseRequestExcel.HeaderDataSheet, PurchaseRequestExcel.LineItemsSheet }));
 
                     if (errors.Count > 0)
                     {
@@ -447,8 +437,8 @@ namespace Innovic.Infrastructure
                     }
 
                     // Column Validation
-                    errors.AddRange(ValidateColumns(SalesOrderExcel.HeaderDataColumns, result.Tables[SalesOrderExcel.HeaderDataSheet]));
-                    errors.AddRange(ValidateColumns(SalesOrderExcel.LineItemsColumns, result.Tables[SalesOrderExcel.LineItemsSheet]));
+                    errors.AddRange(ValidateColumns(PurchaseRequestExcel.HeaderDataColumns, result.Tables[PurchaseRequestExcel.HeaderDataSheet]));
+                    errors.AddRange(ValidateColumns(PurchaseRequestExcel.LineItemsColumns, result.Tables[PurchaseRequestExcel.LineItemsSheet]));
 
                     if (errors.Count > 0)
                     {
@@ -456,9 +446,9 @@ namespace Innovic.Infrastructure
                     }
 
                     // Cell Validation
-                    var cells = result.Tables[SalesOrderExcel.HeaderDataSheet].GetCellsForColumn(0, false);
+                    var cells = result.Tables[PurchaseRequestExcel.HeaderDataSheet].GetCellsForColumn(0, false);
 
-                    errors.AddRange(ValidateCellsForPurchaseRequest(cells, result.Tables[SalesOrderExcel.HeaderDataSheet]));
+                    errors.AddRange(ValidateCellsForPurchaseRequest(cells, result.Tables[PurchaseRequestExcel.HeaderDataSheet]));
 
                     if (errors.Count > 0)
                     {
@@ -482,7 +472,7 @@ namespace Innovic.Infrastructure
                         }
                     });
 
-                    foreach (DataRow row in result.Tables[SalesOrderExcel.HeaderDataSheet].Rows)
+                    foreach (DataRow row in result.Tables[PurchaseRequestExcel.HeaderDataSheet].Rows)
                     {
                         string key = row["Name"].ToString();
                         object value = row["Value"];
@@ -492,7 +482,7 @@ namespace Innovic.Infrastructure
                             case "Date":
                                 if (!IsDateValid(value.ToString(), out date))
                                 {
-                                    errors.Add("Date in sheet " + SalesOrderExcel.HeaderDataSheet + " is not in valid format.");
+                                    errors.Add("Date in sheet " + PurchaseRequestExcel.HeaderDataSheet + " is not in valid format.");
                                 }
                                 break;
                         }
@@ -501,13 +491,15 @@ namespace Innovic.Infrastructure
                     // Because header row has index = 1 in excel sheet
                     int index = 2; // In excel sheet
 
-                    foreach (DataRow row in result.Tables[SalesOrderExcel.LineItemsSheet].Rows)
+                    foreach (DataRow row in result.Tables[PurchaseRequestExcel.LineItemsSheet].Rows)
                     {
+                        // row["Quantity"] doesn't make any sense when there is a separate file for Constants.
+                        // Maybe use enums?
                         var quantity = row["Quantity"];
-                        errors.AddRange(ValidateValueType(quantity.ToString(), result.Tables[SalesOrderExcel.LineItemsSheet], "Integer"));
+                        errors.AddRange(ValidateValueType(quantity.ToString(), result.Tables[PurchaseRequestExcel.LineItemsSheet], "Integer"));
 
-                        var lineNumber = row["Line Number"];
-                        errors.AddRange(ValidateValueType(lineNumber.ToString(), result.Tables[SalesOrderExcel.LineItemsSheet], "Integer"));
+                        var lineNumber = row["Item Number"];
+                        errors.AddRange(ValidateValueType(lineNumber.ToString(), result.Tables[PurchaseRequestExcel.LineItemsSheet], "Integer"));
                         
                         var value = row["Expected Date"];
                         DateTime expectedDate = new DateTime();
@@ -524,25 +516,19 @@ namespace Innovic.Infrastructure
             return errors;
         }
 
-
-
-        //.... Validate Cells for purchase request ...
         public List<string> ValidateCellsForPurchaseRequest(List<string> cells, DataTable sheet)
         {
             List<string> errors = new List<string>();
 
-            SalesOrderExcel.HeaderDataNameRows.ForEach(delegate (string cell)
+            PurchaseRequestExcel.HeaderDataNameRows.ForEach(delegate (string cell)
             {
                 if (!cells.Contains(cell))
                 {
-                    errors.Add("Cell " + cell + " is not present in sheet " + SalesOrderExcel.HeaderDataSheet);
+                    errors.Add("Cell " + cell + " is not present in sheet " + PurchaseRequestExcel.HeaderDataSheet);
                 }
             });
 
             return errors;
         }
-
-        #endregion ---Purchase Request End ----
-
     }
 }

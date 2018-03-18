@@ -1,4 +1,5 @@
-﻿using Innovic.Modules.Sales.Models;
+﻿using Innovic.App;
+using Innovic.Modules.Sales.Models;
 using Innovic.Modules.Sales.ProcessFlows;
 using System.Linq;
 
@@ -17,7 +18,10 @@ namespace Innovic.Modules.Sales.Services
                 case SalesOrderFlow.ImportExcel:
                     break;
                 case SalesOrderFlow.PendingSalesOrderValue:
-                    salesOrder.MetaData.Add("PendingSalesOrderValue", salesOrder.GetPendingSalesOrderValue());
+                    double pendingSalesOrderValue = salesOrder.GetPendingSalesOrderValue();
+                    bool canCreateInvoice = pendingSalesOrderValue > 0;
+                    salesOrder.MetaData.Add("PendingSalesOrderValue", pendingSalesOrderValue);
+                    salesOrder.MetaData.Add("CanCreateInvoice", canCreateInvoice);
                     break;
                 case SalesOrderFlow.AddRemainingQuantity:
                     foreach (var item in salesOrder.SalesOrderItems)
@@ -32,7 +36,7 @@ namespace Innovic.Modules.Sales.Services
 
         internal static double GetPendingSalesOrderValue(this SalesOrder salesOrder)
         {
-            double invoicedValue = salesOrder.Invoices.SelectMany(s => s.InvoiceItems).Sum(i => i.Quantity * i.SalesOrderItem.UnitPrice);
+            double invoicedValue = salesOrder.Invoices.GetDatabaseEntities().SelectMany(s => s.InvoiceItems).Sum(i => i.Quantity * i.SalesOrderItem.UnitPrice);
 
             return salesOrder.SalesOrderItems.Sum(s => s.Value) - invoicedValue;
         }

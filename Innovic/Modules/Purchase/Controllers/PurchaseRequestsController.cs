@@ -2,6 +2,7 @@
 using Innovic.Infrastructure;
 using Innovic.Modules.Purchase.Models;
 using Microsoft.AspNet.Identity;
+using Red.Wine.Picker;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
@@ -15,7 +16,7 @@ using System.Web.Http;
 
 namespace Innovic.Modules.Purchase.Controllers
 {
-    [RoutePrefix("api/PurchaseRequest")]
+    [RoutePrefix("api/PurchaseRequests")]
     [Authorize]
     public class PurchaseRequestsController : ApiController
     {
@@ -23,12 +24,17 @@ namespace Innovic.Modules.Purchase.Controllers
         private readonly string _userId;
         private readonly BaseRepository<PurchaseRequest> _purchaseRequestRepository;
 
-
         public PurchaseRequestsController()
         {
             _userId = RequestContext.Principal.Identity.GetUserId();
             _context = new InnovicContext(_userId);
             _purchaseRequestRepository = new BaseRepository<PurchaseRequest>(_context, _userId);
+        }
+
+        [Route("")]
+        public IHttpActionResult Get()
+        {
+            return Ok(_purchaseRequestRepository.Get().ToPickDictionaryCollection(PickConfigurations.Default));
         }
 
         [HttpPost]
