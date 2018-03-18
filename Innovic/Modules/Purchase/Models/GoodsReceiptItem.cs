@@ -8,23 +8,20 @@ using System.Web;
 
 namespace Innovic.Modules.Purchase.Models
 {
-    public class PurchaseRequestItem : BaseModel
+    public class GoodsReceiptItem : BaseModel
     {
-        public PurchaseRequestItem()
+        public GoodsReceiptItem()
         {
             PurchaseOrderItems = new List<PurchaseOrderItem>();
         }
 
-        public string Number { get; set; }
-        public string PurchaseRequestId { get; set; }
-        public string MaterialId { get; set; }
+        public string GoodsReceiptId { get; set; }
         public int Quantity { get; set; }
-
-        [Column(TypeName = "datetime2")]
-        public DateTime ExpectedDate { get; set; }
+        public string MaterialId { get; set; }
+        public double UnitPrice { get; set; }
 
         public virtual Material Material { get; set; }
-        public virtual PurchaseRequest PurchaseRequest { get; set; }
+        public virtual GoodsReceipt GoodsReceipt { get; set; }
         public virtual List<PurchaseOrderItem> PurchaseOrderItems { get; set; }
 
         [NotMapped]
@@ -32,7 +29,7 @@ namespace Innovic.Modules.Purchase.Models
         {
             get
             {
-                return (Constants.PurchaseRequestItemAbbr + Constants.KeySeparator + KeyId.ToString(Constants.FixedDigits));
+                return (Constants.GoodsReceiptItemAbbr + Constants.KeySeparator + KeyId.ToString(Constants.FixedDigits));
             }
         }
     }

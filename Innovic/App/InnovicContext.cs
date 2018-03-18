@@ -4,10 +4,8 @@ using Innovic.Modules.Purchase.Models;
 using Innovic.Modules.Sales.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Red.Wine;
-using System;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using System.Linq;
 
 namespace Innovic.App
 {
@@ -23,6 +21,11 @@ namespace Innovic.App
         public DbSet<InvoiceItem> InvoiceItems { get; set; }
         public DbSet<PurchaseRequest> PurchaseRequests { get; set; }
         public DbSet<PurchaseRequestItem> PurchaseRequestItems { get; set; }
+        public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
+        public DbSet<PurchaseOrderItem> PurchaseOrderItems { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
+        public DbSet<GoodsReceipt> GoodsReceipts { get; set; }
+        public DbSet<GoodsReceiptItem> GoodsReceiptItems { get; set; }
 
         public InnovicContext()
             : base("dbConnection")

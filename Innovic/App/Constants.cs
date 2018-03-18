@@ -16,6 +16,12 @@ namespace Innovic.App
         public const string InvoiceAbbr = "INV";
         public const string PurchaseRequestAbbr = "PR";
         public const string PurchaseRequestItemAbbr = "PRI";
-
+        public const string PurchaseOrderAbbr = "PO";
+        public const string PurchaseOrderItemAbbr = "POI";
+        public const string SupplierAbbr = "SR";
+        public const string GoodsIssueAbbr = "GI";
+        public const string GoodsIssueItemAbbr = "GII";
+        public const string GoodsReceiptAbbr = "GR";
+        public const string GoodsReceiptItemAbbr = "GRI";
     }
 }

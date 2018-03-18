@@ -97,5 +97,110 @@ namespace Innovic.App
                 });
             }
         }
+
+        public static PickConfig PurchaseOrders
+        {
+            get
+            {
+                return new PickConfig(true, true, new List<Pick>(DefaultData)
+                {
+                    new Pick("Supplier", new PickConfig(false, true, new List<Pick>(DefaultData)
+                    {
+                        new Pick("Name")
+                    }))
+                });
+            }
+        }
+
+        public static PickConfig PurchaseOrder
+        {
+            get
+            {
+                return new PickConfig(true, true, new List<Pick>(DefaultData)
+                {
+                    new Pick("Supplier", new PickConfig(false, true, new List<Pick>
+                    {
+                        new Pick("Name")
+                    })),
+                    new Pick("PurchaseOrderItems", new PickConfig(true, true, new List<Pick>(DefaultData)
+                    {
+                        new Pick("Material", new PickConfig(false, true, new List<Pick>
+                        {
+                            new Pick("Number")
+                        }))
+                    }))
+                });
+            }
+        }
+
+        public static PickConfig GoodsReceipts
+        {
+            get
+            {
+                return new PickConfig(true, true, new List<Pick>
+                {
+                    new Pick("Vendor", new PickConfig(false, true, new List<Pick>(DefaultData)
+                    {
+                        new Pick("Name")
+                    }))
+                });
+            }
+        }
+
+        public static PickConfig GoodsReceipt
+        {
+            get
+            {
+                return new PickConfig(true, true, new List<Pick>(DefaultData)
+                {
+                    new Pick("Vendor", new PickConfig(false, true, new List<Pick>
+                    {
+                        new Pick("Name")
+                    })),
+                    new Pick("GoodsReceiptItems", new PickConfig(true, true, new List<Pick>(DefaultData)
+                    {
+                        new Pick("Material", new PickConfig(false, true, new List<Pick>
+                        {
+                            new Pick("Number")
+                        }))
+                    }))
+                });
+            }
+        }
+
+        public static PickConfig GoodsIssues
+        {
+            get
+            {
+                return new PickConfig(true, true, new List<Pick>(DefaultData)
+                {
+                    new Pick("Customer", new PickConfig(false, true, new List<Pick>
+                    {
+                        new Pick("Name")
+                    })),
+                });
+            }
+        }
+
+        public static PickConfig GoodsIssue
+        {
+            get
+            {
+                return new PickConfig(true, true, new List<Pick>(DefaultData)
+                {
+                    new Pick("Customer", new PickConfig(false, true, new List<Pick>
+                    {
+                        new Pick("Name")
+                    })),
+                    new Pick("GoodsIssueItem", new PickConfig(true, true, new List<Pick>(DefaultData)
+                    {
+                        new Pick("Material", new PickConfig(false, true, new List<Pick>
+                        {
+                            new Pick("Number")
+                        }))
+                    }))
+                });
+            }
+        }
     }
 }
