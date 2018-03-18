@@ -225,7 +225,6 @@
     <Compile Include="Modules\Purchase\Controllers\GoodsIssuesController.cs" />
     <Compile Include="Modules\Purchase\Models\GoodsIssue.cs" />
     <Compile Include="Modules\Purchase\Models\GoodsIssueItem.cs" />
-    <Compile Include="Modules\Purchase\Models\UnitOfMeasurement.cs" />
     <Compile Include="Modules\Purchase\Options\GoodsIssueInsertOptions.cs" />
     <Compile Include="Modules\Purchase\ProcessFlows\GoodsIssueFlow.cs" />
     <Compile Include="Modules\Purchase\Services\GoodsIssueService.cs" />

@@ -17,9 +17,6 @@ namespace Innovic.Modules.Purchase.Services
                     break;
                 case GoodsReceiptItemFlow.Update:
                     break;
-                case GoodsReceiptItemFlow.CalculateCost:
-                    goodsReceiptItem.Cost = goodsReceiptItem.Quantity * goodsReceiptItem.UnitPrice;
-                    break;
             }
 
             return goodsReceiptItem;

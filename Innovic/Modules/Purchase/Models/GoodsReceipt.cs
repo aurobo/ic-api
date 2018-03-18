@@ -14,23 +14,21 @@ namespace Innovic.Modules.Purchase.Models
         {
             GoodsReceiptItems = new List<GoodsReceiptItem>();
             PurchaseOrders = new List<PurchaseOrder>();
-            GoodsIssues = new List<GoodsIssue>();
         }
 
         [Column(TypeName = "datetime2")]
-        public DateTime Date { get; set; }
-
-        public string VendorId { get; set; }
-
-        public string SlipLevelNote { get; set; }
+        public DateTime ExpectedDate { get; set; }
 
         public virtual List<GoodsReceiptItem> GoodsReceiptItems { get; set; }
-
         public virtual List<PurchaseOrder> PurchaseOrders { get; set; }
 
-        public virtual List<GoodsIssue> GoodsIssues { get; set; }
-
-        [ForeignKey("VendorId")]
-        public virtual Customer Vendor { get; set; }
+        [NotMapped]
+        public string Key
+        {
+            get
+            {
+                return (Constants.GoodsReceiptAbbr + Constants.KeySeparator + KeyId.ToString(Constants.FixedDigits));
+            }
+        }
     }
 }

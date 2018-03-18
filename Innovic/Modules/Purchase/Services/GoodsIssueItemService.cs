@@ -15,12 +15,7 @@ namespace Innovic.Modules.Purchase.Services
             {
                 case GoodsIssueItemFlow.Insert:
                     break;
-
                 case GoodsIssueItemFlow.Update:
-                    break;
-
-                case GoodsIssueItemFlow.CalCulateCost:
-                   goodsIssueItem.Cost = goodsIssueItem.UnitPrice * goodsIssueItem.Quantity;
                     break;
             }
 

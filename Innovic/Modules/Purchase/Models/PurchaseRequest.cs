@@ -12,6 +12,7 @@ namespace Innovic.Modules.Purchase.Models
         public PurchaseRequest()
         {
             PurchaseRequestItems = new List<PurchaseRequestItem>();
+            PurchaseOrders = new List<PurchaseOrder>();
         }
 
         [Column(TypeName = "datetime2")]

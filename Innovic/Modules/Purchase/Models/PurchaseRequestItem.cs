@@ -15,9 +15,9 @@ namespace Innovic.Modules.Purchase.Models
             PurchaseOrderItems = new List<PurchaseOrderItem>();
         }
 
+        public string Number { get; set; }
         public string PurchaseRequestId { get; set; }
         public string MaterialId { get; set; }
-        public string Number { get; set; }
         public int Quantity { get; set; }
 
         [Column(TypeName = "datetime2")]
