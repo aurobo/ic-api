@@ -49,43 +49,6 @@ namespace Innovic.Modules.Purchase.Controllers
             return Ok(goodsReceipt.ToPickDictionary(PickConfigurations.GoodsReceipt));
         }
 
-        [Route("{id}")]
-        public IHttpActionResult Put(string id, GoodsReceiptUpdateOptions options)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != options.Id)
-            {
-                return BadRequest();
-            }
-
-            GoodsReceipt existinggoodsReceipt = _goodsReceiptRepository.GetByID(id);
-            GoodsReceipt updatedgoodsReceipt = _goodsReceiptRepository.UpdateExistingWineModel(existinggoodsReceipt, options);
-
-            GoodsReceiptService.Process(updatedgoodsReceipt, GoodsReceiptFlow.Update);
-
-            try
-            {
-                _context.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!goodsReceiptExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
         [Route("")]
         public IHttpActionResult Post(GoodsReceiptInsertOptions options)
         {

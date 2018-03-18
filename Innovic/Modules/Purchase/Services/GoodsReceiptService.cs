@@ -15,10 +15,6 @@ namespace Innovic.Modules.Purchase.Services
             switch (flow)
             {
                 case GoodsReceiptFlow.Insert:
-                    foreach(var goodsReceiptItem in goodsReceipt.GoodsReceiptItems)
-                    {
-                        goodsReceiptItem.Process(GoodsReceiptItemFlow.CalculateCost);
-                    }
                     break;
                 case GoodsReceiptFlow.Update:
                     break;

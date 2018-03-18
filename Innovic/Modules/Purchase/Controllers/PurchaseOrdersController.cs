@@ -51,43 +51,6 @@ namespace Innovic.Modules.Purchase.Controllers
             return Ok(purchaseOrder.ToPickDictionary(PickConfigurations.PurchaseOrder));
         }
 
-        [Route("{id}")]
-        public IHttpActionResult Put(string id, PurchaseOrderUpdateOptions options)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != options.Id)
-            {
-                return BadRequest();
-            }
-
-            PurchaseOrder existingPurchaseOrder = _purchaseOrderRepository.GetByID(id);
-            PurchaseOrder updatedPurchaseOrder = _purchaseOrderRepository.UpdateExistingWineModel(existingPurchaseOrder, options);
-
-            PurchaseOrderService.Process(updatedPurchaseOrder, PurchaseOrderFlow.CalculateItemCost);
-
-            try
-            {
-                _context.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PurchaseOrderExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
         [Route("")]
         public IHttpActionResult Post(PurchaseOrderInsertOptions options)
         {

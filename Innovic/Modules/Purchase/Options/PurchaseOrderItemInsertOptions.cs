@@ -10,6 +10,11 @@ namespace Innovic.Modules.Purchase.Options
 {
     public class PurchaseOrderItemInsertOptions
     {
+        public PurchaseOrderItemInsertOptions()
+        {
+            PurchaseRequestItems = new List<string>();
+        }
+
         [CopyTo(typeof(Material), Red.Wine.Relationship.Dependency, true)]
         public string MaterialId { get; set; }
 
@@ -18,6 +23,6 @@ namespace Innovic.Modules.Purchase.Options
         public double UnitPrice { get; set; }
 
         [CopyTo(typeof(PurchaseRequestItem), Red.Wine.Relationship.Dependency, true)]
-        public string PurchaseRequestItemId { get; set; }
+        public List<string> PurchaseRequestItems { get; set; }
     }
 }
