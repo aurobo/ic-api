@@ -172,6 +172,7 @@
     <Compile Include="App\TraceExceptionLogger.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Infrastructure\ExcelManager.cs" />
+    <Compile Include="Infrastructure\PurchaseRequestExcel.cs" />
     <Compile Include="Infrastructure\SalesOrderExcel.cs" />
     <Compile Include="Infrastructure\ExcelManagerExtensions.cs" />
     <Compile Include="Migrations\Configuration.cs" />
@@ -183,6 +184,9 @@
     <Compile Include="Modules\Master\Options\MaterialInsertOptions.cs" />
     <Compile Include="Modules\Master\Options\MaterialUpdateOptions.cs" />
     <Compile Include="Modules\Master\Services\MaterialService.cs" />
+    <Compile Include="Modules\Purchase\Controllers\PurchaseRequestsController.cs" />
+    <Compile Include="Modules\Purchase\Models\PurchaseRequest.cs" />
+    <Compile Include="Modules\Purchase\Models\PurchaseRequestItem.cs" />
     <Compile Include="Modules\Sales\Controllers\CustomersController.cs" />
     <Compile Include="Modules\Sales\Controllers\InvoicesController.cs" />
     <Compile Include="Modules\Sales\Controllers\SalesOrdersController.cs" />
@@ -210,8 +214,6 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Content\" />
-    <Folder Include="fonts\" />
     <Folder Include="Scripts\" />
     <Folder Include="Views\Reports\" />
     <Folder Include="Views\Report\" />
