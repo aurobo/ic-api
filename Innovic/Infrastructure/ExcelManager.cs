@@ -388,10 +388,8 @@ namespace Innovic.Infrastructure
                     foreach (DataRow row in result.Tables["Line Items"].Rows)
                     {
                         var materialNumber = row["Material Number"].ToString();
-                        var lineNumber = Convert.ToInt32(row["Line Number"]);
+                        var number = row["Item Number"].ToString();
                         var quantity = Convert.ToInt32(row["Quantity"]);
-                        var make = row["Make"].ToString();
-                        var reason = row["Reason"].ToString();
                         var expectedDate = DateTime.Parse(row["Expected Date"].ToString());
                         
 
@@ -410,10 +408,8 @@ namespace Innovic.Infrastructure
                         var purchaseRequestItem = new PurchaseRequestItem
                         {
                             MaterialId = material.Id,
-                            LineNumber = lineNumber,
+                            Number = number,
                             Quantity = quantity,
-                            Make = make,
-                            Reason = reason,
                             ExpectedDate = expectedDate
                         };
 
