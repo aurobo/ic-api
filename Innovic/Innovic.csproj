@@ -189,16 +189,10 @@
     <Compile Include="Modules\Purchase\Controllers\SuppliersController.cs" />
     <Compile Include="Modules\Purchase\Models\GoodsReceipt.cs" />
     <Compile Include="Modules\Purchase\Models\GoodsReceiptItem.cs" />
-    <Compile Include="Modules\Purchase\Models\GoodsReceiptItemStatus.cs" />
-    <Compile Include="Modules\Purchase\Models\GoodsReceiptStatus.cs" />
     <Compile Include="Modules\Purchase\Models\PurchaseOrder.cs" />
     <Compile Include="Modules\Purchase\Models\PurchaseOrderItem.cs" />
-    <Compile Include="Modules\Purchase\Models\PurchaseOrderItemStatus.cs" />
-    <Compile Include="Modules\Purchase\Models\PurchaseOrderStatus.cs" />
     <Compile Include="Modules\Purchase\Models\PurchaseRequest.cs" />
     <Compile Include="Modules\Purchase\Models\PurchaseRequestItem.cs" />
-    <Compile Include="Modules\Purchase\Models\PurchaseRequestItemStatus.cs" />
-    <Compile Include="Modules\Purchase\Models\PurchaseRequestStatus.cs" />
     <Compile Include="Modules\Purchase\Models\Supplier.cs" />
     <Compile Include="Modules\Purchase\Options\GoodsReceiptInsertOptions.cs" />
     <Compile Include="Modules\Purchase\Options\GoodsReceiptItemInsertOptions.cs" />
@@ -230,9 +224,6 @@
     <Compile Include="Modules\Purchase\Controllers\GoodsIssuesController.cs" />
     <Compile Include="Modules\Purchase\Models\GoodsIssue.cs" />
     <Compile Include="Modules\Purchase\Models\GoodsIssueItem.cs" />
-    <Compile Include="Modules\Purchase\Models\GoodsIssueItemStatus.cs" />
-    <Compile Include="Modules\Purchase\Models\GoodsIssueReference.cs" />
-    <Compile Include="Modules\Purchase\Models\GoodsIssueStatus.cs" />
     <Compile Include="Modules\Purchase\Models\UnitOfMeasurement.cs" />
     <Compile Include="Modules\Purchase\Options\GoodsIssueInsertOptions.cs" />
     <Compile Include="Modules\Purchase\ProcessFlows\GoodsIssueFlow.cs" />

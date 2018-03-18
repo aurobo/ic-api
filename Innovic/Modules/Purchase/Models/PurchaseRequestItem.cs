@@ -25,8 +25,6 @@ namespace Innovic.Modules.Purchase.Models
         [Column(TypeName = "datetime2")]
         public DateTime ExpectedDate { get; set; }
 
-        public PurchaseRequestItemStatus Status { get; set; }
-
         public virtual Material Material { get; set; }
         public virtual PurchaseRequest PurchaseRequest { get; set; }
         public virtual List<PurchaseOrderItem> PurchaseOrderItems { get; set; }

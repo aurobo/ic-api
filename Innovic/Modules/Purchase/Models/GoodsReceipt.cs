@@ -16,8 +16,6 @@ namespace Innovic.Modules.Purchase.Models
             PurchaseOrders = new List<PurchaseOrder>();
             GoodsIssues = new List<GoodsIssue>();
         }
-        
-        public GoodsReceiptReference Reference { get; set; }
 
         [Column(TypeName = "datetime2")]
         public DateTime Date { get; set; }
@@ -25,8 +23,6 @@ namespace Innovic.Modules.Purchase.Models
         public string VendorId { get; set; }
 
         public string SlipLevelNote { get; set; }
-
-        public GoodsReceiptStatus Status { get; set; }
 
         public virtual List<GoodsReceiptItem> GoodsReceiptItems { get; set; }
 

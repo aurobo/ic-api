@@ -23,8 +23,6 @@ namespace Innovic.Modules.Purchase.Models
 
         public double UnitPrice { get; set; }
 
-        public GoodsReceiptItemStatus Status { get; set; }
-
         public string PurchaseOrderItemId { get; set; }
 
         public string GoodsIssueItemId { get; set; }

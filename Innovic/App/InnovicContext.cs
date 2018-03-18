@@ -4,10 +4,8 @@ using Innovic.Modules.Purchase.Models;
 using Innovic.Modules.Sales.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Red.Wine;
-using System;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using System.Linq;
 
 namespace Innovic.App
 {

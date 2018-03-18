@@ -21,5 +21,7 @@ namespace Innovic.App
         public const string SupplierAbbr = "SR";
         public const string GoodsIssueAbbr = "GI";
         public const string GoodsIssueItemAbbr = "GII";
+        public const string GoodsReceiptAbbr = "GR";
+        public const string GoodsReceiptItemAbbr = "GRI";
     }
 }

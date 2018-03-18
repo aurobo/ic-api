@@ -102,7 +102,7 @@ namespace Innovic.App
         {
             get
             {
-                return new PickConfig(true, true, new List<Pick>
+                return new PickConfig(true, true, new List<Pick>(DefaultData)
                 {
                     new Pick("Supplier", new PickConfig(false, true, new List<Pick>(DefaultData)
                     {
@@ -167,7 +167,6 @@ namespace Innovic.App
                 });
             }
         }
-
 
         public static PickConfig GoodsIssues
         {

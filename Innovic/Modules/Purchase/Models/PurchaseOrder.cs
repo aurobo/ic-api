@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
-using static Innovic.Modules.Purchase.Models.PurchaseOrderStatus;
 
 namespace Innovic.Modules.Purchase.Models
 {
@@ -21,15 +18,9 @@ namespace Innovic.Modules.Purchase.Models
         [Column(TypeName = "datetime2")]
         public DateTime Date { get; set; }
 
-        public PurchaseOrderType Type { get; set; }
-
-        public PurchaseOrderReference Reference { get; set; }
-
         public string SupplierId { get; set; }
 
         public string TermsAndConditions { get; set; }  
-
-        public PurchaseOrderStatus Status { get; set; }
 
         public virtual Supplier Supplier { get; set; }
 

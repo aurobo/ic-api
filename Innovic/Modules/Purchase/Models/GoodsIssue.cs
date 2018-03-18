@@ -16,9 +16,6 @@ namespace Innovic.Modules.Purchase.Models
             PurchaseOrders = new List<PurchaseOrder>();
             GoodsReceipts = new List<GoodsReceipt>();
         }
-        
-        public GoodsIssueReference Reference { get; set; }
-        public GoodsIssueStatus Status { get; set; }
 
         [Column(TypeName = "datetime2")]
         public DateTime Date { get; set; }

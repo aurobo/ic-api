@@ -34,8 +34,6 @@ namespace Innovic.Modules.Purchase.Models
 
         public string PurchaseOrderId { get; set; }
 
-        public PurchaseOrderItemStatus Status { get; set; }
-
         public string PurchaseRequestItemId { get; set; }
 
         public virtual Material Material { get; set; }
