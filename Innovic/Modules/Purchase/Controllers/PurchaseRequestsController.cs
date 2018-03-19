@@ -34,7 +34,7 @@ namespace Innovic.Modules.Purchase.Controllers
         [Route("")]
         public IHttpActionResult Get()
         {
-            return Ok(_purchaseRequestRepository.Get().ToPickDictionaryCollection(PickConfigurations.Default));
+            return Ok(_purchaseRequestRepository.Get().ToPickDictionaryCollection(PickConfigurations.PurchaseRequests));
         }
 
         [HttpPost]

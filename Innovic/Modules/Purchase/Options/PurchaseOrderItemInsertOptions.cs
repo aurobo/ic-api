@@ -22,6 +22,8 @@ namespace Innovic.Modules.Purchase.Options
 
         public double UnitPrice { get; set; }
 
+        public DateTime ExpectedDate { get; set; }
+
         [CopyTo(typeof(PurchaseRequestItem), Red.Wine.Relationship.Dependency, true)]
         public List<string> PurchaseRequestItems { get; set; }
     }

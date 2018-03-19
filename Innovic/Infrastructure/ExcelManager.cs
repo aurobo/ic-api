@@ -171,7 +171,7 @@ namespace Innovic.Infrastructure
                     // Cell Validation
                     var cells = result.Tables[SalesOrderExcel.HeaderDataSheet].GetCellsForColumn(0, false);
 
-                    errors.AddRange(ValidateCells(cells, result.Tables[SalesOrderExcel.HeaderDataSheet]));
+                    errors.AddRange(ValidateCells(cells, result.Tables[SalesOrderExcel.HeaderDataSheet], SalesOrderExcel.HeaderDataNameRows));
 
                     if (errors.Count > 0)
                     {
@@ -251,100 +251,6 @@ namespace Innovic.Infrastructure
             return errors;
         }
 
-        public bool CompareDates(DateTime greaterDate, DateTime lesserDate)
-        {
-            if (greaterDate < lesserDate)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public List<string> ValidateColumns(List<string> staticColumns, DataTable table)
-        {
-            List<string> errors = new List<string>();
-            foreach (var column in staticColumns)
-            {
-                if (!table.Rows[0].ItemArray.Contains(column))
-                {
-                    errors.Add("Column " + column + " is not present in sheet " + table.TableName);
-                }
-
-            }
-            return errors;
-        }
-
-        public List<string> ValidateValueType(string value, DataTable table, string type)
-        {
-            List<string> errors = new List<string>();
-
-            switch (type)
-            {
-                case "Double":
-                    double doubleValue;
-                    if (!double.TryParse(value, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out doubleValue))
-                    {
-                        errors.Add(value + " is not valid in sheet " + table.TableName);
-                    }
-                    break;
-
-                case "Integer":
-                    int integervalue;
-                    if (!int.TryParse(value, out integervalue))
-                    {
-                        errors.Add(value + " is not valid in sheet " + table.TableName);
-                    }
-                    break;
-            }
-
-            return errors;
-        }
-
-        public bool IsDateValid(string date, out DateTime resultDate)
-        {
-            try
-            {
-                resultDate = Convert.ToDateTime(date);
-                return true;
-            }
-            catch (FormatException e)
-            {
-                resultDate = DateTime.MinValue;
-                return false;
-            }
-        }
-
-        public List<string> ValidateCells(List<string> cells, DataTable sheet)
-        {
-            List<string> errors = new List<string>();
-
-            SalesOrderExcel.HeaderDataNameRows.ForEach(delegate (string cell)
-            {
-                if (!cells.Contains(cell))
-                {
-                    errors.Add("Cell " + cell + " is not present in sheet " + SalesOrderExcel.HeaderDataSheet);
-                }
-            });
-
-            return errors;
-        }
-
-        public List<string> ValidateSheets(DataTableCollection sheets, List<string> sheetNames)
-        {
-            List<string> errors = new List<string>();
-
-            foreach (var sheetName in sheetNames)
-            {
-                if (!sheets.Contains(sheetName))
-                {
-                    errors.Add("Does not contain " + sheetName + " sheet.");
-                }
-            }
-
-            return errors;
-        }
-
         public PurchaseRequest ToPurchaseRequest(string filePath)
         {
             var purchaseRequest = new PurchaseRequest();
@@ -382,7 +288,7 @@ namespace Innovic.Infrastructure
                         var number = row["Item Number"].ToString();
                         var quantity = Convert.ToInt32(row["Quantity"]);
                         var expectedDate = DateTime.Parse(row["Expected Date"].ToString());
-                        
+
 
                         Material material = _context.Materials.Local.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
 
@@ -448,7 +354,7 @@ namespace Innovic.Infrastructure
                     // Cell Validation
                     var cells = result.Tables[PurchaseRequestExcel.HeaderDataSheet].GetCellsForColumn(0, false);
 
-                    errors.AddRange(ValidateCellsForPurchaseRequest(cells, result.Tables[PurchaseRequestExcel.HeaderDataSheet]));
+                    errors.AddRange(ValidateCells(cells, result.Tables[PurchaseRequestExcel.HeaderDataSheet], PurchaseRequestExcel.HeaderDataNameRows));
 
                     if (errors.Count > 0)
                     {
@@ -463,7 +369,7 @@ namespace Innovic.Infrastructure
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
                     DateTime date = new DateTime();
-                    
+
                     var result = reader.AsDataSet(new ExcelDataSetConfiguration()
                     {
                         ConfigureDataTable = (tableReader) => new ExcelDataTableConfiguration()
@@ -487,7 +393,7 @@ namespace Innovic.Infrastructure
                                 break;
                         }
                     }
-                    
+
                     // Because header row has index = 1 in excel sheet
                     int index = 2; // In excel sheet
 
@@ -500,7 +406,7 @@ namespace Innovic.Infrastructure
 
                         var lineNumber = row["Item Number"];
                         errors.AddRange(ValidateValueType(lineNumber.ToString(), result.Tables[PurchaseRequestExcel.LineItemsSheet], "Integer"));
-                        
+
                         var value = row["Expected Date"];
                         DateTime expectedDate = new DateTime();
 
@@ -516,17 +422,96 @@ namespace Innovic.Infrastructure
             return errors;
         }
 
-        public List<string> ValidateCellsForPurchaseRequest(List<string> cells, DataTable sheet)
+        public bool CompareDates(DateTime greaterDate, DateTime lesserDate)
+        {
+            if (greaterDate < lesserDate)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public List<string> ValidateColumns(List<string> staticColumns, DataTable table)
+        {
+            List<string> errors = new List<string>();
+            foreach (var column in staticColumns)
+            {
+                if (!table.Rows[0].ItemArray.Contains(column))
+                {
+                    errors.Add("Column " + column + " is not present in sheet " + table.TableName);
+                }
+
+            }
+            return errors;
+        }
+
+        public List<string> ValidateValueType(string value, DataTable table, string type)
         {
             List<string> errors = new List<string>();
 
-            PurchaseRequestExcel.HeaderDataNameRows.ForEach(delegate (string cell)
+            switch (type)
+            {
+                case "Double":
+                    double doubleValue;
+                    if (!double.TryParse(value, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out doubleValue))
+                    {
+                        errors.Add(value + " is not valid in sheet " + table.TableName);
+                    }
+                    break;
+
+                case "Integer":
+                    int integervalue;
+                    if (!int.TryParse(value, out integervalue))
+                    {
+                        errors.Add(value + " is not valid in sheet " + table.TableName);
+                    }
+                    break;
+            }
+
+            return errors;
+        }
+
+        public bool IsDateValid(string date, out DateTime resultDate)
+        {
+            try
+            {
+                resultDate = Convert.ToDateTime(date);
+                return true;
+            }
+            catch (FormatException e)
+            {
+                resultDate = DateTime.MinValue;
+                return false;
+            }
+        }
+
+        public List<string> ValidateCells(List<string> cells, DataTable sheet, List<string> cellNames)
+        {
+            List<string> errors = new List<string>();
+
+            cellNames.ForEach(delegate (string cell)
             {
                 if (!cells.Contains(cell))
                 {
-                    errors.Add("Cell " + cell + " is not present in sheet " + PurchaseRequestExcel.HeaderDataSheet);
+                    errors.Add("Cell " + cell + " is not present in sheet " + sheet.TableName);
                 }
             });
+
+            return errors;
+        }
+
+        public List<string> ValidateSheets(DataTableCollection sheets, List<string> sheetNames)
+        {
+            List<string> errors = new List<string>();
+
+            foreach (var sheetName in sheetNames)
+            {
+                if (!sheets.Contains(sheetName))
+                {
+                    errors.Add("Does not contain " + sheetName + " sheet.");
+                }
+            }
 
             return errors;
         }
