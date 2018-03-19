@@ -50,6 +50,7 @@ namespace Innovic.Modules.Purchase.Controllers
             }
 
             PurchaseRequestService.Process(purchaseRequest, PurchaseRequestFlow.AddRemainingQuantity);
+            PurchaseRequestService.Process(purchaseRequest, PurchaseRequestFlow.TotalRemainingQuantity);
 
             return Ok(purchaseRequest.ToPickDictionary(PickConfigurations.PurchaseRequests));
         }
