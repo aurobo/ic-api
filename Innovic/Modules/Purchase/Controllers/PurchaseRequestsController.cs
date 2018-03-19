@@ -1,6 +1,8 @@
 ﻿using Innovic.App;
 using Innovic.Infrastructure;
 using Innovic.Modules.Purchase.Models;
+using Innovic.Modules.Purchase.ProcessFlows;
+using Innovic.Modules.Purchase.Services;
 using Microsoft.AspNet.Identity;
 using Red.Wine.Picker;
 using System;
@@ -35,6 +37,21 @@ namespace Innovic.Modules.Purchase.Controllers
         public IHttpActionResult Get()
         {
             return Ok(_purchaseRequestRepository.Get().ToPickDictionaryCollection(PickConfigurations.PurchaseRequests));
+        }
+
+        [Route("{id}")]
+        public IHttpActionResult Get(string id)
+        {
+            PurchaseRequest purchaseRequest = _purchaseRequestRepository.GetByID(id);
+
+            if (purchaseRequest == null)
+            {
+                return NotFound();
+            }
+
+            PurchaseRequestService.Process(purchaseRequest, PurchaseRequestFlow.AddRemainingQuantity);
+
+            return Ok(purchaseRequest.ToPickDictionary(PickConfigurations.PurchaseRequests));
         }
 
         [HttpPost]

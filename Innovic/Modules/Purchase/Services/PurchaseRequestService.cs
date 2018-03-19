@@ -17,6 +17,12 @@ namespace Innovic.Modules.Purchase.Services
                     break;
                 case PurchaseRequestFlow.Update:
                     break;
+                case PurchaseRequestFlow.AddRemainingQuantity:
+                    foreach (var item in purchaseRequest.PurchaseRequestItems)
+                    {
+                        item.MetaData.Add("RemainingQuantity", item.Quantity - item.PurchaseOrderItems.Sum(p => p.Quantity));
+                    }
+                    break;
             }
 
             return purchaseRequest;
