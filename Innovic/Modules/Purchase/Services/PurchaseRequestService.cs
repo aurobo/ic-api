@@ -17,9 +17,26 @@ namespace Innovic.Modules.Purchase.Services
                     break;
                 case PurchaseRequestFlow.Update:
                     break;
+                case PurchaseRequestFlow.AddRemainingQuantity:
+                    foreach (var item in purchaseRequest.PurchaseRequestItems)
+                    {
+                        item.MetaData.Add("RemainingQuantity", item.Quantity - item.PurchaseOrderItems.Sum(p => p.Quantity));
+                    }
+                    break;
+                case PurchaseRequestFlow.TotalRemainingQuantity:
+                    int totalRemainingQuantity = purchaseRequest.PurchaseRequestItems.Sum(s => s.Quantity - s.PurchaseOrderItems.Sum(p => p.Quantity));
+
+                    bool canCreatePurchaseOrder = totalRemainingQuantity > 0;
+
+                    purchaseRequest.MetaData.Add("TotalRemainingQuantity", totalRemainingQuantity);
+                    purchaseRequest.MetaData.Add("CanCreatePurchaseOrder", canCreatePurchaseOrder);
+
+                    break;
             }
 
             return purchaseRequest;
         }
+
+
     }
 }
