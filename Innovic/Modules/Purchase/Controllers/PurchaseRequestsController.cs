@@ -36,7 +36,10 @@ namespace Innovic.Modules.Purchase.Controllers
         [Route("")]
         public IHttpActionResult Get()
         {
-            return Ok(_purchaseRequestRepository.Get().ToPickDictionaryCollection(PickConfigurations.PurchaseRequests));
+            var purchaseRequests = _purchaseRequestRepository.Get();
+            purchaseRequests.ToList().ForEach(s => s.Process(PurchaseRequestFlow.AddRemainingQuantity));
+            purchaseRequests.ToList().ForEach(s => s.Process(PurchaseRequestFlow.TotalRemainingQuantity));
+            return Ok(purchaseRequests.ToPickDictionaryCollection(PickConfigurations.PurchaseRequests));
         }
 
         [Route("{id}")]
