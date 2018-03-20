@@ -13,6 +13,7 @@ namespace Innovic.Modules.Purchase.Models
         public GoodsReceiptItem()
         {
             PurchaseOrderItems = new List<PurchaseOrderItem>();
+            GoodsIssueItems = new List<GoodsIssueItem>();
         }
 
         public string GoodsReceiptId { get; set; }
@@ -23,6 +24,7 @@ namespace Innovic.Modules.Purchase.Models
         public virtual Material Material { get; set; }
         public virtual GoodsReceipt GoodsReceipt { get; set; }
         public virtual List<PurchaseOrderItem> PurchaseOrderItems { get; set; }
+        public virtual List<GoodsIssueItem> GoodsIssueItems { get; set; }
 
         [NotMapped]
         public string Key
