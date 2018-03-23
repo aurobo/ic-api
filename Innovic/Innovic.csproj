@@ -187,7 +187,7 @@
     <Compile Include="Modules\Master\Options\MaterialInsertOptions.cs" />
     <Compile Include="Modules\Master\Options\MaterialUpdateOptions.cs" />
     <Compile Include="Modules\Master\Services\MaterialService.cs" />
-    <Compile Include="Modules\Purchase\Controllers\GoodsIssueController.cs" />
+    <Compile Include="Modules\Purchase\Controllers\GoodsIssuesController.cs" />
     <Compile Include="Modules\Purchase\Controllers\GoodsReceiptsController.cs" />
     <Compile Include="Modules\Purchase\Controllers\PurchaseOrdersController.cs" />
     <Compile Include="Modules\Purchase\Controllers\PurchaseRequestsController.cs" />
@@ -200,6 +200,8 @@
     <Compile Include="Modules\Purchase\Models\PurchaseRequest.cs" />
     <Compile Include="Modules\Purchase\Models\PurchaseRequestItem.cs" />
     <Compile Include="Modules\Purchase\Models\Supplier.cs" />
+    <Compile Include="Modules\Purchase\Options\GoodsIssueInsertOptions.cs" />
+    <Compile Include="Modules\Purchase\Options\GoodsIssueItemInsertOptions.cs" />
     <Compile Include="Modules\Purchase\Options\GoodsReceiptInsertOptions.cs" />
     <Compile Include="Modules\Purchase\Options\GoodsReceiptItemInsertOptions.cs" />
     <Compile Include="Modules\Purchase\Options\PurchaseOrderInsertOptions.cs" />

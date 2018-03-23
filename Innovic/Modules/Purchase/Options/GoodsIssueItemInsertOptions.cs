@@ -7,14 +7,14 @@ using System.Collections.Generic;
 
 namespace Innovic.Modules.Purchase.Options
 {
-    public class GoodsReceiptItemInsertOptions
+    public class GoodsIssueItemInsertOptions
     {
-        public GoodsReceiptItemInsertOptions()
+        public GoodsIssueItemInsertOptions()
         {
             PurchaseOrderItems = new List<string>();
         }
 
-        public string GoodsReceiptId { get; set; }
+        public string GoodsIssueId { get; set; }
         public int Quantity { get; set; }
         [CopyTo(typeof(Material), Relationship.Dependency, true)]
         public string MaterialId { get; set; }
