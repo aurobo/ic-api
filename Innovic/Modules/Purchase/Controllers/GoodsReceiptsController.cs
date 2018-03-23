@@ -64,7 +64,7 @@ namespace Innovic.Modules.Purchase.Controllers
                 return BadRequest("Can't insert the GoodsReceipt.");
             }
 
-            goodsReceipt.UpdateMaterialQuantity();
+            goodsReceipt.AddMaterialQuantity();
 
             try
             {

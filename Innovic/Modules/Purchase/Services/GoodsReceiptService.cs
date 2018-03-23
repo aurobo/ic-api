@@ -32,7 +32,7 @@ namespace Innovic.Modules.Purchase.Services
             return isInsertionAllowed;
         }
 
-        internal static void UpdateMaterialQuantity(this GoodsReceipt goodsReceipt)
+        internal static void AddMaterialQuantity(this GoodsReceipt goodsReceipt)
         {
             goodsReceipt.GoodsReceiptItems.ForEach(gri => gri.Material.Quantity += gri.Quantity);
         }

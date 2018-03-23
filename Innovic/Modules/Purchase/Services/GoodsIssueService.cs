@@ -14,70 +14,24 @@ namespace Innovic.Modules.Purchase.Services
         {
             switch (flow)
             {
-                case GoodsIssueFlow.Insert:
-                    break;
-                case GoodsIssueFlow.Update:
-                    break;
-                case GoodsIssueFlow.AddRemainingQuantity:
-                    foreach (var item in goodsIssue.GoodsIssueItems)
-                    {
-                        item.MetaData.Add("RemainingQuantity", item.Quantity - item.GoodsReceiptItems.Sum(x => x.Quantity));
-                    }
-                    break;
+
             }
 
             return goodsIssue;
         }
 
-        public static List<GoodsIssue> Process(this List<GoodsIssue> goodsIssues, GoodsIssueItemFlow flow)
+        internal static bool IsInsertionAllowed(this GoodsIssue goodsIssue)
         {
-            switch (flow)
-            {
-                case GoodsIssueItemFlow.AddRemainingQuantity:
-                    foreach (var goodsIssue in goodsIssues)
-                    {
-                        if(goodsIssue.GoodsIssueItems.Count > 0)
-                        {
-                            foreach(var goodsIssueItem in goodsIssue.GoodsIssueItems)
-                            {
-                                goodsIssueItem.MetaData.Add("RemainingQuantity", GetRemainingQuantity(goodsIssueItem));
-                            }
-                        }
-                    }
+            bool isInsertionAllowed = false;
 
-                    break;
+            isInsertionAllowed = goodsIssue.PurchaseOrders.Count > 0 && goodsIssue.GoodsIssueItems.Count > 0 && goodsIssue.GoodsIssueItems.TrueForAll(gii => gii.Material.Quantity >= gii.Quantity);
 
-                case GoodsIssueItemFlow.CanCreateGoodsReceipt:
-                    foreach (var goodsIssue in goodsIssues)
-                    {
-                        int TotalQuantity = GetGoodsIssueTotalQuantity(goodsIssue);
-                        if(TotalQuantity > 0)
-                        {
-                            goodsIssue.MetaData.Add("CanCreateGoodsReceipt", true);
-                        }
-                        else
-                        {
-                            goodsIssue.MetaData.Add("CanCreateGoodsReceipt", false);
-                        }
-                    }
-
-                    break;
-
-            }
-
-            return goodsIssues;
+            return isInsertionAllowed;
         }
 
-
-        public static int GetRemainingQuantity(GoodsIssueItem item)
+        internal static void SubtractMaterialQuantity(this GoodsIssue goodsIssue)
         {
-            return item.Quantity - item.GoodsReceiptItems.Sum(x => x.Quantity);
-        }
-
-
-        internal static int GetGoodsIssueTotalQuantity(this GoodsIssue goodissue)
-        {
-            return goodissue.GoodsIssueItems.Sum(i => i.Quantity);
+            goodsIssue.GoodsIssueItems.ForEach(gii => gii.Material.Quantity -= gii.Quantity);
         }
     }
 }
