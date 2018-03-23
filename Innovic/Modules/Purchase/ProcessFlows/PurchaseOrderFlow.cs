@@ -8,6 +8,8 @@ namespace Innovic.Modules.Purchase.ProcessFlows
     public enum PurchaseOrderFlow
     {
         CalculateItemCost,
-        Update
+        Update,
+        AddRemainingQuantity,
+        TotalRemainingQuantity
     }
 }

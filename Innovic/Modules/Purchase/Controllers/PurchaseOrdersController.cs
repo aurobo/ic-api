@@ -5,14 +5,8 @@ using Innovic.Modules.Purchase.ProcessFlows;
 using Innovic.Modules.Purchase.Services;
 using Microsoft.AspNet.Identity;
 using Red.Wine.Picker;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Hosting;
 using System.Web.Http;
 
 namespace Innovic.Modules.Purchase.Controllers
@@ -35,7 +29,10 @@ namespace Innovic.Modules.Purchase.Controllers
         [Route("")]
         public IHttpActionResult Get()
         {
-            return Ok(_purchaseOrderRepository.Get().ToPickDictionaryCollection(PickConfigurations.PurchaseOrders));
+            var purchaseOrders = _purchaseOrderRepository.Get();
+            purchaseOrders.ToList().ForEach(po => po.Process(PurchaseOrderFlow.AddRemainingQuantity));
+            purchaseOrders.ToList().ForEach(po => po.Process(PurchaseOrderFlow.TotalRemainingQuantity));
+            return Ok(purchaseOrders.ToPickDictionaryCollection(PickConfigurations.PurchaseOrders));
         }
 
         [Route("{id}")]
@@ -47,6 +44,9 @@ namespace Innovic.Modules.Purchase.Controllers
             {
                 return NotFound();
             }
+
+            purchaseOrder.Process(PurchaseOrderFlow.AddRemainingQuantity);
+            purchaseOrder.Process(PurchaseOrderFlow.TotalRemainingQuantity);
 
             return Ok(purchaseOrder.ToPickDictionary(PickConfigurations.PurchaseOrder));
         }

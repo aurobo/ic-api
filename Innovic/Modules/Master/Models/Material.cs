@@ -11,6 +11,9 @@ namespace Innovic.Modules.Master.Models
         public Material()
         {
             PurchaseRequestItems = new List<PurchaseRequestItem>();
+            PurchaseOrderItems = new List<PurchaseOrderItem>();
+            GoodsIssueItems = new List<GoodsIssueItem>();
+            GoodsReceiptItems = new List<GoodsReceiptItem>();
         }
 
         public string Number { get; set; }
@@ -18,6 +21,9 @@ namespace Innovic.Modules.Master.Models
         public int Quantity { get; set; }
 
         public virtual List<PurchaseRequestItem> PurchaseRequestItems { get; set; }
+        public virtual List<PurchaseOrderItem> PurchaseOrderItems { get; set; }
+        public virtual List<GoodsIssueItem> GoodsIssueItems { get; set; }
+        public virtual List<GoodsReceiptItem> GoodsReceiptItems { get; set; }
 
         [NotMapped]
         public string Key

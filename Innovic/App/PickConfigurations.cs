@@ -104,10 +104,19 @@ namespace Innovic.App
             {
                 return new PickConfig(true, true, new List<Pick>(DefaultData)
                 {
-                    new Pick("Supplier", new PickConfig(false, true, new List<Pick>(DefaultData)
+                    new Pick("Supplier", new PickConfig(false, true, new List<Pick>
                     {
                         new Pick("Name")
-                    }))
+                    })),
+                    new Pick("PurchaseOrderItems", new PickConfig(true, true, new List<Pick>(DefaultData)
+                    {
+                        new Pick("Material", new PickConfig(false, true, new List<Pick>
+                        {
+                            new Pick("Number"),
+                            new Pick("PurchaseRequestItems")
+                        }))
+                    })),
+                    new Pick("PurchaseRequests", new PickConfig(true, true))
                 });
             }
         }
