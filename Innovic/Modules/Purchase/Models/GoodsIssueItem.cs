@@ -21,7 +21,6 @@ namespace Innovic.Modules.Purchase.Models
         public string MaterialId { get; set; }
         public double UnitPrice { get; set; }
 
-        
         public virtual GoodsIssue GoodsIssue { get; set; }
         public virtual Material Material { get; set; }
         public virtual List<PurchaseOrderItem> PurchaseOrderItems { get; set; }

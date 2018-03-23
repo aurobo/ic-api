@@ -23,6 +23,13 @@ namespace Innovic.Modules.Purchase.Services
             return purchaseOrder;
         }
 
+        internal static bool IsInsertionAllowed(this PurchaseOrder purchaseOrder)
+        {
+            bool isInsertionAllowed = false;
 
+            isInsertionAllowed = purchaseOrder.PurchaseRequests.Count > 0 && purchaseOrder.PurchaseOrderItems.Count > 0;
+
+            return isInsertionAllowed;
+        }
     }
 }

@@ -60,7 +60,11 @@ namespace Innovic.Modules.Purchase.Controllers
             }
 
             PurchaseOrder purchaseOrder = _purchaseOrderRepository.CreateNewWineModel(options);
-            PurchaseOrderService.Process(purchaseOrder, PurchaseOrderFlow.CalculateItemCost);
+
+            if(!purchaseOrder.IsInsertionAllowed())
+            {
+                return BadRequest("Can't insert the PurchaseOrder.");
+            }
 
             try
             {

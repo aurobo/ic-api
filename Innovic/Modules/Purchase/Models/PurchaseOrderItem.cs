@@ -14,13 +14,12 @@ namespace Innovic.Modules.Purchase.Models
             GoodsReceiptItems = new List<GoodsReceiptItem>();
         }
 
-        public string MaterialId { get; set; }
-
         [Column(TypeName = "datetime2")]
         public DateTime ExpectedDate { get; set; }
         public int Quantity { get; set; }
         public double UnitPrice { get; set; }
         public string PurchaseOrderId { get; set; }
+        public string MaterialId { get; set; }
 
         public virtual Material Material { get; set; }
         public virtual PurchaseOrder PurchaseOrder { get; set; }
