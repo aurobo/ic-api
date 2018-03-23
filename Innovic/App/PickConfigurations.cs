@@ -126,9 +126,11 @@ namespace Innovic.App
                     {
                         new Pick("Material", new PickConfig(false, true, new List<Pick>
                         {
-                            new Pick("Number")
+                            new Pick("Number"),
+                            new Pick("PurchaseRequestItems")
                         }))
-                    }))
+                    })),
+                    new Pick("PurchaseRequests", new PickConfig(true, true))
                 });
             }
         }
@@ -215,6 +217,24 @@ namespace Innovic.App
                             new Pick("Number")
                         }))
                     }))
+                });
+            }
+        }
+
+        public static PickConfig PurchaseRequest
+        {
+            get
+            {
+                return new PickConfig(true, true, new List<Pick>(DefaultData)
+                {
+                    new Pick("PurchaseRequestItems", new PickConfig(true, true, new List<Pick>(DefaultData)
+                    {
+                        new Pick("Material", new PickConfig(false, true, new List<Pick>
+                        {
+                            new Pick("Number")
+                        }))
+                    })),
+                    new Pick("PurchaseOrders", new PickConfig(true, true))
                 });
             }
         }

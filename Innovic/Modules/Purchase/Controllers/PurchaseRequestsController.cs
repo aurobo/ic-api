@@ -52,7 +52,10 @@ namespace Innovic.Modules.Purchase.Controllers
                 return NotFound();
             }
 
-            return Ok(purchaseRequest.ToPickDictionary(PickConfigurations.PurchaseRequests));
+            purchaseRequest.Process(PurchaseRequestFlow.AddRemainingQuantity);
+            purchaseRequest.Process(PurchaseRequestFlow.TotalRemainingQuantity);
+
+            return Ok(purchaseRequest.ToPickDictionary(PickConfigurations.PurchaseRequest));
         }
 
         [HttpPost]
