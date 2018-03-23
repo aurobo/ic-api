@@ -287,8 +287,8 @@ namespace Innovic.Infrastructure
                         var materialNumber = row["Material Number"].ToString();
                         var number = row["Item Number"].ToString();
                         var quantity = Convert.ToInt32(row["Quantity"]);
-                        var expectedDate = DateTime.Parse(row["Expected Date"].ToString());
-
+                        var itemDate = DateTime.Parse(row["Date"].ToString());
+                        var description = row["Description"].ToString();
 
                         Material material = _context.Materials.Local.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
 
@@ -298,7 +298,7 @@ namespace Innovic.Infrastructure
 
                             if (material == null)
                             {
-                                material = _materialRepository.CreateNewWineModel(new MaterialInsertOptions { Number = materialNumber });
+                                material = _materialRepository.CreateNewWineModel(new MaterialInsertOptions { Number = materialNumber, Description = description });
                             }
                         }
 
@@ -307,7 +307,7 @@ namespace Innovic.Infrastructure
                             MaterialId = material.Id,
                             Number = number,
                             Quantity = quantity,
-                            Date = expectedDate
+                            Date = itemDate
                         };
 
                         purchaseRequest.PurchaseRequestItems.Add(purchaseRequestItem);
@@ -407,12 +407,12 @@ namespace Innovic.Infrastructure
                         var lineNumber = row["Item Number"];
                         errors.AddRange(ValidateValueType(lineNumber.ToString(), result.Tables[PurchaseRequestExcel.LineItemsSheet], "Integer"));
 
-                        var value = row["Expected Date"];
-                        DateTime expectedDate = new DateTime();
+                        var value = row["Date"];
+                        DateTime itemDate = new DateTime();
 
-                        if (!IsDateValid(value.ToString(), out expectedDate))
+                        if (!IsDateValid(value.ToString(), out itemDate))
                         {
-                            errors.Add("Expected Date at row " + index + " is invalid");
+                            errors.Add("Date at row " + index + " is invalid");
                         }
                         index++;
                     }
