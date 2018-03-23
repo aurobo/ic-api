@@ -58,7 +58,11 @@ namespace Innovic.Modules.Purchase.Controllers
             }
 
             GoodsReceipt goodsReceipt = _goodsReceiptRepository.CreateNewWineModel(options);
-            GoodsReceiptService.Process(goodsReceipt, GoodsReceiptFlow.Insert);
+
+            if (!goodsReceipt.IsInsertionAllowed())
+            {
+                return BadRequest("Can't insert the GoodsReceipt.");
+            }
 
             try
             {

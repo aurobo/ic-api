@@ -16,6 +16,8 @@ namespace Innovic.Modules.Purchase.Models
             GoodsIssueItems = new List<GoodsIssueItem>();
         }
 
+        [Column(TypeName = "datetime2")]
+        public DateTime Date { get; set; }
         public string GoodsReceiptId { get; set; }
         public int Quantity { get; set; }
         public string MaterialId { get; set; }

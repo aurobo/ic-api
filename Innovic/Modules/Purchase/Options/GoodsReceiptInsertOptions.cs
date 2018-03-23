@@ -14,7 +14,7 @@ namespace Innovic.Modules.Purchase.Options
             GoodsReceiptItems = new List<GoodsReceiptItemInsertOptions>();
         }
 
-        public DateTime ExpectedDate { get; set; }
+        public DateTime Date { get; set; }
 
         [CopyTo(typeof(PurchaseOrder), Relationship.Dependency, true)]
         public List<string> PurchaseOrders { get; set; }

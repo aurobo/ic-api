@@ -307,7 +307,7 @@ namespace Innovic.Infrastructure
                             MaterialId = material.Id,
                             Number = number,
                             Quantity = quantity,
-                            ExpectedDate = expectedDate
+                            Date = expectedDate
                         };
 
                         purchaseRequest.PurchaseRequestItems.Add(purchaseRequestItem);

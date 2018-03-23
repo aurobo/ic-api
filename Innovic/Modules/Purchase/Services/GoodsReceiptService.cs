@@ -22,5 +22,14 @@ namespace Innovic.Modules.Purchase.Services
 
             return goodsReceipt;
         }
+
+        internal static bool IsInsertionAllowed(this GoodsReceipt goodsReceipt)
+        {
+            bool isInsertionAllowed = false;
+
+            isInsertionAllowed = goodsReceipt.PurchaseOrders.Count > 0 && goodsReceipt.GoodsReceiptItems.Count > 0;
+
+            return isInsertionAllowed;
+        }
     }
 }

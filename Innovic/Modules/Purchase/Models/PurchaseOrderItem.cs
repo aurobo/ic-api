@@ -15,7 +15,7 @@ namespace Innovic.Modules.Purchase.Models
         }
 
         [Column(TypeName = "datetime2")]
-        public DateTime ExpectedDate { get; set; }
+        public DateTime Date { get; set; }
         public int Quantity { get; set; }
         public double UnitPrice { get; set; }
         public string PurchaseOrderId { get; set; }
