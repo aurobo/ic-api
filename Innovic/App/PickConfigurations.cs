@@ -148,12 +148,17 @@ namespace Innovic.App
         {
             get
             {
-                return new PickConfig(true, true, new List<Pick>
+                return new PickConfig(true, true, new List<Pick>(DefaultData)
                 {
-                    new Pick("Vendor", new PickConfig(false, true, new List<Pick>(DefaultData)
+                    new Pick("GoodsReceiptItems", new PickConfig(true, true, new List<Pick>(DefaultData)
                     {
-                        new Pick("Name")
-                    }))
+                        new Pick("Material", new PickConfig(false, true, new List<Pick>
+                        {
+                            new Pick("Number"),
+                            new Pick("PurchaseOrderItems")
+                        }))
+                    })),
+                    new Pick("PurchaseOrders", new PickConfig(true, true))
                 });
             }
         }
@@ -164,17 +169,15 @@ namespace Innovic.App
             {
                 return new PickConfig(true, true, new List<Pick>(DefaultData)
                 {
-                    new Pick("Vendor", new PickConfig(false, true, new List<Pick>
-                    {
-                        new Pick("Name")
-                    })),
                     new Pick("GoodsReceiptItems", new PickConfig(true, true, new List<Pick>(DefaultData)
                     {
                         new Pick("Material", new PickConfig(false, true, new List<Pick>
                         {
-                            new Pick("Number")
+                            new Pick("Number"),
+                            new Pick("PurchaseOrderItems")
                         }))
-                    }))
+                    })),
+                    new Pick("PurchaseOrders", new PickConfig(true, true))
                 });
             }
         }
@@ -185,13 +188,15 @@ namespace Innovic.App
             {
                 return new PickConfig(true, true, new List<Pick>(DefaultData)
                 {
-                    new Pick("GoodsIssueItem", new PickConfig(true, true, new List<Pick>(DefaultData)
+                    new Pick("GoodsIssueItems", new PickConfig(true, true, new List<Pick>(DefaultData)
                     {
                         new Pick("Material", new PickConfig(false, true, new List<Pick>
                         {
-                            new Pick("Number")
+                            new Pick("Number"),
+                            new Pick("PurchaseOrderItems")
                         }))
-                    }))
+                    })),
+                    new Pick("PurchaseOrders", new PickConfig(true, true))
                 });
             }
         }
@@ -202,13 +207,15 @@ namespace Innovic.App
             {
                 return new PickConfig(true, true, new List<Pick>(DefaultData)
                 {
-                    new Pick("GoodsIssueItem", new PickConfig(true, true, new List<Pick>(DefaultData)
+                    new Pick("GoodsIssueItems", new PickConfig(true, true, new List<Pick>(DefaultData)
                     {
                         new Pick("Material", new PickConfig(false, true, new List<Pick>
                         {
-                            new Pick("Number")
+                            new Pick("Number"),
+                            new Pick("PurchaseOrderItems")
                         }))
-                    }))
+                    })),
+                    new Pick("PurchaseOrders", new PickConfig(true, true))
                 });
             }
         }

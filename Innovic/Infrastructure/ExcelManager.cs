@@ -479,7 +479,7 @@ namespace Innovic.Infrastructure
                 resultDate = Convert.ToDateTime(date);
                 return true;
             }
-            catch (FormatException e)
+            catch (FormatException)
             {
                 resultDate = DateTime.MinValue;
                 return false;

@@ -1,4 +1,5 @@
-﻿using Innovic.Modules.Purchase.Models;
+﻿using Innovic.Modules.Master.Models;
+using Innovic.Modules.Purchase.Models;
 using Red.Wine;
 using Red.Wine.Attributes;
 using System;
@@ -17,6 +18,7 @@ namespace Innovic.Modules.Purchase.Options
 
         public string GoodsReceiptId { get; set; }
         public int Quantity { get; set; }
+        [CopyTo(typeof(Material), Red.Wine.Relationship.Dependency, true)]
         public string MaterialId { get; set; }
         public double UnitPrice { get; set; }
 
