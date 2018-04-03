@@ -198,10 +198,10 @@ namespace Innovic.App
                         new Pick("Material", new PickConfig(false, true, new List<Pick>
                         {
                             new Pick("Number"),
-                            new Pick("PurchaseOrderItems")
+                            new Pick("Description")
                         }))
                     })),
-                    new Pick("PurchaseOrders", new PickConfig(true, true))
+                    new Pick("Links", new PickConfig(true, true))
                 });
             }
         }
@@ -217,10 +217,10 @@ namespace Innovic.App
                         new Pick("Material", new PickConfig(false, true, new List<Pick>
                         {
                             new Pick("Number"),
-                            new Pick("PurchaseOrderItems")
+                            new Pick("Description")
                         }))
                     })),
-                    new Pick("PurchaseOrders", new PickConfig(true, true))
+                    new Pick("Links", new PickConfig(true, true))
                 });
             }
         }

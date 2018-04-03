@@ -10,21 +10,11 @@ namespace Innovic.Modules.Purchase.Services
 {
     public static class GoodsIssueService
     {
-        public static GoodsIssue AddMetaData(this GoodsIssue goodsIssue, GoodsIssueFlow flow)
-        {
-            switch (flow)
-            {
-
-            }
-
-            return goodsIssue;
-        }
-
         internal static bool IsInsertable(this GoodsIssue goodsIssue)
         {
             bool isInsertionAllowed = false;
 
-            isInsertionAllowed = goodsIssue.PurchaseOrders.Count > 0 && goodsIssue.GoodsIssueItems.Count > 0 && goodsIssue.GoodsIssueItems.TrueForAll(gii => gii.Material.Quantity >= gii.Quantity);
+            isInsertionAllowed = goodsIssue.GoodsIssueItems.Count > 0 && goodsIssue.GoodsIssueItems.TrueForAll(gii => gii.Material.Quantity >= gii.Quantity);
 
             return isInsertionAllowed;
         }
