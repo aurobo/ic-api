@@ -12,6 +12,7 @@ namespace Innovic.Models
         public Link()
         {
             PurchaseRequests = new List<PurchaseRequest>();
+            GoodsIssues = new List<GoodsIssue>();
         }
 
         public string ReferenceId { get; set; }
@@ -19,5 +20,6 @@ namespace Innovic.Models
         public string Type { get; set; }
 
         public virtual List<PurchaseRequest> PurchaseRequests { get; set; }
+        public virtual List<GoodsIssue> GoodsIssues { get; set; }
     }
 }

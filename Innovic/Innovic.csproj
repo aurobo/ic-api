@@ -175,6 +175,7 @@
     <Compile Include="App\TraceExceptionLogger.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Infrastructure\ExcelManager.cs" />
+    <Compile Include="Infrastructure\GoodsIssueExcel.cs" />
     <Compile Include="Infrastructure\PurchaseRequestExcel.cs" />
     <Compile Include="Infrastructure\SalesOrderExcel.cs" />
     <Compile Include="Infrastructure\ExcelManagerExtensions.cs" />

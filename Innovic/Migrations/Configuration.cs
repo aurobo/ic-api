@@ -23,25 +23,13 @@ namespace Innovic.Migrations
                 x => x.UserName,
                 new User
                 {
+                    Id = "admin",
                     Name = "Tony Stark",
                     UserName = "admin",
                     PasswordHash = hasher.HashPassword("Admin123!"),
-                    SecurityStamp = new Guid().ToString()
+                    SecurityStamp = "admin"
                 }
             );
-
-            //var identityUser = context.Users.Single(u => u.UserName.Equals("admin"));
-            //var appUser = new AppUser
-            //{
-            //    Name = "Tony Stark"
-            //};
-
-            //appUser.SetId(identityUser.Id);
-
-            //context.AppUsers.AddOrUpdate(
-            //    x => x.IdentityUser.UserName, 
-            //    appUser
-            //);
         }
     }
 }

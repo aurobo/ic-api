@@ -138,6 +138,194 @@ namespace Innovic.Infrastructure
             return salesOrder;
         }
 
+        public GoodsIssue ToGoodsIssue(string filePath)
+        {
+            var goodsIssue = new GoodsIssue();
+
+            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                    {
+                        ConfigureDataTable = (tableReader) => new ExcelDataTableConfiguration()
+                        {
+                            UseHeaderRow = true
+                        }
+                    });
+
+                    foreach (DataRow row in result.Tables[GoodsIssueExcel.HeaderDataSheetName].Rows)
+                    {
+                        var key = row[GoodsIssueExcel.HeaderDataColumn.Name.ToString()].ToString();
+                        var value = row[GoodsIssueExcel.HeaderDataColumn.Value.ToString()];
+
+                        Enum.TryParse(key, out GoodsIssueExcel.HeaderDataNameCell cellName);
+
+                        switch (cellName)
+                        {
+                            case GoodsIssueExcel.HeaderDataNameCell.Date:
+                                DateTime date;
+                                DateTime.TryParse(value.ToString(), out date);
+                                goodsIssue.Date = date;
+                                break;
+                            case GoodsIssueExcel.HeaderDataNameCell.Remarks:
+                                goodsIssue.Remarks = value.ToString();
+                                break;
+                            case GoodsIssueExcel.HeaderDataNameCell.PurchaseOrderReferences:
+                                var purchaseOrderKeys = value.ToString().Split(',');
+                                var purchaseOrders = _context.PurchaseOrders.ToList();
+
+                                foreach (var po in purchaseOrders)
+                                {
+                                    if (purchaseOrderKeys.Contains(po.Key))
+                                    {
+                                        goodsIssue.Links.Add(new Link
+                                        {
+                                            ReferenceId = po.Id,
+                                            ReferenceName = po.Key,
+                                            Type = "PurchaseOrders"
+                                        });
+                                    }
+                                }
+                                break;
+                        }
+                    }
+
+                    foreach (DataRow row in result.Tables[GoodsIssueExcel.LineItemsSheetName].Rows)
+                    {
+                        var materialNumber = row[GoodsIssueExcel.LineItemsColumn.MaterialNumber.ToString()].ToString();
+                        var quantity = Convert.ToInt32(row[GoodsIssueExcel.LineItemsColumn.Quantity.ToString()]);
+                        var requiredByDate = DateTime.Parse(row[GoodsIssueExcel.LineItemsColumn.RequiredByDate.ToString()].ToString());
+                        var description = row[GoodsIssueExcel.LineItemsColumn.Description.ToString()].ToString();
+
+                        Material material = _context.Materials.Local.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
+
+                        if (material == null)
+                        {
+                            material = _context.Materials.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
+
+                            if (material == null)
+                            {
+                                material = _materialRepository.CreateNewWineModel(new MaterialInsertOptions { Number = materialNumber, Description = description });
+                            }
+                        }
+
+                        var goodsIssueItem = new GoodsIssueItem
+                        {
+                            MaterialId = material.Id,
+                            Quantity = quantity,
+                            RequiredByDate = requiredByDate
+                        };
+
+                        goodsIssue.GoodsIssueItems.Add(goodsIssueItem);
+                    }
+                }
+            }
+            _context.GoodsIssues.Add(goodsIssue);
+            return goodsIssue;
+        }
+
+        public List<string> ValidateForGoodsIssue(string filePath)
+        {
+            List<string> errors = new List<string>();
+
+            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                    {
+                        ConfigureDataTable = (tableReader) => new ExcelDataTableConfiguration()
+                        {
+                            UseHeaderRow = false
+                        }
+                    });
+
+                    // Sheet Validation
+                    errors.AddRange(ValidateSheets(result.Tables, new List<string> { GoodsIssueExcel.HeaderDataSheetName, GoodsIssueExcel.LineItemsSheetName }));
+
+                    if (errors.Count > 0)
+                    {
+                        return errors;
+                    }
+
+                    // Column Validation
+                    errors.AddRange(ValidateColumns(GoodsIssueExcel.HeaderDataColumns, result.Tables[GoodsIssueExcel.HeaderDataSheetName]));
+                    errors.AddRange(ValidateColumns(GoodsIssueExcel.LineItemsColumns, result.Tables[GoodsIssueExcel.LineItemsSheetName]));
+
+                    if (errors.Count > 0)
+                    {
+                        return errors;
+                    }
+
+                    // Cell Validation
+                    var cells = result.Tables[GoodsIssueExcel.HeaderDataSheetName].GetCellsForColumn(0, false);
+
+                    errors.AddRange(ValidateCells(cells, result.Tables[GoodsIssueExcel.HeaderDataSheetName], GoodsIssueExcel.HeaderDataNameCells));
+
+                    if (errors.Count > 0)
+                    {
+                        return errors;
+                    }
+                }
+            }
+
+            // Date Validation
+            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    DateTime date = new DateTime();
+
+                    var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                    {
+                        ConfigureDataTable = (tableReader) => new ExcelDataTableConfiguration()
+                        {
+                            UseHeaderRow = true
+                        }
+                    });
+
+                    foreach (DataRow row in result.Tables[GoodsIssueExcel.HeaderDataSheetName].Rows)
+                    {
+                        string key = row[GoodsIssueExcel.HeaderDataColumn.Name.ToString()].ToString();
+                        object value = row[GoodsIssueExcel.HeaderDataColumn.Value.ToString()];
+
+                        Enum.TryParse(key, out GoodsIssueExcel.HeaderDataNameCell cellName);
+
+                        switch (cellName)
+                        {
+                            case GoodsIssueExcel.HeaderDataNameCell.Date:
+                                if (!IsDateValid(value.ToString(), out date))
+                                {
+                                    errors.Add(key + " in sheet " + GoodsIssueExcel.HeaderDataSheetName + " is not in valid format.");
+                                }
+                                break;
+                        }
+                    }
+
+                    // Because header row has index = 1 in excel sheet
+                    int index = 2; // In excel sheet
+
+                    foreach (DataRow row in result.Tables[GoodsIssueExcel.LineItemsSheetName].Rows)
+                    {
+                        var quantity = row[GoodsIssueExcel.LineItemsColumn.Quantity.ToString()];
+                        errors.AddRange(ValidateValueType(quantity.ToString(), result.Tables[GoodsIssueExcel.LineItemsSheetName], "Integer"));
+
+                        var value = row[GoodsIssueExcel.LineItemsColumn.RequiredByDate.ToString()];
+                        DateTime requiredByDate = new DateTime();
+
+                        if (!IsDateValid(value.ToString(), out requiredByDate))
+                        {
+                            errors.Add(GoodsIssueExcel.LineItemsColumn.RequiredByDate.ToString() + " at row " + index + " is invalid");
+                        }
+                        index++;
+                    }
+                }
+            }
+
+            return errors;
+        }
+
         public List<string> ValidateForSalesOrder(string filePath)
         {
             List<string> errors = new List<string>();

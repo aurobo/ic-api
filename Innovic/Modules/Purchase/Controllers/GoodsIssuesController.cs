@@ -1,4 +1,5 @@
 ﻿using Innovic.App;
+using Innovic.Infrastructure;
 using Innovic.Modules.Purchase.Models;
 using Innovic.Modules.Purchase.Options;
 using Innovic.Modules.Purchase.ProcessFlows;
@@ -9,7 +10,11 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Http;
 
 namespace Innovic.Modules.Purchase.Controllers
@@ -71,7 +76,7 @@ namespace Innovic.Modules.Purchase.Controllers
             }
             catch (DbUpdateException)
             {
-                if (goodsIssueExists(goodsIssue.Id))
+                if (GoodsIssueExists(goodsIssue.Id))
                 {
                     return Conflict();
                 }
@@ -99,6 +104,61 @@ namespace Innovic.Modules.Purchase.Controllers
             return Ok(goodsIssue.ToPickDictionary(new PickConfig(true, true)));
         }
 
+        [HttpPost]
+        [Route("upload")]
+        public async Task<HttpResponseMessage> UploadAsync()
+        {
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+
+            var provider = new MultipartFormDataStreamProvider(HostingEnvironment.MapPath("~/App_Data"));
+
+            try
+            {
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                ExcelManager excelManager = new ExcelManager(_context, _userId);
+
+                var errors = excelManager.ValidateForGoodsIssue(provider.FileData[0].LocalFileName);
+
+                if (errors.Count > 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+
+                var goodsIssue = excelManager.ToGoodsIssue(provider.FileData[0].LocalFileName);
+
+                try
+                {
+                    _context.SaveChanges();
+                }
+                catch (DbUpdateException)
+                {
+                    if (GoodsIssueExists(goodsIssue.Id))
+                    {
+                        return Request.CreateResponse(HttpStatusCode.Conflict);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                if (System.IO.File.Exists(provider.FileData[0].LocalFileName))
+                {
+                    System.IO.File.Delete(provider.FileData[0].LocalFileName);
+                }
+
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -108,7 +168,7 @@ namespace Innovic.Modules.Purchase.Controllers
             base.Dispose(disposing);
         }
 
-        private bool goodsIssueExists(string id)
+        private bool GoodsIssueExists(string id)
         {
             return _context.GoodsReceipts.Count(e => e.Id == id) > 0;
         }
