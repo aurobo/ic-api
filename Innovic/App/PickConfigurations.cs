@@ -139,7 +139,10 @@ namespace Innovic.App
                             new Pick("PurchaseRequestItems")
                         }))
                     })),
-                    new Pick("PurchaseRequests", new PickConfig(true, true))
+                    new Pick("PurchaseRequests", new PickConfig(true, true, new List<Pick>(DefaultData)
+                    {
+                        new Pick("Links", new PickConfig(true, true))
+                    }))
                 });
             }
         }
@@ -250,7 +253,8 @@ namespace Innovic.App
                             new Pick("Number")
                         }))
                     })),
-                    new Pick("PurchaseOrders", new PickConfig(true, true))
+                    new Pick("PurchaseOrders", new PickConfig(true, true)),
+                    new Pick("Links", new PickConfig(true, true))
                 });
             }
         }

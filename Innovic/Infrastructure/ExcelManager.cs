@@ -291,15 +291,19 @@ namespace Innovic.Infrastructure
                                 break;
                             case PurchaseRequestExcel.HeaderDataNameCell.SalesOrderReferences:
                                 var salesOrderKeys = value.ToString().Split(',');
-                                var salesOrders = _context.SalesOrders.Where(so => salesOrderKeys.Contains(so.Key));
+                                var salesOrders = _context.SalesOrders.ToList();
+
                                 foreach (var so in salesOrders)
                                 {
-                                    purchaseRequest.Links.Add(new Link
+                                    if(salesOrderKeys.Contains(so.Key))
                                     {
-                                        ReferenceId = so.Id,
-                                        ReferenceName = so.Key,
-                                        Type = "SalesOrders"
-                                    });
+                                        purchaseRequest.Links.Add(new Link
+                                        {
+                                            ReferenceId = so.Id,
+                                            ReferenceName = so.Key,
+                                            Type = "SalesOrders"
+                                        });
+                                    }
                                 }
                                 break;
                         }

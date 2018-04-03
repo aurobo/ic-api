@@ -17,6 +17,7 @@ namespace Innovic.Modules.Purchase.Models
         [Column(TypeName = "datetime2")]
         public DateTime Date { get; set; }
         public string SupplierId { get; set; }
+        public string Remarks { get; set; }
 
         public virtual Supplier Supplier { get; set; }
         public virtual List<PurchaseOrderItem> PurchaseOrderItems { get; set; }
