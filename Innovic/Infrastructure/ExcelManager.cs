@@ -43,14 +43,16 @@ namespace Innovic.Infrastructure
                         }
                     });
 
-                    foreach (DataRow row in result.Tables["Header Data"].Rows)
+                    foreach (DataRow row in result.Tables[SalesOrderExcel.HeaderDataSheetName].Rows)
                     {
-                        var key = row["Name"].ToString();
-                        var value = row["Value"];
+                        var key = row[SalesOrderExcel.HeaderDataColumn.Name.ToString()].ToString();
+                        var value = row[SalesOrderExcel.HeaderDataColumn.Value.ToString()];
 
-                        switch (key)
+                        Enum.TryParse(key, out SalesOrderExcel.HeaderDataNameCell cellName);
+
+                        switch (cellName)
                         {
-                            case "Customer":
+                            case SalesOrderExcel.HeaderDataNameCell.Customer:
                                 var customerName = value.ToString();
                                 Customer customer = _context.Customers.Local.Where(c => c.Name.Equals(customerName)).SingleOrDefault();
 
@@ -67,41 +69,41 @@ namespace Innovic.Infrastructure
                                 salesOrder.CustomerId = customer.Id;
                                 break;
 
-                            case "ExpirationDate":
+                            case SalesOrderExcel.HeaderDataNameCell.ExpirationDate:
                                 DateTime expirationDate;
                                 DateTime.TryParse(value.ToString(), out expirationDate);
                                 salesOrder.ExpirationDate = expirationDate;
                                 break;
 
-                            case "OrderDate":
+                            case SalesOrderExcel.HeaderDataNameCell.OrderDate:
                                 DateTime orderDate;
                                 DateTime.TryParse(value.ToString(), out orderDate);
                                 salesOrder.OrderDate = orderDate;
                                 break;
 
-                            case "CustomerReference":
+                            case SalesOrderExcel.HeaderDataNameCell.CustomerReference:
                                 salesOrder.CustomerReference = value.ToString();
                                 break;
 
-                            case "PaymentTerms":
+                            case SalesOrderExcel.HeaderDataNameCell.PaymentTerms:
                                 salesOrder.PaymentTerms = value.ToString();
                                 break;
 
-                            case "Description":
-                                salesOrder.Description = value.ToString();
+                            case SalesOrderExcel.HeaderDataNameCell.Remarks:
+                                salesOrder.Remarks = value.ToString();
                                 break;
                         }
                     }
 
-                    foreach (DataRow row in result.Tables["Line Items"].Rows)
+                    foreach (DataRow row in result.Tables[SalesOrderExcel.LineItemsSheetName].Rows)
                     {
-                        var itemNumber = row["Item Number"].ToString();
-                        var materialNumber = row["Material Number"].ToString();
-                        var description = row["Description"].ToString();
-                        var quantity = Convert.ToInt32(row["Quantity"]);
-                        var unitPrice = Convert.ToDouble(row["Unit Price"]);
-                        var deliveryDate = DateTime.Parse(row["Delivery Date"].ToString());
-                        var wbsElement = row["WBS Element"].ToString();
+                        var itemNumber = row[SalesOrderExcel.LineItemsColumn.ItemNumber.ToString()].ToString();
+                        var materialNumber = row[SalesOrderExcel.LineItemsColumn.MaterialNumber.ToString()].ToString();
+                        var description = row[SalesOrderExcel.LineItemsColumn.Description.ToString()].ToString();
+                        var quantity = Convert.ToInt32(row[SalesOrderExcel.LineItemsColumn.Quantity.ToString()]);
+                        var unitPrice = Convert.ToDouble(row[SalesOrderExcel.LineItemsColumn.UnitPrice.ToString()]);
+                        var deliveryDate = DateTime.Parse(row[SalesOrderExcel.LineItemsColumn.DeliveryDate.ToString()].ToString());
+                        var wbsElement = row[SalesOrderExcel.LineItemsColumn.WBSElement.ToString()].ToString();
 
                         Material material = _context.Materials.Local.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
 
@@ -152,7 +154,7 @@ namespace Innovic.Infrastructure
                     });
 
                     // Sheet Validation
-                    errors.AddRange(ValidateSheets(result.Tables, new List<string> { SalesOrderExcel.HeaderDataSheet, SalesOrderExcel.LineItemsSheet }));
+                    errors.AddRange(ValidateSheets(result.Tables, SalesOrderExcel.Sheets));
 
                     if (errors.Count > 0)
                     {
@@ -160,8 +162,8 @@ namespace Innovic.Infrastructure
                     }
 
                     // Column Validation
-                    errors.AddRange(ValidateColumns(SalesOrderExcel.HeaderDataColumns, result.Tables[SalesOrderExcel.HeaderDataSheet]));
-                    errors.AddRange(ValidateColumns(SalesOrderExcel.LineItemsColumns, result.Tables[SalesOrderExcel.LineItemsSheet]));
+                    errors.AddRange(ValidateColumns(SalesOrderExcel.HeaderDataColumns, result.Tables[SalesOrderExcel.HeaderDataSheetName]));
+                    errors.AddRange(ValidateColumns(SalesOrderExcel.LineItemsColumns,result.Tables[SalesOrderExcel.LineItemsSheetName]));
 
                     if (errors.Count > 0)
                     {
@@ -169,9 +171,9 @@ namespace Innovic.Infrastructure
                     }
                     
                     // Cell Validation
-                    var cells = result.Tables[SalesOrderExcel.HeaderDataSheet].GetCellsForColumn(0, false);
+                    var cells = result.Tables[SalesOrderExcel.HeaderDataSheetName].GetCellsForColumn(0, false);
 
-                    errors.AddRange(ValidateCells(cells, result.Tables[SalesOrderExcel.HeaderDataSheet], SalesOrderExcel.HeaderDataNameRows));
+                    errors.AddRange(ValidateCells(cells, result.Tables[SalesOrderExcel.HeaderDataSheetName], SalesOrderExcel.HeaderDataNameCells));
 
                     if (errors.Count > 0)
                     {
@@ -196,23 +198,25 @@ namespace Innovic.Infrastructure
                         }
                     });
 
-                    foreach (DataRow row in result.Tables[SalesOrderExcel.HeaderDataSheet].Rows)
+                    foreach (DataRow row in result.Tables[SalesOrderExcel.HeaderDataSheetName].Rows)
                     {
-                        string key = row["Name"].ToString();
-                        object value = row["Value"];
+                        string key = row[SalesOrderExcel.HeaderDataColumn.Name.ToString()].ToString();
+                        object value = row[SalesOrderExcel.HeaderDataColumn.Value.ToString()];
 
-                        switch (key)
+                        Enum.TryParse(key, out SalesOrderExcel.HeaderDataNameCell cellName);
+
+                        switch (cellName)
                         {
-                            case "ExpirationDate":
+                            case SalesOrderExcel.HeaderDataNameCell.ExpirationDate:
                                 if (!IsDateValid(value.ToString(), out expirationDate))
                                 {
-                                    errors.Add("ExpirationDate in sheet " + SalesOrderExcel.HeaderDataSheet + " is not in valid format.");
+                                    errors.Add(key + " in sheet " + SalesOrderExcel.HeaderDataSheetName + " is not in valid format.");
                                 }
                                 break;
-                            case "OrderDate":
+                            case SalesOrderExcel.HeaderDataNameCell.OrderDate:
                                 if (!IsDateValid(value.ToString(), out orderDate))
                                 {
-                                    errors.Add("OrderDate in sheet " + SalesOrderExcel.HeaderDataSheet + " is not in valid format.");
+                                    errors.Add(key + " in sheet " + SalesOrderExcel.HeaderDataSheetName + " is not in valid format.");
                                 }
                                 break;
                         }
@@ -222,26 +226,26 @@ namespace Innovic.Infrastructure
                     {
                         if(!CompareDates(expirationDate, orderDate))
                         {
-                            errors.Add("ExpirationDate is lesser than OrderDate in sheet " + SalesOrderExcel.HeaderDataSheet);
+                            errors.Add("ExpirationDate is lesser than OrderDate in sheet " + SalesOrderExcel.HeaderDataSheetName);
                         }
                     }
 
                     // Because header row has index = 1 in excel sheet
                     int index = 2; // In excel sheet
 
-                    foreach (DataRow row in result.Tables[SalesOrderExcel.LineItemsSheet].Rows)
+                    foreach (DataRow row in result.Tables[SalesOrderExcel.LineItemsSheetName].Rows)
                     {
-                        string unitPrice = row["Unit Price"].ToString();
-                        errors.AddRange(ValidateValueType(unitPrice, result.Tables[SalesOrderExcel.LineItemsSheet], "Double"));
+                        string unitPrice = row[SalesOrderExcel.LineItemsColumn.UnitPrice.ToString()].ToString();
+                        errors.AddRange(ValidateValueType(unitPrice, result.Tables[SalesOrderExcel.LineItemsSheetName], "Double"));
 
-                        var quantity = row["Quantity"];
-                        errors.AddRange(ValidateValueType(quantity.ToString(), result.Tables[SalesOrderExcel.LineItemsSheet], "Integer"));
+                        var quantity = row[SalesOrderExcel.LineItemsColumn.Quantity.ToString()];
+                        errors.AddRange(ValidateValueType(quantity.ToString(), result.Tables[SalesOrderExcel.LineItemsSheetName], "Integer"));
 
-                        var value = row["Delivery Date"];
+                        var value = row[SalesOrderExcel.LineItemsColumn.DeliveryDate.ToString()];
                         DateTime deliveryDate = new DateTime();
                         if (!IsDateValid(value.ToString(), out deliveryDate))
                         {
-                            errors.Add("Delivery Date at row " + index + " is invalid");
+                            errors.Add(SalesOrderExcel.LineItemsColumn.DeliveryDate.ToString() + " at row " + index + " is invalid.");
                         }
                         index++;
                     }
@@ -267,14 +271,16 @@ namespace Innovic.Infrastructure
                         }
                     });
 
-                    foreach (DataRow row in result.Tables["Header Data"].Rows)
+                    foreach (DataRow row in result.Tables[PurchaseRequestExcel.HeaderDataSheetName].Rows)
                     {
-                        var key = row["Name"].ToString();
-                        var value = row["Value"];
+                        var key = row[PurchaseRequestExcel.HeaderDataColumn.Name.ToString()].ToString();
+                        var value = row[PurchaseRequestExcel.HeaderDataColumn.Value.ToString()];
 
-                        switch (key)
+                        Enum.TryParse(key, out PurchaseRequestExcel.HeaderDataNameCell cellName);
+
+                        switch (cellName)
                         {
-                            case "Date":
+                            case PurchaseRequestExcel.HeaderDataNameCell.Date:
                                 DateTime date;
                                 DateTime.TryParse(value.ToString(), out date);
                                 purchaseRequest.Date = date;
@@ -282,13 +288,13 @@ namespace Innovic.Infrastructure
                         }
                     }
 
-                    foreach (DataRow row in result.Tables["Line Items"].Rows)
+                    foreach (DataRow row in result.Tables[PurchaseRequestExcel.LineItemsSheetName].Rows)
                     {
-                        var materialNumber = row["Material Number"].ToString();
-                        var number = row["Item Number"].ToString();
-                        var quantity = Convert.ToInt32(row["Quantity"]);
-                        var itemDate = DateTime.Parse(row["Date"].ToString());
-                        var description = row["Description"].ToString();
+                        var materialNumber = row[PurchaseRequestExcel.LineItemsColumn.MaterialNumber.ToString()].ToString();
+                        var number = row[PurchaseRequestExcel.LineItemsColumn.ItemNumber.ToString()].ToString();
+                        var quantity = Convert.ToInt32(row[PurchaseRequestExcel.LineItemsColumn.Quantity.ToString()]);
+                        var requiredByDate = DateTime.Parse(row[PurchaseRequestExcel.LineItemsColumn.RequiredByDate.ToString()].ToString());
+                        var description = row[PurchaseRequestExcel.LineItemsColumn.Description.ToString()].ToString();
 
                         Material material = _context.Materials.Local.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
 
@@ -307,7 +313,7 @@ namespace Innovic.Infrastructure
                             MaterialId = material.Id,
                             Number = number,
                             Quantity = quantity,
-                            Date = itemDate
+                            RequiredByDate = requiredByDate
                         };
 
                         purchaseRequest.PurchaseRequestItems.Add(purchaseRequestItem);
@@ -335,7 +341,7 @@ namespace Innovic.Infrastructure
                     });
 
                     // Sheet Validation
-                    errors.AddRange(ValidateSheets(result.Tables, new List<string> { PurchaseRequestExcel.HeaderDataSheet, PurchaseRequestExcel.LineItemsSheet }));
+                    errors.AddRange(ValidateSheets(result.Tables, new List<string> { PurchaseRequestExcel.HeaderDataSheetName, PurchaseRequestExcel.LineItemsSheetName }));
 
                     if (errors.Count > 0)
                     {
@@ -343,8 +349,8 @@ namespace Innovic.Infrastructure
                     }
 
                     // Column Validation
-                    errors.AddRange(ValidateColumns(PurchaseRequestExcel.HeaderDataColumns, result.Tables[PurchaseRequestExcel.HeaderDataSheet]));
-                    errors.AddRange(ValidateColumns(PurchaseRequestExcel.LineItemsColumns, result.Tables[PurchaseRequestExcel.LineItemsSheet]));
+                    errors.AddRange(ValidateColumns(PurchaseRequestExcel.HeaderDataColumns, result.Tables[PurchaseRequestExcel.HeaderDataSheetName]));
+                    errors.AddRange(ValidateColumns(PurchaseRequestExcel.LineItemsColumns, result.Tables[PurchaseRequestExcel.LineItemsSheetName]));
 
                     if (errors.Count > 0)
                     {
@@ -352,9 +358,9 @@ namespace Innovic.Infrastructure
                     }
 
                     // Cell Validation
-                    var cells = result.Tables[PurchaseRequestExcel.HeaderDataSheet].GetCellsForColumn(0, false);
+                    var cells = result.Tables[PurchaseRequestExcel.HeaderDataSheetName].GetCellsForColumn(0, false);
 
-                    errors.AddRange(ValidateCells(cells, result.Tables[PurchaseRequestExcel.HeaderDataSheet], PurchaseRequestExcel.HeaderDataNameRows));
+                    errors.AddRange(ValidateCells(cells, result.Tables[PurchaseRequestExcel.HeaderDataSheetName], PurchaseRequestExcel.HeaderDataNameCells));
 
                     if (errors.Count > 0)
                     {
@@ -378,17 +384,19 @@ namespace Innovic.Infrastructure
                         }
                     });
 
-                    foreach (DataRow row in result.Tables[PurchaseRequestExcel.HeaderDataSheet].Rows)
+                    foreach (DataRow row in result.Tables[PurchaseRequestExcel.HeaderDataSheetName].Rows)
                     {
-                        string key = row["Name"].ToString();
-                        object value = row["Value"];
+                        string key = row[PurchaseRequestExcel.HeaderDataColumn.Name.ToString()].ToString();
+                        object value = row[PurchaseRequestExcel.HeaderDataColumn.Value.ToString()];
 
-                        switch (key)
+                        Enum.TryParse(key, out PurchaseRequestExcel.HeaderDataNameCell cellName);
+
+                        switch (cellName)
                         {
-                            case "Date":
+                            case PurchaseRequestExcel.HeaderDataNameCell.Date:
                                 if (!IsDateValid(value.ToString(), out date))
                                 {
-                                    errors.Add("Date in sheet " + PurchaseRequestExcel.HeaderDataSheet + " is not in valid format.");
+                                    errors.Add(key + " in sheet " + PurchaseRequestExcel.HeaderDataSheetName + " is not in valid format.");
                                 }
                                 break;
                         }
@@ -397,22 +405,20 @@ namespace Innovic.Infrastructure
                     // Because header row has index = 1 in excel sheet
                     int index = 2; // In excel sheet
 
-                    foreach (DataRow row in result.Tables[PurchaseRequestExcel.LineItemsSheet].Rows)
+                    foreach (DataRow row in result.Tables[PurchaseRequestExcel.LineItemsSheetName].Rows)
                     {
-                        // row["Quantity"] doesn't make any sense when there is a separate file for Constants.
-                        // Maybe use enums?
-                        var quantity = row["Quantity"];
-                        errors.AddRange(ValidateValueType(quantity.ToString(), result.Tables[PurchaseRequestExcel.LineItemsSheet], "Integer"));
+                        var quantity = row[PurchaseRequestExcel.LineItemsColumn.Quantity.ToString()];
+                        errors.AddRange(ValidateValueType(quantity.ToString(), result.Tables[PurchaseRequestExcel.LineItemsSheetName], "Integer"));
 
-                        var lineNumber = row["Item Number"];
-                        errors.AddRange(ValidateValueType(lineNumber.ToString(), result.Tables[PurchaseRequestExcel.LineItemsSheet], "Integer"));
+                        var lineNumber = row[PurchaseRequestExcel.LineItemsColumn.ItemNumber.ToString()];
+                        errors.AddRange(ValidateValueType(lineNumber.ToString(), result.Tables[PurchaseRequestExcel.LineItemsSheetName], "Integer"));
 
-                        var value = row["Date"];
-                        DateTime itemDate = new DateTime();
+                        var value = row[PurchaseRequestExcel.LineItemsColumn.RequiredByDate.ToString()];
+                        DateTime requiredByDate = new DateTime();
 
-                        if (!IsDateValid(value.ToString(), out itemDate))
+                        if (!IsDateValid(value.ToString(), out requiredByDate))
                         {
-                            errors.Add("Date at row " + index + " is invalid");
+                            errors.Add(PurchaseRequestExcel.LineItemsColumn.RequiredByDate.ToString() + " at row " + index + " is invalid");
                         }
                         index++;
                     }
