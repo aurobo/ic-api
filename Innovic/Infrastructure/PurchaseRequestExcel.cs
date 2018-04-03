@@ -79,7 +79,8 @@ namespace Innovic.Infrastructure
         public enum HeaderDataNameCell
         {
             Date,
-            Remarks
+            Remarks,
+            SalesOrderReferences
         }
     }
 }

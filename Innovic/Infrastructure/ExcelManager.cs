@@ -1,5 +1,6 @@
 ﻿using ExcelDataReader;
 using Innovic.App;
+using Innovic.Models;
 using Innovic.Modules.Master.Models;
 using Innovic.Modules.Master.Options;
 using Innovic.Modules.Purchase.Models;
@@ -284,6 +285,22 @@ namespace Innovic.Infrastructure
                                 DateTime date;
                                 DateTime.TryParse(value.ToString(), out date);
                                 purchaseRequest.Date = date;
+                                break;
+                            case PurchaseRequestExcel.HeaderDataNameCell.Remarks:
+                                purchaseRequest.Remarks = value.ToString();
+                                break;
+                            case PurchaseRequestExcel.HeaderDataNameCell.SalesOrderReferences:
+                                var salesOrderKeys = value.ToString().Split(',');
+                                var salesOrders = _context.SalesOrders.Where(so => salesOrderKeys.Contains(so.Key));
+                                foreach (var so in salesOrders)
+                                {
+                                    purchaseRequest.Links.Add(new Link
+                                    {
+                                        ReferenceId = so.Id,
+                                        ReferenceName = so.Key,
+                                        Type = "SalesOrders"
+                                    });
+                                }
                                 break;
                         }
                     }

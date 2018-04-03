@@ -179,6 +179,7 @@
     <Compile Include="Infrastructure\SalesOrderExcel.cs" />
     <Compile Include="Infrastructure\ExcelManagerExtensions.cs" />
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Link.cs" />
     <Compile Include="Modules\Accounts\Models\User.cs" />
     <Compile Include="Modules\Accounts\Options\UserOptions.cs" />
     <Compile Include="Modules\Accounts\Services\AccountService.cs" />
