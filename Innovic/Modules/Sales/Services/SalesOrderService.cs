@@ -7,7 +7,7 @@ namespace Innovic.Modules.Sales.Services
 {
     public static class SalesOrderService
     {
-        internal static SalesOrder Process(this SalesOrder salesOrder, SalesOrderFlow flow)
+        internal static SalesOrder AddMetaData(this SalesOrder salesOrder, SalesOrderFlow flow)
         {
             switch (flow)
             {

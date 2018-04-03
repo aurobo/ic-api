@@ -10,7 +10,7 @@ namespace Innovic.Modules.Purchase.Services
 {
     public static class PurchaseOrderService
     {
-        public static PurchaseOrder Process(this PurchaseOrder purchaseOrder, PurchaseOrderFlow flow)
+        public static PurchaseOrder AddMetaData(this PurchaseOrder purchaseOrder, PurchaseOrderFlow flow)
         {
             switch (flow)
             {
@@ -38,7 +38,7 @@ namespace Innovic.Modules.Purchase.Services
             return purchaseOrder;
         }
 
-        internal static bool IsInsertionAllowed(this PurchaseOrder purchaseOrder)
+        internal static bool IsInsertable(this PurchaseOrder purchaseOrder)
         {
             bool isInsertionAllowed = false;
 

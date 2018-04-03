@@ -62,7 +62,7 @@ namespace Innovic.Modules.Sales.Controllers
             Invoice existingInvoice = _invoiceRepository.GetByID(id);
             Invoice updatedInvoice = _invoiceRepository.UpdateExistingWineModel(existingInvoice, options);
 
-            InvoiceService.Process(updatedInvoice, InvoiceFlow.Update);
+            InvoiceService.AddMetaData(updatedInvoice, InvoiceFlow.Update);
 
             try
             {
@@ -93,10 +93,12 @@ namespace Innovic.Modules.Sales.Controllers
 
             Invoice invoice = _invoiceRepository.CreateNewWineModel(options);
 
-            if (!invoice.IsInsertionAllowed())
+            if (!invoice.IsInsertable())
             {
                 return BadRequest("Invoice Can't Be Generated on this Sales Order.");
             }
+
+            invoice.SubtractMaterialQuantity();
 
             try
             {

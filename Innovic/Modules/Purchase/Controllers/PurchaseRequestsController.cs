@@ -37,8 +37,8 @@ namespace Innovic.Modules.Purchase.Controllers
         public IHttpActionResult Get()
         {
             var purchaseRequests = _purchaseRequestRepository.Get();
-            purchaseRequests.ToList().ForEach(s => s.Process(PurchaseRequestFlow.AddRemainingQuantity));
-            purchaseRequests.ToList().ForEach(s => s.Process(PurchaseRequestFlow.TotalRemainingQuantity));
+            purchaseRequests.ToList().ForEach(s => s.AddMetaData(PurchaseRequestFlow.AddRemainingQuantity));
+            purchaseRequests.ToList().ForEach(s => s.AddMetaData(PurchaseRequestFlow.TotalRemainingQuantity));
             return Ok(purchaseRequests.ToPickDictionaryCollection(PickConfigurations.PurchaseRequests));
         }
 
@@ -52,8 +52,8 @@ namespace Innovic.Modules.Purchase.Controllers
                 return NotFound();
             }
 
-            purchaseRequest.Process(PurchaseRequestFlow.AddRemainingQuantity);
-            purchaseRequest.Process(PurchaseRequestFlow.TotalRemainingQuantity);
+            purchaseRequest.AddMetaData(PurchaseRequestFlow.AddRemainingQuantity);
+            purchaseRequest.AddMetaData(PurchaseRequestFlow.TotalRemainingQuantity);
 
             return Ok(purchaseRequest.ToPickDictionary(PickConfigurations.PurchaseRequest));
         }

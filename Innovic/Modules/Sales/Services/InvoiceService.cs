@@ -9,7 +9,7 @@ namespace Innovic.Modules.Sales.Services
 {
     public static class InvoiceService
     {
-        internal static Invoice Process(this Invoice invoice, InvoiceFlow flow)
+        internal static Invoice AddMetaData(this Invoice invoice, InvoiceFlow flow)
         {
             switch (flow)
             {
@@ -24,7 +24,7 @@ namespace Innovic.Modules.Sales.Services
             return invoice;
         }
 
-        internal static bool IsInsertionAllowed(this Invoice invoice)
+        internal static bool IsInsertable(this Invoice invoice)
         {
             double pendingSalesOrderValue = invoice.SalesOrder.GetPendingSalesOrderValue();
 
@@ -34,6 +34,11 @@ namespace Innovic.Modules.Sales.Services
             }
 
             return false;
+        }
+
+        internal static void SubtractMaterialQuantity(this Invoice invoice)
+        {
+            invoice.InvoiceItems.ForEach(ii => ii.Material.Quantity -= ii.Quantity);
         }
     }
 }

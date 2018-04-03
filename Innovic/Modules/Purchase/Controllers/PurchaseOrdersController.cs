@@ -30,8 +30,8 @@ namespace Innovic.Modules.Purchase.Controllers
         public IHttpActionResult Get()
         {
             var purchaseOrders = _purchaseOrderRepository.Get();
-            purchaseOrders.ToList().ForEach(po => po.Process(PurchaseOrderFlow.AddRemainingQuantity));
-            purchaseOrders.ToList().ForEach(po => po.Process(PurchaseOrderFlow.TotalRemainingQuantity));
+            purchaseOrders.ToList().ForEach(po => po.AddMetaData(PurchaseOrderFlow.AddRemainingQuantity));
+            purchaseOrders.ToList().ForEach(po => po.AddMetaData(PurchaseOrderFlow.TotalRemainingQuantity));
             return Ok(purchaseOrders.ToPickDictionaryCollection(PickConfigurations.PurchaseOrders));
         }
 
@@ -45,8 +45,8 @@ namespace Innovic.Modules.Purchase.Controllers
                 return NotFound();
             }
 
-            purchaseOrder.Process(PurchaseOrderFlow.AddRemainingQuantity);
-            purchaseOrder.Process(PurchaseOrderFlow.TotalRemainingQuantity);
+            purchaseOrder.AddMetaData(PurchaseOrderFlow.AddRemainingQuantity);
+            purchaseOrder.AddMetaData(PurchaseOrderFlow.TotalRemainingQuantity);
 
             return Ok(purchaseOrder.ToPickDictionary(PickConfigurations.PurchaseOrder));
         }
@@ -61,7 +61,7 @@ namespace Innovic.Modules.Purchase.Controllers
 
             PurchaseOrder purchaseOrder = _purchaseOrderRepository.CreateNewWineModel(options);
 
-            if(!purchaseOrder.IsInsertionAllowed())
+            if(!purchaseOrder.IsInsertable())
             {
                 return BadRequest("Can't insert the PurchaseOrder.");
             }

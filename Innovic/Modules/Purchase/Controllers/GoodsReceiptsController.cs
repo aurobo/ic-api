@@ -59,7 +59,7 @@ namespace Innovic.Modules.Purchase.Controllers
 
             GoodsReceipt goodsReceipt = _goodsReceiptRepository.CreateNewWineModel(options);
 
-            if (!goodsReceipt.IsInsertionAllowed())
+            if (!goodsReceipt.IsInsertable())
             {
                 return BadRequest("Can't insert the GoodsReceipt.");
             }

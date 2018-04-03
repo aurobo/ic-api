@@ -10,7 +10,7 @@ namespace Innovic.Modules.Purchase.Services
 {
     public static class GoodsIssueService
     {
-        public static GoodsIssue Process(this GoodsIssue goodsIssue, GoodsIssueFlow flow)
+        public static GoodsIssue AddMetaData(this GoodsIssue goodsIssue, GoodsIssueFlow flow)
         {
             switch (flow)
             {
@@ -20,7 +20,7 @@ namespace Innovic.Modules.Purchase.Services
             return goodsIssue;
         }
 
-        internal static bool IsInsertionAllowed(this GoodsIssue goodsIssue)
+        internal static bool IsInsertable(this GoodsIssue goodsIssue)
         {
             bool isInsertionAllowed = false;
 

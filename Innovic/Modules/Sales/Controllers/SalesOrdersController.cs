@@ -49,8 +49,8 @@ namespace Innovic.Modules.Sales.Controllers
                 return NotFound();
             }
 
-            SalesOrderService.Process(salesOrder, SalesOrderFlow.AddRemainingQuantity);
-            SalesOrderService.Process(salesOrder, SalesOrderFlow.PendingSalesOrderValue);
+            SalesOrderService.AddMetaData(salesOrder, SalesOrderFlow.AddRemainingQuantity);
+            SalesOrderService.AddMetaData(salesOrder, SalesOrderFlow.PendingSalesOrderValue);
 
             return Ok(salesOrder.ToPickDictionary(PickConfigurations.SalesOrder));
         }
@@ -71,7 +71,7 @@ namespace Innovic.Modules.Sales.Controllers
             SalesOrder existingSalesOrder = _salesOrderRepository.GetByID(id);
             SalesOrder updatedSalesOrder = _salesOrderRepository.UpdateExistingWineModel(existingSalesOrder, options);
 
-            SalesOrderService.Process(updatedSalesOrder, SalesOrderFlow.Update);
+            SalesOrderService.AddMetaData(updatedSalesOrder, SalesOrderFlow.Update);
 
             try
             {
@@ -102,7 +102,7 @@ namespace Innovic.Modules.Sales.Controllers
 
             SalesOrder salesOrder = _salesOrderRepository.CreateNewWineModel(options);
 
-            SalesOrderService.Process(salesOrder, SalesOrderFlow.Insert);
+            SalesOrderService.AddMetaData(salesOrder, SalesOrderFlow.Insert);
 
             try
             {

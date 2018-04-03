@@ -9,7 +9,7 @@ namespace Innovic.Modules.Purchase.Services
 {
     public static class PurchaseRequestService
     {
-        public static PurchaseRequest Process(this PurchaseRequest purchaseRequest, PurchaseRequestFlow flow)
+        public static PurchaseRequest AddMetaData(this PurchaseRequest purchaseRequest, PurchaseRequestFlow flow)
         {
             switch (flow)
             {
@@ -36,7 +36,5 @@ namespace Innovic.Modules.Purchase.Services
 
             return purchaseRequest;
         }
-
-
     }
 }

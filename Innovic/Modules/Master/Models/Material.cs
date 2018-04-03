@@ -1,5 +1,6 @@
 ﻿using Innovic.App;
 using Innovic.Modules.Purchase.Models;
+using Innovic.Modules.Sales.Models;
 using Red.Wine;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,6 +15,7 @@ namespace Innovic.Modules.Master.Models
             PurchaseOrderItems = new List<PurchaseOrderItem>();
             GoodsIssueItems = new List<GoodsIssueItem>();
             GoodsReceiptItems = new List<GoodsReceiptItem>();
+            InvoiceItems = new List<InvoiceItem>();
         }
 
         public string Number { get; set; }
@@ -24,6 +26,7 @@ namespace Innovic.Modules.Master.Models
         public virtual List<PurchaseOrderItem> PurchaseOrderItems { get; set; }
         public virtual List<GoodsIssueItem> GoodsIssueItems { get; set; }
         public virtual List<GoodsReceiptItem> GoodsReceiptItems { get; set; }
+        public virtual List<InvoiceItem> InvoiceItems { get; set; }
 
         [NotMapped]
         public string Key

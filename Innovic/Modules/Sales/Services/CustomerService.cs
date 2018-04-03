@@ -8,7 +8,7 @@ namespace Innovic.Modules.Sales.Services
 {
     public static class CustomerService
     {
-        public static Customer Process(this Customer customer, CustomerFlow flow)
+        public static Customer AddMetaData(this Customer customer, CustomerFlow flow)
         {
             switch(flow)
             {

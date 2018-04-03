@@ -62,7 +62,7 @@ namespace Innovic.Modules.Sales.Controllers
             Customer existingCustomer = _customerRepository.GetByID(id);
             Customer updatedCustomer = _customerRepository.UpdateExistingWineModel(existingCustomer, options);
 
-            CustomerService.Process(updatedCustomer, CustomerFlow.Update);
+            CustomerService.AddMetaData(updatedCustomer, CustomerFlow.Update);
 
             try
             {
@@ -93,7 +93,7 @@ namespace Innovic.Modules.Sales.Controllers
 
             Customer customer = _customerRepository.CreateNewWineModel(options);
 
-            CustomerService.Process(customer, CustomerFlow.Insert);
+            CustomerService.AddMetaData(customer, CustomerFlow.Insert);
 
             try
             {

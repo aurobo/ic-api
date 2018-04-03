@@ -58,7 +58,7 @@ namespace Innovic.Modules.Purchase.Controllers
 
             GoodsIssue goodsIssue = _goodsIssueRepository.CreateNewWineModel(options);
 
-            if (!goodsIssue.IsInsertionAllowed())
+            if (!goodsIssue.IsInsertable())
             {
                 return BadRequest("Can't insert the GoodsIssue.");
             }
