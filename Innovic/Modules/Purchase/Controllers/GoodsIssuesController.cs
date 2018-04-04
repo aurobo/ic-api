@@ -37,7 +37,10 @@ namespace Innovic.Modules.Purchase.Controllers
         [Route("")]
         public IHttpActionResult Get()
         {
-            return Ok(_goodsIssueRepository.Get().ToPickDictionaryCollection(PickConfigurations.GoodsIssues));
+            var goodsIssues = _goodsIssueRepository.Get();
+            goodsIssues.ToList().ForEach(x => x.AddMetaData(GoodsIssueFlow.AddRemainingQuantity));
+            goodsIssues.ToList().ForEach(x => x.AddMetaData(GoodsIssueFlow.TotalRemainingQuantity));
+            return Ok(goodsIssues.ToPickDictionaryCollection(PickConfigurations.GoodsIssues));
         }
 
         [Route("{id}")]
@@ -49,6 +52,9 @@ namespace Innovic.Modules.Purchase.Controllers
             {
                 return NotFound();
             }
+
+            goodsIssue.AddMetaData(GoodsIssueFlow.AddRemainingQuantity);
+            goodsIssue.AddMetaData(GoodsIssueFlow.TotalRemainingQuantity);
 
             return Ok(goodsIssue.ToPickDictionary(PickConfigurations.GoodsIssue));
         }

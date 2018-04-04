@@ -10,6 +10,34 @@ namespace Innovic.Modules.Purchase.Services
 {
     public static class GoodsIssueService
     {
+        public static GoodsIssue AddMetaData(this GoodsIssue goodsIssue, GoodsIssueFlow flow)
+        {
+            switch (flow)
+            {
+                case GoodsIssueFlow.Insert:
+                    break;
+                case GoodsIssueFlow.Update:
+                    break;
+                case GoodsIssueFlow.AddRemainingQuantity:
+                    foreach (var item in goodsIssue.GoodsIssueItems)
+                    {
+                        item.MetaData.Add("RemainingQuantity", item.Quantity - item.GoodsReceiptItems.Sum(x => x.Quantity));
+                    }
+                    break;
+                case GoodsIssueFlow.TotalRemainingQuantity:
+                    int totalRemainingQuantity = goodsIssue.GoodsIssueItems.Sum(x => x.Quantity - x.GoodsReceiptItems.Sum(p => p.Quantity));
+
+                    bool canCreateGoodsReceipt = totalRemainingQuantity > 0;
+
+                    goodsIssue.MetaData.Add("TotalRemainingQuantity", totalRemainingQuantity);
+                    goodsIssue.MetaData.Add("CanCreateGoodsReceipt", canCreateGoodsReceipt);
+
+                    break;
+            }
+
+            return goodsIssue;
+        }
+
         internal static bool IsInsertable(this GoodsIssue goodsIssue)
         {
             bool isInsertionAllowed = false;
