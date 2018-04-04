@@ -47,6 +47,7 @@ namespace Innovic.Modules.Purchase.Controllers
 
             purchaseOrder.AddMetaData(PurchaseOrderFlow.AddRemainingQuantity);
             purchaseOrder.AddMetaData(PurchaseOrderFlow.TotalRemainingQuantity);
+            purchaseOrder.AddMetaData(PurchaseOrderFlow.CalculateItemAmount);
 
             return Ok(purchaseOrder.ToPickDictionary(PickConfigurations.PurchaseOrder));
         }

@@ -14,15 +14,13 @@ namespace Innovic.Modules.Purchase.Services
         {
             switch (flow)
             {
-                case PurchaseOrderFlow.CalculateItemCost:
+                case PurchaseOrderFlow.CalculateItemAmount:
+                    purchaseOrder.PurchaseOrderItems.ForEach(poi => poi.MetaData.Add("Amount", poi.UnitPrice * poi.Quantity));
                     break;
                 case PurchaseOrderFlow.Update:
                     break;
                 case PurchaseOrderFlow.AddRemainingQuantity:
-                    foreach (var item in purchaseOrder.PurchaseOrderItems)
-                    {
-                        item.MetaData.Add("RemainingQuantity", item.Quantity - item.GoodsReceiptItems.Sum(p => p.Quantity));
-                    }
+                    purchaseOrder.PurchaseOrderItems.ForEach(poi => poi.MetaData.Add("RemainingQuantity", poi.Quantity - poi.GoodsReceiptItems.Sum(gri => gri.Quantity)));
                     break;
                 case PurchaseOrderFlow.TotalRemainingQuantity:
                     int totalRemainingQuantity = purchaseOrder.PurchaseOrderItems.Sum(s => s.Quantity - s.GoodsReceiptItems.Sum(p => p.Quantity));

@@ -324,7 +324,7 @@ namespace Innovic.Infrastructure
                     foreach (DataRow row in result.Tables[GoodsIssueExcel.LineItemsSheetName].Rows)
                     {
                         // Material
-                        var materialNumber = row[GoodsIssueExcel.LineItemsColumn.MaterialNumber.ToString()];
+                        var materialNumber = row[GoodsIssueExcel.LineItemsColumn.MaterialNumber.ToString()].ToString();
                         var quantity = Convert.ToInt32(row[GoodsIssueExcel.LineItemsColumn.Quantity.ToString()]);
 
                         var material = _context.Materials.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
@@ -335,7 +335,7 @@ namespace Innovic.Infrastructure
                         }
                         else if (material.Quantity < quantity)
                         {
-                            errors.Add(materialNumber + " has only " + material.Quantity + " available. The issued quantity amount is " + quantity);
+                            errors.Add(materialNumber + " has " + material.Quantity + " quantity available. The issued quantity amount is " + quantity);
                         }
                     }
                 }
