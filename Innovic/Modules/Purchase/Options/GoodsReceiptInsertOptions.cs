@@ -12,6 +12,7 @@ namespace Innovic.Modules.Purchase.Options
         {
             PurchaseOrders = new List<string>();
             GoodsReceiptItems = new List<GoodsReceiptItemInsertOptions>();
+            GoodsIssues = new List<string>();
         }
 
         public DateTime Date { get; set; }

@@ -12,6 +12,7 @@ namespace Innovic.Modules.Purchase.Options
         public GoodsReceiptItemInsertOptions()
         {
             PurchaseOrderItems = new List<string>();
+            GoodsIssueItems = new List<string>();
         }
 
         public string GoodsReceiptId { get; set; }
