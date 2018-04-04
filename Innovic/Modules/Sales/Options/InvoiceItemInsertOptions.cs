@@ -1,4 +1,5 @@
-﻿using Innovic.Modules.Sales.Models;
+﻿using Innovic.Modules.Master.Models;
+using Innovic.Modules.Sales.Models;
 using Red.Wine.Attributes;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,8 @@ namespace Innovic.Modules.Sales.Options
     {
         [CopyTo(typeof(SalesOrderItem), Red.Wine.Relationship.Dependency, true)]
         public string SalesOrderItemId { get; set; }
+        [CopyTo(typeof(Material), Red.Wine.Relationship.Dependency, true)]
+        public string MaterialId { get; set; }
         public int Quantity { get; set; }
     }
 }
