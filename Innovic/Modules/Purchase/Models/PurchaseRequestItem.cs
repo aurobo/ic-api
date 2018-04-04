@@ -21,7 +21,7 @@ namespace Innovic.Modules.Purchase.Models
         public int Quantity { get; set; }
 
         [Column(TypeName = "datetime2")]
-        public DateTime RequiredByDate { get; set; }
+        public DateTime Date { get; set; }
 
         public virtual Material Material { get; set; }
         public virtual PurchaseRequest PurchaseRequest { get; set; }

@@ -27,7 +27,7 @@ namespace Innovic.Modules.Purchase.Services
         {
             bool isInsertionAllowed = false;
 
-            isInsertionAllowed = goodsReceipt.PurchaseOrders.Count > 0 && goodsReceipt.GoodsReceiptItems.Count > 0;
+            isInsertionAllowed = (goodsReceipt.PurchaseOrders.Count > 0 || goodsReceipt.GoodsIssues.Count > 0) && goodsReceipt.GoodsReceiptItems.Count > 0;
 
             return isInsertionAllowed;
         }

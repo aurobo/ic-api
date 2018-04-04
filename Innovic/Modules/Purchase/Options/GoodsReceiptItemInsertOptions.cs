@@ -22,5 +22,8 @@ namespace Innovic.Modules.Purchase.Options
 
         [CopyTo(typeof(PurchaseOrderItem), Relationship.Dependency, true)]
         public List<string> PurchaseOrderItems { get; set; }
+
+        [CopyTo(typeof(GoodsIssueItem), Relationship.Dependency, true)]
+        public List<string> GoodsIssueItems { get; set; }
     }
 }

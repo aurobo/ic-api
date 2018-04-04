@@ -214,7 +214,7 @@ namespace Innovic.Infrastructure
                         {
                             MaterialId = material.Id,
                             Quantity = quantity,
-                            RequiredByDate = requiredByDate
+                            Date = requiredByDate
                         };
 
                         goodsIssue.GoodsIssueItems.Add(goodsIssueItem);
@@ -522,7 +522,7 @@ namespace Innovic.Infrastructure
                             MaterialId = material.Id,
                             Number = number,
                             Quantity = quantity,
-                            RequiredByDate = requiredByDate
+                            Date = requiredByDate
                         };
 
                         purchaseRequest.PurchaseRequestItems.Add(purchaseRequestItem);
