@@ -18,12 +18,14 @@ namespace Innovic.Infrastructure
     public class ExcelManager
     {
         private readonly InnovicContext _context;
+        private readonly string _userId;
         private readonly BaseRepository<Material> _materialRepository;
         private readonly BaseRepository<Customer> _customerRepository;
 
         public ExcelManager(InnovicContext context, string userId)
         {
             _context = context;
+            _userId = userId;
             _materialRepository = new BaseRepository<Material>(context, userId);
             _customerRepository = new BaseRepository<Customer>(context, userId);
         }
@@ -198,17 +200,7 @@ namespace Innovic.Infrastructure
                         var requiredByDate = DateTime.Parse(row[GoodsIssueExcel.LineItemsColumn.RequiredByDate.ToString()].ToString());
                         var description = row[GoodsIssueExcel.LineItemsColumn.Description.ToString()].ToString();
 
-                        Material material = _context.Materials.Local.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
-
-                        if (material == null)
-                        {
-                            material = _context.Materials.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
-
-                            if (material == null)
-                            {
-                                material = _materialRepository.CreateNewWineModel(new MaterialInsertOptions { Number = materialNumber, Description = description });
-                            }
-                        }
+                        Material material = _context.Materials.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
 
                         var goodsIssueItem = new GoodsIssueItem
                         {
@@ -308,9 +300,11 @@ namespace Innovic.Infrastructure
 
                     foreach (DataRow row in result.Tables[GoodsIssueExcel.LineItemsSheetName].Rows)
                     {
+                        // Quantity
                         var quantity = row[GoodsIssueExcel.LineItemsColumn.Quantity.ToString()];
                         errors.AddRange(ValidateValueType(quantity.ToString(), result.Tables[GoodsIssueExcel.LineItemsSheetName], "Integer"));
 
+                        // Date
                         var value = row[GoodsIssueExcel.LineItemsColumn.RequiredByDate.ToString()];
                         DateTime requiredByDate = new DateTime();
 
@@ -318,7 +312,31 @@ namespace Innovic.Infrastructure
                         {
                             errors.Add(GoodsIssueExcel.LineItemsColumn.RequiredByDate.ToString() + " at row " + index + " is invalid");
                         }
+
                         index++;
+                    }
+
+                    if(errors.Count > 0)
+                    {
+                        return errors;
+                    }
+
+                    foreach (DataRow row in result.Tables[GoodsIssueExcel.LineItemsSheetName].Rows)
+                    {
+                        // Material
+                        var materialNumber = row[GoodsIssueExcel.LineItemsColumn.MaterialNumber.ToString()];
+                        var quantity = Convert.ToInt32(row[GoodsIssueExcel.LineItemsColumn.Quantity.ToString()]);
+
+                        var material = _context.Materials.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
+
+                        if (material == null)
+                        {
+                            errors.Add(materialNumber + " does not exist in Master.");
+                        }
+                        else if (material.Quantity < quantity)
+                        {
+                            errors.Add(materialNumber + " has only " + material.Quantity + " available. The issued quantity amount is " + quantity);
+                        }
                     }
                 }
             }

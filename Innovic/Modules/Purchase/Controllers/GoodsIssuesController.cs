@@ -136,6 +136,8 @@ namespace Innovic.Modules.Purchase.Controllers
 
                 var goodsIssue = excelManager.ToGoodsIssue(provider.FileData[0].LocalFileName);
 
+                goodsIssue.SubtractMaterialQuantity();
+
                 try
                 {
                     _context.SaveChanges();
