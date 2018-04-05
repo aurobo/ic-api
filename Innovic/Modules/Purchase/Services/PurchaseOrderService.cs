@@ -23,12 +23,15 @@ namespace Innovic.Modules.Purchase.Services
                     purchaseOrder.PurchaseOrderItems.ForEach(poi => poi.MetaData.Add("RemainingQuantity", poi.Quantity - poi.GoodsReceiptItems.Sum(gri => gri.Quantity)));
                     break;
                 case PurchaseOrderFlow.TotalRemainingQuantity:
+                    // Move this to item level
                     int totalRemainingQuantity = purchaseOrder.PurchaseOrderItems.Sum(s => s.Quantity - s.GoodsReceiptItems.Sum(p => p.Quantity));
+                    double totalRemainingAmount = purchaseOrder.PurchaseOrderItems.Sum(x => (x.Quantity - x.GoodsReceiptItems.Sum(y => y.Quantity)) * x.UnitPrice);
 
                     bool canCreateGoodsReceipt = totalRemainingQuantity > 0;
 
                     purchaseOrder.MetaData.Add("TotalRemainingQuantity", totalRemainingQuantity);
                     purchaseOrder.MetaData.Add("CanCreateGoodsReceipt", canCreateGoodsReceipt);
+                    purchaseOrder.MetaData.Add("TotalRemainingAmount", totalRemainingAmount);
 
                     break;
             }
