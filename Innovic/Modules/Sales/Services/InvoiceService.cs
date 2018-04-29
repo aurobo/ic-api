@@ -26,10 +26,11 @@ namespace Innovic.Modules.Sales.Services
 
         internal static bool IsInsertable(this Invoice invoice)
         {
+            bool hasItems = invoice.InvoiceItems.Count > 0;
             double pendingSalesOrderValue = invoice.SalesOrder.GetPendingSalesOrderValue();
             var hasSufficientQuantity = invoice.InvoiceItems.TrueForAll(ii => ii.Material.Quantity >= ii.Quantity);
 
-            if (pendingSalesOrderValue > 0 && hasSufficientQuantity)
+            if (hasItems && pendingSalesOrderValue > 0 && hasSufficientQuantity)
             {
                 return true;
             }
