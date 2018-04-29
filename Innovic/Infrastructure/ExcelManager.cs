@@ -30,6 +30,44 @@ namespace Innovic.Infrastructure
             _customerRepository = new BaseRepository<Customer>(context, userId);
         }
 
+        public void ToMaterials(string filePath)
+        {
+            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                    {
+                        ConfigureDataTable = (tableReader) => new ExcelDataTableConfiguration()
+                        {
+                            UseHeaderRow = true
+                        }
+                    });
+
+                    foreach(DataRow row in result.Tables["Materials"].Rows)
+                    {
+                        string materialNumber = row["MaterialNumber"].ToString();
+                        string description = row["Description"].ToString();
+                        int quantity = Convert.ToInt32(row["Quantity"]);
+
+
+                        // The following snippet is repeating throughout this class, create a separate method for it.
+                        Material material = _context.Materials.Local.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
+
+                        if (material == null)
+                        {
+                            material = _context.Materials.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
+
+                            if (material == null)
+                            {
+                                material = _materialRepository.CreateNewWineModel(new MaterialInsertOptions { Number = materialNumber, Description = description, Quantity = quantity });
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public SalesOrder ToSalesOrder(string filePath)
         {
             var salesOrder = new SalesOrder();

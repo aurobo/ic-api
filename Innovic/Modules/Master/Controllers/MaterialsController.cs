@@ -1,12 +1,17 @@
 ﻿using Innovic.App;
+using Innovic.Infrastructure;
 using Innovic.Modules.Master.Models;
 using Innovic.Modules.Master.Options;
 using Microsoft.AspNet.Identity;
 using Red.Wine;
 using Red.Wine.Picker;
+using System;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Hosting;
 using System.Web.Http;
 
 namespace Innovic.Modules.Master.Controllers
@@ -125,6 +130,47 @@ namespace Innovic.Modules.Master.Controllers
             _context.SaveChanges();
 
             return Ok(material.ToPickDictionary(new PickConfig(true, true)));
+        }
+
+        [HttpPost]
+        [Route("upload")]
+        public async Task<HttpResponseMessage> UploadAsync()
+        {
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+
+            var provider = new MultipartFormDataStreamProvider(HostingEnvironment.MapPath("~/App_Data"));
+
+            try
+            {
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                ExcelManager excelManager = new ExcelManager(_context, _userId);
+
+                excelManager.ToMaterials(provider.FileData[0].LocalFileName);
+
+                try
+                {
+                    _context.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    throw e;
+                }
+
+                if (System.IO.File.Exists(provider.FileData[0].LocalFileName))
+                {
+                    System.IO.File.Delete(provider.FileData[0].LocalFileName);
+                }
+
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e);
+            }
         }
 
         protected override void Dispose(bool disposing)
