@@ -1,5 +1,5 @@
 ﻿using Innovic.App;
-using Red.Wine;
+using Innovic.Modules.Master.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;

@@ -2,7 +2,7 @@
 using Red.Wine;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Innovic.Modules.Sales.Models
+namespace Innovic.Modules.Master.Models
 {
     public class Customer : BaseModel
     {

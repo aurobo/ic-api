@@ -12,6 +12,7 @@ namespace Innovic.App
         public const string KeySeparator = "-";
         public const string FixedDigits = "D5";
         public const string CustomerAbbr = "CR";
+        public const string VendorAbbr = "VR";
         public const string MaterialAbbr = "MT";
         public const string InvoiceAbbr = "INV";
         public const string PurchaseRequestAbbr = "PR";

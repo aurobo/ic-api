@@ -1,17 +1,17 @@
 ﻿using Innovic.App;
-using Innovic.Modules.Sales.Models;
+using Innovic.Modules.Master.Models;
+using Innovic.Modules.Master.Options;
 using Innovic.Modules.Sales.Options;
 using Innovic.Modules.Sales.ProcessFlows;
 using Innovic.Modules.Sales.Services;
 using Microsoft.AspNet.Identity;
-using Red.Wine;
 using Red.Wine.Picker;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
 
-namespace Innovic.Modules.Sales.Controllers
+namespace Innovic.Modules.Master.Controllers
 {
     [RoutePrefix("api/Customers")]
     [Authorize]
@@ -62,8 +62,6 @@ namespace Innovic.Modules.Sales.Controllers
             Customer existingCustomer = _customerRepository.GetByID(id);
             Customer updatedCustomer = _customerRepository.UpdateExistingWineModel(existingCustomer, options);
 
-            CustomerService.AddMetaData(updatedCustomer, CustomerFlow.Update);
-
             try
             {
                 _context.SaveChanges();
@@ -92,8 +90,6 @@ namespace Innovic.Modules.Sales.Controllers
             }
 
             Customer customer = _customerRepository.CreateNewWineModel(options);
-
-            CustomerService.AddMetaData(customer, CustomerFlow.Insert);
 
             try
             {

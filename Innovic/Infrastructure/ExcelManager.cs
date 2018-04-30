@@ -30,6 +30,41 @@ namespace Innovic.Infrastructure
             _customerRepository = new BaseRepository<Customer>(context, userId);
         }
 
+        public void ToVendors(string filePath)
+        {
+            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                    {
+                        ConfigureDataTable = (tableReader) => new ExcelDataTableConfiguration()
+                        {
+                            UseHeaderRow = true
+                        }
+                    });
+
+                    foreach (DataRow row in result.Tables["Vendors"].Rows)
+                    {
+                        string name = row["name"].ToString();
+
+                        Vendor vendor = _context.Vendors.Local.Where(v => v.Name.Equals(name)).SingleOrDefault();
+
+                        if (vendor == null)
+                        {
+                            vendor = _context.Vendors.Where(v => v.Name.Equals(name)).SingleOrDefault();
+
+                            if (vendor == null)
+                            {
+                                BaseRepository<Vendor> vendorRepository = new BaseRepository<Vendor>(_context, _userId);
+                                vendor = vendorRepository.CreateNewWineModel(new VendorInsertOptions { Name = name});
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public void ToMaterials(string filePath)
         {
             using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
