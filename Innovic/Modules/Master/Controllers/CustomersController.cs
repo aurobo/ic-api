@@ -43,7 +43,7 @@ namespace Innovic.Modules.Master.Controllers
                 return NotFound();
             }
 
-            return Ok(customer.ToPickDictionary(new PickConfig(true, true)));
+            return Ok(customer.ToPickDictionary(PickConfigurations.Default));
         }
 
         [Route("{id}")]
@@ -107,7 +107,7 @@ namespace Innovic.Modules.Master.Controllers
                 }
             }
 
-            return Ok(customer.ToPickDictionary(new PickConfig(true, true)));
+            return Ok(customer.ToPickDictionary(PickConfigurations.Default));
         }
 
         [Route("{id}")]
@@ -122,7 +122,7 @@ namespace Innovic.Modules.Master.Controllers
             _context.Customers.Remove(customer);
             _context.SaveChanges();
 
-            return Ok(customer.ToPickDictionary(new PickConfig(true, true)));
+            return Ok(customer.ToPickDictionary(PickConfigurations.Default));
         }
 
         protected override void Dispose(bool disposing)

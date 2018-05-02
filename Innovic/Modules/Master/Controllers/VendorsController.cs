@@ -33,7 +33,7 @@ namespace Innovic.Modules.Master.Controllers
         [Route("")]
         public IHttpActionResult Get()
         {
-            return Ok(_vendorRepository.Get().ToPickDictionaryCollection(new PickConfig(true, true)));
+            return Ok(_vendorRepository.Get().ToPickDictionaryCollection(PickConfigurations.Default));
         }
 
         [Route("{id}")]
@@ -45,7 +45,7 @@ namespace Innovic.Modules.Master.Controllers
                 return NotFound();
             }
 
-            return Ok(vendor.ToPickDictionary(new PickConfig(true, true)));
+            return Ok(vendor.ToPickDictionary(PickConfigurations.Default));
         }
 
         [Route("{id}")]
@@ -108,7 +108,7 @@ namespace Innovic.Modules.Master.Controllers
                 }
             }
 
-            return Ok(vendor.ToPickDictionary(new PickConfig(true, true)));
+            return Ok(vendor.ToPickDictionary(PickConfigurations.Default));
         }
 
         [Route("{id}")]
@@ -123,7 +123,7 @@ namespace Innovic.Modules.Master.Controllers
             _context.Vendors.Remove(vendor);
             _context.SaveChanges();
 
-            return Ok(vendor.ToPickDictionary(new PickConfig(true, true)));
+            return Ok(vendor.ToPickDictionary(PickConfigurations.Default));
         }
 
         [HttpPost]
