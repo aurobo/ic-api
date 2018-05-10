@@ -115,6 +115,7 @@ namespace Innovic.Modules.Master.Controllers
         public IHttpActionResult Delete(string id)
         {
             Vendor vendor = _vendorRepository.GetByID(id);
+
             if (vendor == null)
             {
                 return NotFound();

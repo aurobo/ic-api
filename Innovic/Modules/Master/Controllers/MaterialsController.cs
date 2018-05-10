@@ -2,6 +2,7 @@
 using Innovic.Infrastructure;
 using Innovic.Modules.Master.Models;
 using Innovic.Modules.Master.Options;
+using Innovic.Modules.Master.Services;
 using Microsoft.AspNet.Identity;
 using Red.Wine;
 using Red.Wine.Picker;
@@ -34,7 +35,7 @@ namespace Innovic.Modules.Master.Controllers
         [Route("")]
         public IHttpActionResult Get()
         {
-            return Ok(_materialRepository.Get().ToPickDictionaryCollection(new PickConfig(true, true)));
+            return Ok(_materialRepository.Get().ToPickDictionaryCollection(PickConfigurations.Default));
         }
 
         [Route("{id}")]
@@ -46,7 +47,7 @@ namespace Innovic.Modules.Master.Controllers
                 return NotFound();
             }
 
-            return Ok(material.ToPickDictionary(new PickConfig(true, true)));
+            return Ok(material.ToPickDictionary(PickConfigurations.Default));
         }
 
         [Route("{id}")]
@@ -114,7 +115,7 @@ namespace Innovic.Modules.Master.Controllers
                 }
             }
 
-            return Ok(material.ToPickDictionary(new PickConfig(true, true)));
+            return Ok(material.ToPickDictionary(PickConfigurations.Default));
         }
 
         [Route("{id}")]
@@ -126,10 +127,15 @@ namespace Innovic.Modules.Master.Controllers
                 return NotFound();
             }
 
+            if(!material.IsDeletable())
+            {
+                return Conflict();
+            }
+
             _context.Materials.Remove(material);
             _context.SaveChanges();
 
-            return Ok(material.ToPickDictionary(new PickConfig(true, true)));
+            return Ok(material.ToPickDictionary(PickConfigurations.Default));
         }
 
         [HttpPost]

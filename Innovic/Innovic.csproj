@@ -193,6 +193,7 @@
     <Compile Include="Modules\Master\Options\VendorInsertOptions.cs" />
     <Compile Include="Modules\Master\Options\VendorUpdateOptions.cs" />
     <Compile Include="Modules\Master\Services\MaterialService.cs" />
+    <Compile Include="Modules\Master\Services\VendorService.cs" />
     <Compile Include="Modules\Purchase\Controllers\GoodsIssuesController.cs" />
     <Compile Include="Modules\Purchase\Controllers\GoodsReceiptsController.cs" />
     <Compile Include="Modules\Purchase\Controllers\PurchaseOrdersController.cs" />

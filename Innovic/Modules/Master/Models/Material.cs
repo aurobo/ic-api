@@ -16,6 +16,7 @@ namespace Innovic.Modules.Master.Models
             GoodsIssueItems = new List<GoodsIssueItem>();
             GoodsReceiptItems = new List<GoodsReceiptItem>();
             InvoiceItems = new List<InvoiceItem>();
+            SalesOrderItems = new List<SalesOrderItem>();
         }
 
         public string Number { get; set; }
@@ -27,6 +28,7 @@ namespace Innovic.Modules.Master.Models
         public virtual List<GoodsIssueItem> GoodsIssueItems { get; set; }
         public virtual List<GoodsReceiptItem> GoodsReceiptItems { get; set; }
         public virtual List<InvoiceItem> InvoiceItems { get; set; }
+        public virtual List<SalesOrderItem> SalesOrderItems { get; set; }
 
         [NotMapped]
         public string Key
