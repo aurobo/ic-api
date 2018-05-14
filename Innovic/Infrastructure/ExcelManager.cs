@@ -208,19 +208,7 @@ namespace Innovic.Infrastructure
                         return errors;
                     }
 
-                    foreach (DataRow row in result.Tables[GoodsReceiptExcel.LineItemsSheetName].Rows)
-                    {
-                        // Material
-                        var materialNumber = row[GoodsReceiptExcel.LineItemsColumn.MaterialNumber.ToString()].ToString();
-                        var quantity = Convert.ToInt32(row[GoodsReceiptExcel.LineItemsColumn.Quantity.ToString()]);
-
-                        var material = _context.Materials.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
-
-                        if (material == null)
-                        {
-                            errors.Add(materialNumber + " does not exist in Master.");
-                        }
-                    }
+                    //No need to validate the materials. If the specified materials not exist, we should generate it.
                 }
             }
 
@@ -478,11 +466,22 @@ namespace Innovic.Infrastructure
 
                         Material material = _context.Materials.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
 
+                       
+                        if (material == null)
+                        {
+                            material = _materialRepository.CreateNewWineModel(new MaterialInsertOptions { Number = materialNumber, Description = description });
+                        }
+                        
+
                         var goodsReceiptItem = new GoodsReceiptItem
                         {
                             MaterialId = material.Id,
                             Quantity = quantity,
-                            Date = date
+                            Date = date,
+
+                            //Had to do it, so that it would be referenced correrctly we add quantity to the material in GoodsReceiptService.AddMaterialQuantity
+                            // otherwise the goodsReceiptItem.Material would be NULL
+                            Material = material,
                         };
 
                         goodsReceipt.GoodsReceiptItems.Add(goodsReceiptItem);
