@@ -1,4 +1,5 @@
 ﻿using Innovic.App;
+using Innovic.Infrastructure;
 using Innovic.Modules.Purchase.Models;
 using Innovic.Modules.Purchase.Options;
 using Innovic.Modules.Purchase.ProcessFlows;
@@ -11,6 +12,8 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Hosting;
 using System.Web.Http;
 
 namespace Innovic.Modules.Purchase.Controllers
@@ -98,6 +101,63 @@ namespace Innovic.Modules.Purchase.Controllers
             _context.SaveChanges();
 
             return Ok(goodsReceipt.ToPickDictionary(new PickConfig(true, true)));
+        }
+
+        [HttpPost]
+        [Route("upload")]
+        public async Task<HttpResponseMessage> UploadAsync()
+        {
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+
+            var provider = new MultipartFormDataStreamProvider(HostingEnvironment.MapPath("~/App_Data"));
+
+            try
+            {
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                ExcelManager excelManager = new ExcelManager(_context, _userId);
+
+                var errors = excelManager.ValidateForGoodsReceipt(provider.FileData[0].LocalFileName);
+
+                if (errors.Count > 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+
+                var goodsReceipt = excelManager.ToGoodsReceipt(provider.FileData[0].LocalFileName);
+
+                goodsReceipt.AddMaterialQuantity();
+
+                try
+                {
+                    _context.SaveChanges();
+                }
+                catch (DbUpdateException)
+                {
+                    if (goodsReceiptExists(goodsReceipt.Id))
+                    {
+                        return Request.CreateResponse(HttpStatusCode.Conflict);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                if (System.IO.File.Exists(provider.FileData[0].LocalFileName))
+                {
+                    System.IO.File.Delete(provider.FileData[0].LocalFileName);
+                }
+
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e);
+            }
         }
 
         protected override void Dispose(bool disposing)

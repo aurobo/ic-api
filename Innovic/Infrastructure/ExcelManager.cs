@@ -103,6 +103,130 @@ namespace Innovic.Infrastructure
             }
         }
 
+        internal List<string> ValidateForGoodsReceipt(string filePath)
+        {
+
+            List<string> errors = new List<string>();
+
+            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                    {
+                        ConfigureDataTable = (tableReader) => new ExcelDataTableConfiguration()
+                        {
+                            UseHeaderRow = false
+                        }
+                    });
+
+                    // Sheet Validation
+                    errors.AddRange(ValidateSheets(result.Tables, new List<string> { GoodsReceiptExcel.HeaderDataSheetName, GoodsReceiptExcel.LineItemsSheetName }));
+
+                    if (errors.Count > 0)
+                    {
+                        return errors;
+                    }
+
+                    // Column Validation
+                    errors.AddRange(ValidateColumns(GoodsReceiptExcel.HeaderDataColumns, result.Tables[GoodsReceiptExcel.HeaderDataSheetName]));
+                    errors.AddRange(ValidateColumns(GoodsReceiptExcel.LineItemsColumns, result.Tables[GoodsReceiptExcel.LineItemsSheetName]));
+
+                    if (errors.Count > 0)
+                    {
+                        return errors;
+                    }
+
+                    // Cell Validation
+                    var cells = result.Tables[GoodsReceiptExcel.HeaderDataSheetName].GetCellsForColumn(0, false);
+
+                    errors.AddRange(ValidateCells(cells, result.Tables[GoodsReceiptExcel.HeaderDataSheetName], GoodsReceiptExcel.HeaderDataNameCells));
+
+                    if (errors.Count > 0)
+                    {
+                        return errors;
+                    }
+                }
+            }
+
+            // Date Validation
+            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    DateTime date = new DateTime();
+
+                    var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                    {
+                        ConfigureDataTable = (tableReader) => new ExcelDataTableConfiguration()
+                        {
+                            UseHeaderRow = true
+                        }
+                    });
+
+                    foreach (DataRow row in result.Tables[GoodsReceiptExcel.HeaderDataSheetName].Rows)
+                    {
+                        string key = row[GoodsReceiptExcel.HeaderDataColumn.Name.ToString()].ToString();
+                        object value = row[GoodsReceiptExcel.HeaderDataColumn.Value.ToString()];
+
+                        Enum.TryParse(key, out GoodsReceiptExcel.HeaderDataNameCell cellName);
+
+                        switch (cellName)
+                        {
+                            case GoodsReceiptExcel.HeaderDataNameCell.Date:
+                                if (!IsDateValid(value.ToString(), out date))
+                                {
+                                    errors.Add(key + " in sheet " + GoodsReceiptExcel.HeaderDataSheetName + " is not in valid format.");
+                                }
+                                break;
+                        }
+                    }
+
+                    // Because header row has index = 1 in excel sheet
+                    int index = 2; // In excel sheet
+
+                    foreach (DataRow row in result.Tables[GoodsReceiptExcel.LineItemsSheetName].Rows)
+                    {
+                        // Quantity
+                        var quantity = row[GoodsReceiptExcel.LineItemsColumn.Quantity.ToString()];
+                        errors.AddRange(ValidateValueType(quantity.ToString(), result.Tables[GoodsReceiptExcel.LineItemsSheetName], "Integer"));
+
+                        // Date
+                        var value = row[GoodsReceiptExcel.LineItemsColumn.RequiredByDate.ToString()];
+                        DateTime requiredByDate = new DateTime();
+
+                        if (!IsDateValid(value.ToString(), out requiredByDate))
+                        {
+                            errors.Add(GoodsReceiptExcel.LineItemsColumn.RequiredByDate.ToString() + " at row " + index + " is invalid");
+                        }
+
+                        index++;
+                    }
+
+                    if (errors.Count > 0)
+                    {
+                        return errors;
+                    }
+
+                    foreach (DataRow row in result.Tables[GoodsReceiptExcel.LineItemsSheetName].Rows)
+                    {
+                        // Material
+                        var materialNumber = row[GoodsReceiptExcel.LineItemsColumn.MaterialNumber.ToString()].ToString();
+                        var quantity = Convert.ToInt32(row[GoodsReceiptExcel.LineItemsColumn.Quantity.ToString()]);
+
+                        var material = _context.Materials.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
+
+                        if (material == null)
+                        {
+                            errors.Add(materialNumber + " does not exist in Master.");
+                        }
+                    }
+                }
+            }
+
+            return errors;
+        }
+
         public SalesOrder ToSalesOrder(string filePath)
         {
             var salesOrder = new SalesOrder();
@@ -288,6 +412,85 @@ namespace Innovic.Infrastructure
             }
             _context.GoodsIssues.Add(goodsIssue);
             return goodsIssue;
+        }
+
+        public GoodsReceipt ToGoodsReceipt(string filePath)
+        {
+            var goodsReceipt = new GoodsReceipt();
+
+            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                    {
+                        ConfigureDataTable = (tableReader) => new ExcelDataTableConfiguration()
+                        {
+                            UseHeaderRow = true
+                        }
+                    });
+
+                    foreach (DataRow row in result.Tables[GoodsReceiptExcel.HeaderDataSheetName].Rows)
+                    {
+                        var key = row[GoodsReceiptExcel.HeaderDataColumn.Name.ToString()].ToString();
+                        var value = row[GoodsReceiptExcel.HeaderDataColumn.Value.ToString()];
+
+                        Enum.TryParse(key, out GoodsReceiptExcel.HeaderDataNameCell cellName);
+
+                        switch (cellName)
+                        {
+                            case GoodsReceiptExcel.HeaderDataNameCell.Date:
+                                DateTime date;
+                                DateTime.TryParse(value.ToString(), out date);
+                                goodsReceipt.Date = date;
+                                break;
+                            case GoodsReceiptExcel.HeaderDataNameCell.Remarks:
+                                goodsReceipt.Remarks = value.ToString();
+                                break;
+                            case GoodsReceiptExcel.HeaderDataNameCell.SalesOrderReferences:
+                                var salesOrderKeys = value.ToString().Split(',');
+                                var salesOrders = _context.SalesOrders.ToList();
+
+                                foreach (var so in salesOrders)
+                                {
+                                    if (salesOrderKeys.Contains(so.Key))
+                                    {
+                                        goodsReceipt.Links.Add(new Link
+                                        {
+                                            ReferenceId = so.Id,
+                                            ReferenceName = so.Key,
+                                            Type = "SalesOrders"
+                                        });
+                                    }
+                                }
+                                break;
+                        }
+                    }
+
+                    foreach (DataRow row in result.Tables[GoodsReceiptExcel.LineItemsSheetName].Rows)
+                    {
+                        var materialNumber = row[GoodsReceiptExcel.LineItemsColumn.MaterialNumber.ToString()].ToString();
+                        var quantity = Convert.ToInt32(row[GoodsReceiptExcel.LineItemsColumn.Quantity.ToString()]);
+
+                        //Need to confirm with Ronak
+                        var date = DateTime.Parse(row[GoodsReceiptExcel.LineItemsColumn.RequiredByDate.ToString()].ToString());
+                        var description = row[GoodsReceiptExcel.LineItemsColumn.Description.ToString()].ToString();
+
+                        Material material = _context.Materials.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
+
+                        var goodsReceiptItem = new GoodsReceiptItem
+                        {
+                            MaterialId = material.Id,
+                            Quantity = quantity,
+                            Date = date
+                        };
+
+                        goodsReceipt.GoodsReceiptItems.Add(goodsReceiptItem);
+                    }
+                }
+            }
+            _context.GoodsReceipts.Add(goodsReceipt);
+            return goodsReceipt;
         }
 
         public List<string> ValidateForGoodsIssue(string filePath)
