@@ -66,7 +66,7 @@ namespace Innovic.Infrastructure
             MaterialNumber,
             Description,
             Quantity,
-            RequiredByDate,
+            Date,
         }
 
         public enum Sheet

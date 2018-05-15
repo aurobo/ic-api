@@ -192,12 +192,12 @@ namespace Innovic.Infrastructure
                         errors.AddRange(ValidateValueType(quantity.ToString(), result.Tables[GoodsReceiptExcel.LineItemsSheetName], "Integer"));
 
                         // Date
-                        var value = row[GoodsReceiptExcel.LineItemsColumn.RequiredByDate.ToString()];
+                        var value = row[GoodsReceiptExcel.LineItemsColumn.Date.ToString()];
                         DateTime requiredByDate = new DateTime();
 
                         if (!IsDateValid(value.ToString(), out requiredByDate))
                         {
-                            errors.Add(GoodsReceiptExcel.LineItemsColumn.RequiredByDate.ToString() + " at row " + index + " is invalid");
+                            errors.Add(GoodsReceiptExcel.LineItemsColumn.Date.ToString() + " at row " + index + " is invalid");
                         }
 
                         index++;
@@ -461,7 +461,7 @@ namespace Innovic.Infrastructure
                         var quantity = Convert.ToInt32(row[GoodsReceiptExcel.LineItemsColumn.Quantity.ToString()]);
 
                         //Need to confirm with Ronak
-                        var date = DateTime.Parse(row[GoodsReceiptExcel.LineItemsColumn.RequiredByDate.ToString()].ToString());
+                        var date = DateTime.Parse(row[GoodsReceiptExcel.LineItemsColumn.Date.ToString()].ToString());
                         var description = row[GoodsReceiptExcel.LineItemsColumn.Description.ToString()].ToString();
 
                         Material material = _context.Materials.Local.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
