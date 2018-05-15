@@ -57,7 +57,7 @@ namespace Innovic.Infrastructure
                             if (vendor == null)
                             {
                                 BaseRepository<Vendor> vendorRepository = new BaseRepository<Vendor>(_context, _userId);
-                                vendor = vendorRepository.CreateNewWineModel(new VendorInsertOptions { Name = name});
+                                vendor = vendorRepository.CreateNewWineModel(new VendorInsertOptions { Name = name });
                             }
                         }
                     }
@@ -79,7 +79,7 @@ namespace Innovic.Infrastructure
                         }
                     });
 
-                    foreach(DataRow row in result.Tables["Materials"].Rows)
+                    foreach (DataRow row in result.Tables["Materials"].Rows)
                     {
                         string materialNumber = row["MaterialNumber"].ToString();
                         string description = row["Description"].ToString();
@@ -464,14 +464,20 @@ namespace Innovic.Infrastructure
                         var date = DateTime.Parse(row[GoodsReceiptExcel.LineItemsColumn.RequiredByDate.ToString()].ToString());
                         var description = row[GoodsReceiptExcel.LineItemsColumn.Description.ToString()].ToString();
 
-                        Material material = _context.Materials.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
+                        Material material = _context.Materials.Local.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
 
-                       
                         if (material == null)
                         {
-                            material = _materialRepository.CreateNewWineModel(new MaterialInsertOptions { Number = materialNumber, Description = description });
+
+                            material = _context.Materials.Where(m => m.Number.Equals(materialNumber)).SingleOrDefault();
+
+
+                            if (material == null)
+                            {
+                                material = _materialRepository.CreateNewWineModel(new MaterialInsertOptions { Number = materialNumber, Description = description });
+                            }
                         }
-                        
+
 
                         var goodsReceiptItem = new GoodsReceiptItem
                         {
@@ -591,7 +597,7 @@ namespace Innovic.Infrastructure
                         index++;
                     }
 
-                    if(errors.Count > 0)
+                    if (errors.Count > 0)
                     {
                         return errors;
                     }
@@ -645,13 +651,13 @@ namespace Innovic.Infrastructure
 
                     // Column Validation
                     errors.AddRange(ValidateColumns(SalesOrderExcel.HeaderDataColumns, result.Tables[SalesOrderExcel.HeaderDataSheetName]));
-                    errors.AddRange(ValidateColumns(SalesOrderExcel.LineItemsColumns,result.Tables[SalesOrderExcel.LineItemsSheetName]));
+                    errors.AddRange(ValidateColumns(SalesOrderExcel.LineItemsColumns, result.Tables[SalesOrderExcel.LineItemsSheetName]));
 
                     if (errors.Count > 0)
                     {
                         return errors;
                     }
-                    
+
                     // Cell Validation
                     var cells = result.Tables[SalesOrderExcel.HeaderDataSheetName].GetCellsForColumn(0, false);
 
@@ -663,7 +669,7 @@ namespace Innovic.Infrastructure
                     }
                 }
             }
-            
+
             // Date Validation
             using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
             {
@@ -706,7 +712,7 @@ namespace Innovic.Infrastructure
 
                     if (expirationDate != DateTime.MinValue && orderDate != DateTime.MinValue)
                     {
-                        if(!CompareDates(expirationDate, orderDate))
+                        if (!CompareDates(expirationDate, orderDate))
                         {
                             errors.Add("ExpirationDate is lesser than OrderDate in sheet " + SalesOrderExcel.HeaderDataSheetName);
                         }
@@ -776,7 +782,7 @@ namespace Innovic.Infrastructure
 
                                 foreach (var so in salesOrders)
                                 {
-                                    if(salesOrderKeys.Contains(so.Key))
+                                    if (salesOrderKeys.Contains(so.Key))
                                     {
                                         purchaseRequest.Links.Add(new Link
                                         {

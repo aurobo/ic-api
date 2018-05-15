@@ -186,7 +186,8 @@ namespace Innovic.App
                         }))
                     })),
                     new Pick("PurchaseOrders", new PickConfig(true, true)),
-                    new Pick("GoodsIssues", new PickConfig(true, true))
+                    new Pick("GoodsIssues", new PickConfig(true, true)),
+                    new Pick("Links", new PickConfig(true, true))
                 });
             }
         }
