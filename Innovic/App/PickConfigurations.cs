@@ -72,6 +72,25 @@ namespace Innovic.App
             }
         }
 
+        public static PickConfig Invoices
+        {
+            get
+            {
+                return new PickConfig(true, true, new List<Pick>
+                {
+                    new Pick("SalesOrder", new PickConfig(false, true, new List<Pick>
+                    {
+                        new Pick("Key"),
+                        new Pick("Customer", new PickConfig(false, true, new List<Pick>
+                        {
+                            new Pick("Name"),
+                            new Pick("Id"),
+                        })),
+                    }))
+                });
+            }
+        }
+
         public static PickConfig Invoice
         {
             get
