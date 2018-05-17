@@ -256,9 +256,8 @@ namespace Innovic.Infrastructure
                                     {
                                         goodsIssue.Links.Add(new Link
                                         {
-                                            ReferenceId = po.Id,
-                                            ReferenceName = po.Key,
-                                            Type = "PurchaseOrders"
+                                            PurchaseOrder = po,
+                                            GoodsIssue = goodsIssue,
                                         });
                                     }
                                 }
@@ -578,9 +577,8 @@ namespace Innovic.Infrastructure
                                     {
                                         purchaseRequest.Links.Add(new Link
                                         {
-                                            ReferenceId = so.Id,
-                                            ReferenceName = so.Key,
-                                            Type = "SalesOrders"
+                                            SalesOrder = so,
+                                            PurchaseRequest = purchaseRequest
                                         });
                                     }
                                 }

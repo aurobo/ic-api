@@ -1,4 +1,5 @@
-﻿using Innovic.Modules.Accounts.Models;
+﻿using Innovic.Models;
+using Innovic.Modules.Accounts.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Red.Wine;
 using Red.Wine.Attributes;
@@ -15,6 +16,7 @@ namespace Innovic.App
         public BaseModel()
         {
             MetaData = new Dictionary<string, object>();
+            Links = new List<Link>();
         }
 
         [ForeignKey("CreatedByUser")]
@@ -28,5 +30,7 @@ namespace Innovic.App
 
         [NotMapped]
         public Dictionary<string, object> MetaData { get; set; }
+
+        public virtual List<Link> Links { get; set; }
     }
 }

@@ -14,7 +14,6 @@ namespace Innovic.Modules.Purchase.Models
         {
             GoodsIssueItems = new List<GoodsIssueItem>();
             GoodsReceipts = new List<GoodsReceipt>();
-            Links = new List<Link>();
         }
         
         [Column(TypeName = "datetime2")]
@@ -23,7 +22,6 @@ namespace Innovic.Modules.Purchase.Models
 
         public virtual List<GoodsIssueItem> GoodsIssueItems { get; set; }
         public virtual List<GoodsReceipt> GoodsReceipts { get; set; }
-        public virtual List<Link> Links { get; set; }
 
         [NotMapped]
         public string Key
