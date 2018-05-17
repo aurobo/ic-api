@@ -31,7 +31,7 @@ namespace Innovic.Modules.Sales.Controllers
         [Route("")]
         public IHttpActionResult Get()
         {
-            return Ok(_invoiceRepository.Get().ToPickDictionaryCollection(PickConfigurations.Default));
+            return Ok(_invoiceRepository.Get().ToPickDictionaryCollection(PickConfigurations.Invoices));
         }
 
         [Route("{id}")]
