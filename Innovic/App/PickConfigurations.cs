@@ -22,7 +22,8 @@ namespace Innovic.App
                     {
                         new Pick("Name")
                     })),
-                    new Pick("MetaData", new PickConfig(true, true))
+                    new Pick("MetaData", new PickConfig(true, true)),
+                    new Pick("Links", new PickConfig(true, true))
                 };
             }
         }
@@ -39,7 +40,7 @@ namespace Innovic.App
         {
             get
             {
-                return new PickConfig(true, true, new List<Pick>
+                return new PickConfig(true, true, new List<Pick>(DefaultData)
                 {
                     new Pick("Customer", new PickConfig(false, true, new List<Pick>(DefaultData)
                     {
