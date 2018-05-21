@@ -189,6 +189,7 @@ namespace Innovic.App
                             new Pick("Description")
                         }))
                     })),
+                    new Pick("PurchaseRequests", new PickConfig(true, true))
                 });
             }
         }
