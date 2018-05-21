@@ -444,9 +444,8 @@ namespace Innovic.Infrastructure
                                     {
                                         goodsReceipt.Links.Add(new Link
                                         {
-                                            ReferenceId = so.Id,
-                                            ReferenceName = so.Key,
-                                            Type = "SalesOrders"
+                                            SalesOrder = so,
+                                            GoodsReceipt = goodsReceipt
                                         });
                                     }
                                 }

@@ -23,7 +23,34 @@ namespace Innovic.App
                         new Pick("Name")
                     })),
                     new Pick("MetaData", new PickConfig(true, true)),
-                    new Pick("Links", new PickConfig(true, true))
+                    new Pick("Links", new PickConfig(false, true, new List<Pick>()
+                    {
+                        new Pick("PurchaseRequest", new PickConfig(false, true, new List<Pick>()
+                        {
+                            new Pick("Key"),
+                            new Pick("Id")
+                        })),
+                        new Pick("GoodsIssue", new PickConfig(false, true, new List<Pick>()
+                        {
+                            new Pick("Key"),
+                            new Pick("Id")
+                        })),
+                        new Pick("SalesOrder", new PickConfig(false, true, new List<Pick>()
+                        {
+                            new Pick("Key"),
+                            new Pick("Id")
+                        })),
+                        new Pick("PurchaseOrder", new PickConfig(false, true, new List<Pick>()
+                        {
+                            new Pick("Key"),
+                            new Pick("Id")
+                        })),
+                         new Pick("GoodsReceipt", new PickConfig(false, true, new List<Pick>()
+                        {
+                            new Pick("Key"),
+                            new Pick("Id")
+                        }))
+                    }))
                 };
             }
         }
@@ -162,10 +189,6 @@ namespace Innovic.App
                             new Pick("Description")
                         }))
                     })),
-                    new Pick("PurchaseRequests", new PickConfig(true, true, new List<Pick>(DefaultData)
-                    {
-                        new Pick("Links", new PickConfig(true, true))
-                    }))
                 });
             }
         }
@@ -207,7 +230,6 @@ namespace Innovic.App
                     })),
                     new Pick("PurchaseOrders", new PickConfig(true, true)),
                     new Pick("GoodsIssues", new PickConfig(true, true)),
-                    new Pick("Links", new PickConfig(true, true))
                 });
             }
         }
@@ -226,7 +248,6 @@ namespace Innovic.App
                             new Pick("Description")
                         }))
                     })),
-                    new Pick("Links", new PickConfig(true, true))
                 });
             }
         }
@@ -245,7 +266,6 @@ namespace Innovic.App
                             new Pick("Description")
                         }))
                     })),
-                    new Pick("Links", new PickConfig(true, true))
                 });
             }
         }
@@ -283,7 +303,6 @@ namespace Innovic.App
                         }))
                     })),
                     new Pick("PurchaseOrders", new PickConfig(true, true)),
-                    new Pick("Links", new PickConfig(true, true))
                 });
             }
         }

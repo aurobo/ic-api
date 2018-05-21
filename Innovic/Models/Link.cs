@@ -16,10 +16,12 @@ namespace Innovic.Models
         public string GoodsIssueId { get; set; }
         public string SalesOrderId { get; set; }
         public string PurchaseOrderId { get; set; }
+        public string GoodsReceiptId { get; set; }
 
         public virtual PurchaseRequest PurchaseRequest { get; set; }
         public virtual GoodsIssue GoodsIssue { get; set; }
         public virtual SalesOrder SalesOrder { get; set; }
         public virtual PurchaseOrder PurchaseOrder { get; set; }
+        public virtual GoodsReceipt GoodsReceipt { get; set; }
     }
 }
