@@ -31,12 +31,12 @@ namespace Innovic.App
         public DbSet<GoodsIssueItem> GoodsIssueItems { get; set; }
 
         public InnovicContext()
-            : base("dbConnection")
+            : base("defaultConnection")
         {
         }
 
         public InnovicContext(string userId = null)
-            : base("dbConnection")
+            : base("defaultConnection")
         {
             _userId = userId;
         }
